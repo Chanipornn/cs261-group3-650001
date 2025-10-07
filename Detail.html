@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>รายละเอียดเมนู – ข้าวผัดกะเพรา</title>
+  <link rel="stylesheet" href="Detail.css" />
+</head>
+<body>
+<div class="phone">
+  <!-- Header -->
+  <header class="topbar">
+    <button class="back" onclick="window.location.href='home.html'" aria-label="ย้อนกลับไปหน้าเมนู">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#fff"/></svg>
+    </button>
+  </header>
+  <div class="topbar-shadow"></div>
+
+  <!-- Content -->
+  <main class="content">
+    <div class="photo-wrap">
+      <img src="eiei" alt="ข้าวผัดกะเพรา">
+    </div>
+
+    <h1 class="title">ข้าวผัดกะเพรา</h1>
+
+    <!-- ปกติ/พิเศษ (คนละบรรทัด) -->
+    <label class="line radio-line">
+      <div class="left">
+        <input type="radio" name="size" value="normal" checked>
+        <span>ปกติ</span>
+      </div>
+      <div class="right"></div>
+    </label>
+
+    <label class="line radio-line">
+      <div class="left">
+        <input type="radio" name="size" value="special">
+        <span>พิเศษ</span>
+      </div>
+      <div class="right price">+10 บาท</div>
+    </label>
+
+    <!-- ไข่เจียว -->
+    <div class="line">
+      <div class="left"><span class="label">ไข่เจียว</span></div>
+      <div class="right row-ctrl">
+        <span class="price">+10 บาท</span>
+        <div class="qty">
+          <button onclick="chg('omelet',-1)" aria-label="ลดไข่เจียว">−</button>
+          <input id="omelet" value="0" readonly>
+          <button onclick="chg('omelet',1)" aria-label="เพิ่มไข่เจียว">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ไข่ดาว -->
+    <div class="line">
+      <div class="left"><span class="label">ไข่ดาว</span></div>
+      <div class="right row-ctrl">
+        <span class="price">+10 บาท</span>
+        <div class="qty">
+          <button onclick="chg('fried',-1)" aria-label="ลดไข่ดาว">−</button>
+          <input id="fried" value="0" readonly>
+          <button onclick="chg('fried',1)" aria-label="เพิ่มไข่ดาว">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- เพิ่มเติม -->
+    <div class="line column">
+      <label class="label" for="note">เพิ่มเติม</label>
+      <textarea id="note" placeholder="โปรดระบุรายละเอียด"></textarea>
+    </div>
+
+    <!-- ปุ่มยืนยัน -->
+    <div class="cta-wrap">
+      <button class="btn" onclick="addToCart()">ยืนยัน</button>
+    </div>
+  </main>
+
+  <!-- bottom red bar -->
+  <div class="bottombar"></div>
+</div>
+
+<script>
+  const inputs = {
+    omelet: document.getElementById('omelet'),
+    fried:  document.getElementById('fried')
+  };
+
+  // เพิ่ม/ลดจำนวน (0 ถึง 5)
+  function chg(id, d){
+    const el = inputs[id];
+    let v = parseInt(el.value || '0', 10) + d;
+    if (v < 0) v = 0;
+    if (v > 5) v = 5; // สูงสุด 5
+    el.value = v;
+  }
+
+  // กดยืนยัน
+  function addToCart(){
+    const item = {
+      id: Date.now(),
+      name: 'ข้าวผัดกะเพรา',
+      size: document.querySelector('input[name="size"]:checked').value,
+      omeletQty: parseInt(inputs.omelet.value, 10),
+      friedQty: parseInt(inputs.fried.value, 10),
+      note: document.getElementById('note').value.trim()
+    };
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart.push(item);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    location.href = 'home.html';
+  }
+</script>
+</body>
+</html>
