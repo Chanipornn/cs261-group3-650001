@@ -7,23 +7,23 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="Summary.css">
+    <script src="Summary.js" defer></script>
+
     <title>Summarry</title>
 </head>
 
 <body>
 
     <header>
-        <h1>
-            <p>ตะกร้าของคุณ</p>
-        </h1>
+        <h1>ตะกร้าของคุณ</h1>
 
     </header>
 
-    <div class="menu-item">
-        <div class="menu-img">
-            <img src="path/to/tomyum.jpg" alt="ชื่อเมนู">
+<main>
+    <div class="menu-list">
         </div>
-
+    </main>
+    
         <div>
             <div class="menu-name">
                 <span>ชื่อเมนู</span>
@@ -36,7 +36,7 @@
             </div>
             
             <!-- ปุ่มเพิ่ม/ลด -->
-            <div class="">
+            <div class="qty-actions">
 
             </div>
 
@@ -57,11 +57,11 @@
         </div>
 
         <div class="price">
-            <p>จำนวนราคา บาท</p>
+            <p id="grand-total">จำนวนราคา บาท</p>
         </div>
 
-        <button class="btn back">กลับไปหน้าเมนู</button>
-        <button class="btn confirm">ยืนยันคำสั่งซื้อ</button>
+        <button class="back-btn">กลับไปหน้าเมนู</button>
+        <button class="confirm-btn">ยืนยันคำสั่งซื้อ</button>        
 
     </footer>
 

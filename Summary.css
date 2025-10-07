@@ -19,6 +19,14 @@
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
   }
+
+  .menu-list {
+    display: flex;
+    flex-direction: column;   
+    align-items: center;      
+    gap: 16px;                
+    margin: 20px;
+  }
   
   .menu-item {
     display: flex;
@@ -101,13 +109,12 @@
     transition: 0.3s;
   }
   
-  footer button:first-child {
-    background-color: #FFC814; 
-    color: #333;
+  footer button:first-of-type {
+    background-color: #FFC814;
+    color: #222;
   }
-  
-  footer button:first-child:hover {
-    background-color: #e6b912;  
+  footer button:first-of-type:hover {
+    background-color: #e6b912;
   }  
 
   footer button:last-child {
