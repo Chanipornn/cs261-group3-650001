@@ -10,19 +10,19 @@
 <div class="phone">
   <!-- Header -->
   <header class="topbar">
-    <button class="back" onclick="window.location.href='home.html'" aria-label="ย้อนกลับไปหน้าเมนู">
+    <button class="back" onclick="window.location.href='Home.html'" aria-label="ย้อนกลับไปหน้าเมนู">
       <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#fff"/></svg>
     </button>
   </header>
   <div class="topbar-shadow"></div>
 
   <!-- Content -->
-  <main class="content">
+  <main class="content" id="mainContent">
     <div class="photo-wrap">
-      <img src="eiei" alt="ข้าวผัดกะเพรา">
+      <img id="food-photo" src="img/kapowgai.webp" alt="ข้าวผัดกะเพรา">
     </div>
 
-    <h1 class="title">ข้าวผัดกะเพรา</h1>
+    <h1 class="title" id="item-title">ข้าวผัดกะเพรา</h1>
 
     <!-- ปกติ/พิเศษ (คนละบรรทัด) -->
     <label class="line radio-line">
@@ -47,9 +47,9 @@
       <div class="right row-ctrl">
         <span class="price">+10 บาท</span>
         <div class="qty">
-          <button onclick="chg('omelet',-1)" aria-label="ลดไข่เจียว">−</button>
+          <button type="button" onclick="chg('omelet',-1)" aria-label="ลดไข่เจียว">−</button>
           <input id="omelet" value="0" readonly>
-          <button onclick="chg('omelet',1)" aria-label="เพิ่มไข่เจียว">+</button>
+          <button type="button" onclick="chg('omelet',1)" aria-label="เพิ่มไข่เจียว">+</button>
         </div>
       </div>
     </div>
@@ -60,9 +60,9 @@
       <div class="right row-ctrl">
         <span class="price">+10 บาท</span>
         <div class="qty">
-          <button onclick="chg('fried',-1)" aria-label="ลดไข่ดาว">−</button>
+          <button type="button" onclick="chg('fried',-1)" aria-label="ลดไข่ดาว">−</button>
           <input id="fried" value="0" readonly>
-          <button onclick="chg('fried',1)" aria-label="เพิ่มไข่ดาว">+</button>
+          <button type="button" onclick="chg('fried',1)" aria-label="เพิ่มไข่ดาว">+</button>
         </div>
       </div>
     </div>
@@ -84,35 +84,109 @@
 </div>
 
 <script>
+
+
+(function () {
+  const STORAGE_KEY = 'simple_cart_v1';
+  const MENU_ID_FALLBACK = 'kapow_gai'; 
+  const BASE_PRICE = 55;
+  const EXTRA_PRICE = 10;
+
   const inputs = {
     omelet: document.getElementById('omelet'),
     fried:  document.getElementById('fried')
   };
 
   // เพิ่ม/ลดจำนวน (0 ถึง 5)
-  function chg(id, d){
+  window.chg = function chg(id, d){
     const el = inputs[id];
     let v = parseInt(el.value || '0', 10) + d;
     if (v < 0) v = 0;
-    if (v > 5) v = 5; // สูงสุด 5
+    if (v > 5) v = 5; 
     el.value = v;
+  };
+
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {};
+      return JSON.parse(raw);
+    } catch (e) {
+      console.warn('โหลด cart ผิดพลาด', e);
+      return {};
+    }
   }
 
-  // กดยืนยัน
-  function addToCart(){
-    const item = {
-      id: Date.now(),
-      name: 'ข้าวผัดกะเพรา',
-      size: document.querySelector('input[name="size"]:checked').value,
-      omeletQty: parseInt(inputs.omelet.value, 10),
-      friedQty: parseInt(inputs.fried.value, 10),
-      note: document.getElementById('note').value.trim()
-    };
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    cart.push(item);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    location.href = 'home.html';
+  function saveCart(cart) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    } catch (e) {
+      console.warn('ไม่สามารถบันทึก cart:', e);
+    }
   }
+
+  // อ่าน pending_add (ถ้ามี) เพื่อให้ใช้ id เดียวกับหน้า Home
+  function readPendingAdd() {
+    try {
+      const raw = localStorage.getItem('pending_add');
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function addToCart(){
+
+    const size = document.querySelector('input[name="size"]:checked').value;
+    const omeletQty = parseInt(inputs.omelet.value, 10) || 0;
+    const friedQty = parseInt(inputs.fried.value, 10) || 0;
+    const note = document.getElementById('note').value.trim();
+
+    const mainQty = 1;
+
+
+    const pending = readPendingAdd();
+    const menuId = pending && pending.id ? String(pending.id) : MENU_ID_FALLBACK;
+
+
+    let cart = loadCart();
+
+
+    cart[menuId] = (cart[menuId] || 0) + mainQty;
+
+
+    try {
+      localStorage.setItem('last_added_detail', JSON.stringify({
+        id: menuId,
+        name: document.getElementById('item-title').textContent.trim(),
+        size,
+        omeletQty,
+        friedQty,
+        note,
+        mainQty,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.warn('ไม่สามารถบันทึก last_added_detail', e);
+    }
+
+    // บันทึก cart
+    saveCart(cart);
+
+  
+    try {
+      localStorage.removeItem('pending_add');
+    } catch (e) {}
+
+    // กลับไปหน้า Home เพื่อให้ Home.js โหลด cart ใหม่และอัปเดต UI
+    window.location.href = 'Home.html';
+  }
+
+  // expose addToCart globally for onclick attr
+  window.addToCart = addToCart;
+
+})();
 </script>
 </body>
 </html>
