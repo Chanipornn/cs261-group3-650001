@@ -20,7 +20,7 @@ body {
     cursor: pointer;
     transition: transform 0.2s ease;
     position: relative;
-    top: -10px;
+    top: -11px;
     margin-left: 15px;
   }
   
@@ -97,11 +97,10 @@ body {
   }
   
   .categories button.active {
-    background-color: #cdbfbf;
-    color: rgb(0,0,0);
+    background-color: #d7cccc;
+    color: rgb(0, 0, 0);
     font-weight: 600; /* ตัวหนาขึ้น */
   }
-  
   
   /* ส่วนรายการเมนู */
   .menu-list {
