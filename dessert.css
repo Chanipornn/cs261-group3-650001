@@ -41,16 +41,26 @@ body {
   margin: 0 auto 25px auto; 
 }
 
+
 .search-box button {
   border: none;
   background: none;
   padding: 0 8px;
-  font-size: 18px;
+  font-size: 18px;    
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+/* ให้รูปใช้ขนาดเท่ากับขนาดอิโมจิ (1em) */
+.search-box button img {
+  width: 1.1em;
+  height: 1.1em;
+  display: block;
+  object-fit: contain;
+}
+
 
 .search-box input {
   border: none;
@@ -84,11 +94,11 @@ header {
 .categories button {
   border: none;
   background-color: white;
-  padding: 10px 10px;   /* เพิ่มขนาดปุ่ม */
-  border-radius: 25px;  /* ปรับให้โค้งมนมากขึ้น */
-  font-size: 15px;      /* เพิ่มขนาดตัวอักษร */
+  padding: 10px 10px;   
+  border-radius: 25px;  
+  font-size: 15px;      
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* เพิ่มเงาเล็กน้อยให้ดูเด่นขึ้น */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
   transition: all 0.2s ease; /* เพิ่ม animation เวลา hover */
 }
 
@@ -100,7 +110,7 @@ header {
 .categories button.active {
   background-color: #d7cccc;
   color: rgb(0, 0, 0);
-  font-weight: 600; /* ตัวหนาขึ้น */
+  font-weight: 600; 
 }
 
 
@@ -110,7 +120,7 @@ header {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
   padding: 20px;
-  justify-items: center; /* ชื่อและราคาอยู่ตรงกลาง */
+  justify-items: center; 
 }
 
 .menu-item {
@@ -196,7 +206,7 @@ header {
 /* responsive */
 @media (max-width: 480px) {
   .menu-list {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     padding: 12px;
   }
   .menu-item {
@@ -210,3 +220,24 @@ header {
     gap: 12px;
   }
 }
+
+/* เพิ่มขนาด category สำหรับหน้าจอใหญ่ (desktop) */
+@media (min-width: 768px) {
+  .categories {
+    gap: 80px;
+    margin-top: 0px;
+  }
+
+  .categories button {
+    padding: 12px 28px;   
+    border-radius: 30px;  
+    font-size: 17px;      
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+  }
+
+  .categories button.active {
+    background-color: #d1c7c7; 
+  }
+}
+
