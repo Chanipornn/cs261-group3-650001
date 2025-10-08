@@ -1,203 +1,212 @@
 body {
-    margin: 0;
-    font-family: "Prompt", sans-serif;
-    background-color: #fff;
-  }
-  
-  /* กล่องรวม search + ตะกร้า */
-  .top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 0px 10px;
-  }
-  
-  /* ตะกร้า */
-  .cart-icon img {
-    width: 33px;
-    height: 33px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    position: relative;
-    top: -11px;
-    margin-left: 15px;
-  }
-  
-  .cart-icon img:hover {
-    transform: scale(1.1);
-  }
-  
-  /* search-box */
-  .search-box {
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 30px;
-    padding: 5px 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 100%;
-    margin: 0 auto 25px auto; 
-  }
-  
-  .search-box button {
-    border: none;
-    background: none;
-    padding: 0 8px;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .search-box input {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding: 10px;
-    border-radius: 20px;
-    font-size: 16px;
-  }
-  
-  /* ส่วนหัว */
-  header {
-    background-color: #d9251d;
-    color: white;
-    padding: 30px;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  
-  /* categories */
-  /* categories */
-  .categories {
-    display: flex;
-    justify-content: space-around;
-    gap: 50px;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-  
-  .categories button {
-    border: none;
-    background-color: white;
-    padding: 10px 10px;   /* เพิ่มขนาดปุ่ม */
-    border-radius: 25px;  /* ปรับให้โค้งมนมากขึ้น */
-    font-size: 15px;      /* เพิ่มขนาดตัวอักษร */
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* เพิ่มเงาเล็กน้อยให้ดูเด่นขึ้น */
-    transition: all 0.2s ease; /* เพิ่ม animation เวลา hover */
-  }
-  
-  .categories button:hover {
-    background-color: #f5f5f5;
-    transform: scale(1.05); /* ขยายเล็กน้อยเวลา hover */
-  }
-  
-  .categories button.active {
-    background-color: #d7cccc;
-    color: rgb(0, 0, 0);
-    font-weight: 600; /* ตัวหนาขึ้น */
-  }
-  
-  /* ส่วนรายการเมนู */
+  margin: 0;
+  font-family: "Prompt", sans-serif;
+  background-color: #fff;
+}
+
+/* กล่องรวม search + ตะกร้า */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0px 10px;
+}
+
+/* ตะกร้า */
+.cart-icon img {
+  width: 33px;
+  height: 33px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+  top: -12px;
+  margin-left: 15px;
+}
+
+.cart-icon img:hover {
+  transform: scale(1.1);
+}
+
+
+/* search-box */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  padding: 4px 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  margin: 0 auto 25px auto; 
+}
+
+.search-box button {
+  border: none;
+  background: none;
+  padding: 0 8px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+/* ส่วนหัว */
+header {
+  background-color: #d9251d;
+  color: white;
+  padding: 30px;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* categories */
+/* categories */
+.categories {
+  display: flex;
+  justify-content: space-around;
+  gap: 50px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.categories button {
+  border: none;
+  background-color: white;
+  padding: 10px 10px;   /* เพิ่มขนาดปุ่ม */
+  border-radius: 25px;  /* ปรับให้โค้งมนมากขึ้น */
+  font-size: 15px;      /* เพิ่มขนาดตัวอักษร */
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* เพิ่มเงาเล็กน้อยให้ดูเด่นขึ้น */
+  transition: all 0.2s ease; /* เพิ่ม animation เวลา hover */
+}
+
+.categories button:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.05); /* ขยายเล็กน้อยเวลา hover */
+}
+
+.categories button.active {
+  background-color: #d7cccc;
+  color: rgb(0, 0, 0);
+  font-weight: 600; /* ตัวหนาขึ้น */
+}
+
+
+/* ส่วนรายการเมนู */
+.menu-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center; /* ชื่อและราคาอยู่ตรงกลาง */
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 150px;
+}
+
+.image-box {
+  position: relative; /* สำคัญสำหรับปุ่ม + / qty */
+  width: 150px;
+  height: 150px;
+  background-color: #eee;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.image-box img {
+  width: 100%;       /* ให้เต็มความกว้างของ image-box */
+  height: 100%;      /* ให้เต็มความสูงของ image-box */
+  object-fit: cover; /* ครอบเต็มกล่อง ไม่บิดรูป */
+  border-radius: 10px; /* ตามที่ตั้งไว้ใน image-box */
+  display: block;
+}
+
+/* ปุ่ม + หรือ qty-control */
+.add-btn, .qty-control {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.add-btn {
+  background: #ffd600;
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.qty-control {
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  gap: 6px;
+  padding: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.qty-control button {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: #f1f1f1;
+  font-weight: 700;
+}
+
+.qty-control .count {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.menu-item p {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.menu-item .price {
+  color: red;
+  text-align: center;
+}
+
+/* responsive */
+@media (max-width: 480px) {
   .menu-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    justify-items: center; /* ชื่อและราคาอยู่ตรงกลาง */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    padding: 12px;
   }
-  
   .menu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 150px;
+    width: 120px;
   }
-  
   .image-box {
-    position: relative; /* สำคัญสำหรับปุ่ม + / qty */
-    width: 150px;
-    height: 150px;
-    background-color: #eee;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 120px;
+    height: 120px;
   }
-  
-  /* ปุ่ม + หรือ qty-control */
-  .add-btn, .qty-control {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    user-select: none;
+  .categories {
+    gap: 12px;
   }
-  
-  .add-btn {
-    background: #ffd600;
-    border-radius: 6px;
-    width: 30px;
-    height: 30px;
-    font-weight: 700;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  }
-  
-  .qty-control {
-    background: rgba(255,255,255,0.95);
-    border-radius: 8px;
-    gap: 6px;
-    padding: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  }
-  
-  .qty-control button {
-    width: 28px;
-    height: 28px;
-    border: none;
-    border-radius: 6px;
-    background: #f1f1f1;
-    font-weight: 700;
-  }
-  
-  .qty-control .count {
-    min-width: 22px;
-    text-align: center;
-    font-weight: 600;
-  }
-  
-  .menu-item p {
-    margin: 6px 0 0 0;
-    font-size: 14px;
-    text-align: center;
-  }
-  
-  .menu-item .price {
-    color: red;
-    text-align: center;
-  }
-  
-  /* responsive */
-  @media (max-width: 480px) {
-    .menu-list {
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      padding: 12px;
-    }
-    .menu-item {
-      width: 120px;
-    }
-    .image-box {
-      width: 120px;
-      height: 120px;
-    }
-    .categories {
-      gap: 12px;
-    }
-  }
-  
+}
