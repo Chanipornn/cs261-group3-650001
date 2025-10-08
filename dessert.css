@@ -108,7 +108,7 @@ header {
 }
 
 .categories button.active {
-  background-color: #d7cccc;
+  background-color: #ddd8d8;
   color: rgb(0, 0, 0);
   font-weight: 600; 
 }
@@ -237,7 +237,7 @@ header {
   }
 
   .categories button.active {
-    background-color: #d1c7c7; 
+    background-color: #ddd8d8; 
   }
 }
 
