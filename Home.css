@@ -130,6 +130,14 @@ header {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+.image-box img {
+  width: 100%;       /* ให้เต็มความกว้างของ image-box */
+  height: 100%;      /* ให้เต็มความสูงของ image-box */
+  object-fit: cover; /* ครอบเต็มกล่อง ไม่บิดรูป */
+  border-radius: 10px; /* ตามที่ตั้งไว้ใน image-box */
+  display: block;
+}
+
 /* ปุ่ม + หรือ qty-control */
 .add-btn, .qty-control {
   position: absolute;
