@@ -221,8 +221,10 @@ function wireQtyActions() {
         const result = await submitOrder(cart, grand);
   
         if (result.status === "success") {
+
           // ล้าง cart ฝั่ง front (เฉพาะเคสไม่มี backend)
           if (!CONFIG.API_CREATE_ORDER_URL) localStorage.removeItem("cart");
+          
           // แนบยอดรวมไปหน้า success (ผ่าน query string)
           const url = new URL(CONFIG.ROUTES.SUCCESS, location.href);
           url.searchParams.set("total", grand);
