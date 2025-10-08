@@ -12,8 +12,8 @@ const CONFIG = {
   
     // สำหรับทดสอบ (ตอนไม่มี backend)
     DEMO_CART: [
-      { id: 1, name: "ต้มยำกุ้ง", price: 80, qty: 1, image: "images/tomyum.jpg" },
-      { id: 2, name: "ผัดไทยกุ้งสด", price: 60, qty: 2, image: "images/padthai.jpg" }
+      { id: 1, name: "ต้มยำกุ้ง", price: 80, qty: 1, image: "img/tomyum.jpg" },
+      { id: 2, name: "ผัดไทยกุ้งสด", price: 60, qty: 2, image: "img/padthai.jpg" }
     ]
   };
   
