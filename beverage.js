@@ -189,6 +189,8 @@
       });
     });
   }
+ localStorage.removeItem('pending_add');
+localStorage.removeItem('last_added_detail')
 
   // --- เมื่อกลับมาหน้าจาก history (back/forward) ให้รีโหลด cart จาก localStorage เพื่ออัปเดต UI ---
   window.addEventListener('pageshow', function () {
