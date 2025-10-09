@@ -1,7 +1,17 @@
+:root{
+  --bg: #fff;
+  --menu-width: 170px;       /* ขนาดการ์ด (desktop default) */
+  --image-size: 140px;       /* ความสูงรูปภายในการ์ด */
+  --add-btn-size: 34px;
+  --font-base: 16px;
+  --font-small: 14px;
+}
+
+/* รีเซ็ตและพื้นฐาน */
 body {
   margin: 0;
   font-family: "Prompt", sans-serif;
-  background-color: #fff;
+  background-color: var(--bg);
 }
 
 /* กล่องรวม search + ตะกร้า */
@@ -15,8 +25,8 @@ body {
 
 /* ตะกร้า */
 .cart-icon img {
-  width: 33px;
-  height: 33px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   transition: transform 0.2s ease;
   position: relative;
@@ -25,9 +35,8 @@ body {
 }
 
 .cart-icon img:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
-
 
 /* search-box */
 .search-box {
@@ -35,12 +44,11 @@ body {
   align-items: center;
   background-color: white;
   border-radius: 30px;
-  padding: 4px 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 6px 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
   width: 100%;
   margin: 0 auto 25px auto; 
 }
-
 
 .search-box button {
   border: none;
@@ -53,7 +61,6 @@ body {
   justify-content: center;
 }
 
-/* ให้รูปใช้ขนาดเท่ากับขนาดอิโมจิ (1em) */
 .search-box button img {
   width: 1.1em;
   height: 1.1em;
@@ -61,14 +68,13 @@ body {
   object-fit: contain;
 }
 
-
 .search-box input {
   border: none;
   outline: none;
   flex: 1;
   padding: 10px;
   border-radius: 20px;
-  font-size: 16px;
+  font-size: var(--font-base);
 }
 
 /* ส่วนหัว */
@@ -80,7 +86,6 @@ header {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* categories */
 /* categories */
 .categories {
   display: flex;
@@ -99,12 +104,12 @@ header {
   font-size: 15px;      
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
-  transition: all 0.2s ease; /* เพิ่ม animation เวลา hover */
+  transition: all 0.2s ease; 
 }
 
 .categories button:hover {
   background-color: #f5f5f5;
-  transform: scale(1.05); /* ขยายเล็กน้อยเวลา hover */
+  transform: scale(1.05);
 }
 
 .categories button.active {
@@ -113,8 +118,7 @@ header {
   font-weight: 600; 
 }
 
-
-/* ส่วนรายการเมนู */
+/* ส่วนรายการเมนู - ทำเป็นการ์ด (กรอบมน) */
 .menu-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -123,36 +127,52 @@ header {
   justify-items: center; 
 }
 
+/* การ์ดแต่ละเมนู */
 .menu-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 150px;
+  width: var(--menu-width);
+  background: #ffffff;
+  border-radius: 14px;            /* กรอบมน */
+  padding: 10px;                  /* ช่องว่างรอบๆ */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;               /* ตัดขอบรูปที่เลยมุม */
 }
 
+.menu-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* กล่องรูป */
 .image-box {
-  position: relative; /* สำคัญสำหรับปุ่ม + / qty */
-  width: 150px;
-  height: 150px;
+  position: relative;
+  width: 100%;
+  height: var(--image-size);
   background-color: #eee;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
 .image-box img {
-  width: 100%;       /* ให้เต็มความกว้างของ image-box */
-  height: 100%;      /* ให้เต็มความสูงของ image-box */
-  object-fit: cover; /* ครอบเต็มกล่อง ไม่บิดรูป */
-  border-radius: 10px; /* ตามที่ตั้งไว้ใน image-box */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-/* ปุ่ม + หรือ qty-control */
+/* ปุ่ม + หรือ qty-control (ขยายให้ใหญ่ขึ้น) */
 .add-btn, .qty-control {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: 10px;
+  right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,26 +180,31 @@ header {
   user-select: none;
 }
 
+
 .add-btn {
   background: #ffd600;
-  border-radius: 6px;
-  width: 30px;
-  height: 30px;
+  border-radius: 8px;
+  width: var(--add-btn-size);
+  height: var(--add-btn-size);
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 }
 
 .qty-control {
   background: rgba(255,255,255,0.95);
   border-radius: 8px;
   gap: 6px;
-  padding: 4px;
+  padding: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
 .qty-control button {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: 6px;
   background: #f1f1f1;
@@ -187,42 +212,82 @@ header {
 }
 
 .qty-control .count {
-  min-width: 22px;
+  min-width: 26px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
 }
 
+/* ข้อความชื่อและราคา -> ขนาดใหญ่ขึ้น */
 .menu-item p {
   margin: 6px 0 0 0;
-  font-size: 14px;
+  font-size: 15px;
   text-align: center;
+  line-height: 1.2;
+  color: #222;
 }
 
 .menu-item .price {
-  color: red;
+  color: #d9251d;
   text-align: center;
+  font-weight: 700;
+  margin-top: 6px;
+  font-size: 15px;
 }
 
-/* responsive */
+/* responsive: ปรับให้มือถือใหญ่ขึ้นและ spacing มากขึ้น */
 @media (max-width: 480px) {
+  :root{
+    --menu-width: 180px;     /* กว้างขึ้นบนมือถือ */
+    --image-size: 160px;     /* รูปใหญ่ขึ้นบนมือถือ */
+    --add-btn-size: 40px;
+    --font-base: 18px;
+  }
+
   .menu-list {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    padding: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    padding: 14px;
+    gap: 14px;
   }
+
   .menu-item {
-    width: 120px;
+    width: var(--menu-width);
+    padding: 12px;
+    border-radius: 16px;
   }
+
+  .menu-item p {
+    font-size: 16px;    /* ชื่อเมนูใหญ่ขึ้น */
+  }
+
+  .menu-item .price {
+    font-size: 15px;    /* ราคาใหญ่ขึ้น */
+  }
+
   .image-box {
-    width: 120px;
-    height: 120px;
+    height: var(--image-size);
   }
-  .categories {
-    gap: 12px;
+
+  .add-btn {
+    width: var(--add-btn-size);
+    height: var(--add-btn-size);
+    font-size: 20px;
+    border-radius: 10px;
   }
+
+  
+  
+  
 }
 
-/* เพิ่มขนาด category สำหรับหน้าจอใหญ่ (desktop) */
+/* desktop adjustments */
 @media (min-width: 768px) {
+  :root{
+    --menu-width: 170px;
+    --image-size: 140px;
+    --add-btn-size: 34px;
+  }
+
   .categories {
     gap: 80px;
     margin-top: 0px;
@@ -240,4 +305,3 @@ header {
     background-color: #ddd8d8; 
   }
 }
-
