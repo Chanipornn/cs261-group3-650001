@@ -116,7 +116,7 @@
     }
 
     // ไปยังหน้ารายละเอียด พร้อม query param id (Detail.html อ่าน id หรือ pending_add ได้)
-    window.location.href = `Detail.html?id=${encodeURIComponent(id)}`;
+    window.location.href = `dessertdetail.html?id=${encodeURIComponent(id)}`;
   }
 
   // --- Cart click handlers ---
