@@ -3,78 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>รายละเอียดเมนู – ข้าวผัดกะเพรา</title>
+  <title>รายละเอียดเมนู</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="Detail.css" />
 </head>
 <body>
 <div class="phone">
-  <!-- Header -->
   <header class="topbar">
-    <button class="back" onclick="window.location.href='Home.html'" aria-label="ย้อนกลับไปหน้าเมนู">
+    <button class="back" onclick="window.location.href='Home.html'" aria-label="ย้อนกลับ">
       <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#fff"/></svg>
     </button>
   </header>
   <div class="topbar-shadow"></div>
 
-  <!-- Content -->
-  <main class="content" id="mainContent">
+  <main class="content">
     <div class="photo-wrap">
-      <img id="food-photo" src="img/kapowgai.webp" alt="ข้าวผัดกะเพรา">
+      <img id="food-photo" src="img/placeholder.webp" alt="">
     </div>
 
-    <h1 class="title" id="item-title">ข้าวผัดกะเพรา</h1>
+    <h1 class="title" id="item-title">ชื่อเมนู</h1>
 
-    <!-- ปกติ/พิเศษ -->
-    <label class="line radio-line">
-      <div class="left">
-        <input type="radio" name="size" value="normal" checked>
-        <span>ปกติ</span>
-      </div>
-      <div class="right"></div>
-    </label>
+    <section id="sizeWrap"></section>
+    <section id="addonsWrap"></section>
 
-    <label class="line radio-line">
-      <div class="left">
-        <input type="radio" name="size" value="special">
-        <span>พิเศษ</span>
-      </div>
-      <div class="right price">+10 บาท</div>
-    </label>
-
-    <!-- ไข่เจียว -->
-    <div class="line">
-      <div class="left"><span class="label">ไข่เจียว</span></div>
-      <div class="right row-ctrl">
-        <span class="price">+10 บาท</span>
-        <div class="qty">
-          <button type="button" onclick="chg('omelet',-1)">−</button>
-          <input id="omelet" value="0" readonly>
-          <button type="button" onclick="chg('omelet',1)">+</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ไข่ดาว -->
-    <div class="line">
-      <div class="left"><span class="label">ไข่ดาว</span></div>
-      <div class="right row-ctrl">
-        <span class="price">+10 บาท</span>
-        <div class="qty">
-          <button type="button" onclick="chg('fried',-1)">−</button>
-          <input id="fried" value="0" readonly>
-          <button type="button" onclick="chg('fried',1)">+</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- เพิ่มเติม -->
     <div class="line column">
       <label class="label" for="note">เพิ่มเติม</label>
       <textarea id="note" placeholder="โปรดระบุรายละเอียด"></textarea>
     </div>
 
-    <!-- ปุ่มยืนยัน + จำนวนหลัก -->
     <div class="cta-row">
       <div class="main-qty">
         <button id="mainMinus">−</button>
@@ -82,15 +38,14 @@
         <button id="mainPlus">+</button>
       </div>
       <button id="confirmBtn" class="btn" onclick="addToCart()">
-        ยืนยัน · <span id="totalPrice">฿55</span>
+        ยืนยัน · <span id="totalPrice">฿0</span>
       </button>
     </div>
   </main>
 
-  <!-- bottom bar -->
   <div class="bottombar"></div>
 </div>
 
-<script src="Detail.js"></script>
+<script defer src="Detail.js"></script>
 </body>
 </html>

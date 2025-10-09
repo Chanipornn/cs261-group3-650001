@@ -1,199 +1,30 @@
-:root{
-  --brand:#d32323;
-  --bg:#eeeeee;
-  --paper:#ffffff;
-  --text:#111;
-  --border:#e6e6e6;
-}
-
-/* พื้นหลังรวม */
-html,body{
-  margin:0;
-  font-family:"Noto Sans Thai",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  min-height:100vh;
-}
-
-/* กรอบหน้าจอ */
-.phone{
-  background:var(--bg);
-  width:min(420px,92vw);
-  border-radius:22px;
-  overflow:hidden;
-  margin:24px auto;
-  box-shadow:0 0 12px #00000015;
-}
-
-/* หัวบน */
-.topbar{
-  height:64px;
-  background:var(--brand);
-  display:flex;
-  align-items:center;
-  padding:0 14px;
-  border-bottom-left-radius:14px;
-  border-bottom-right-radius:14px;
-}
-.topbar-shadow{
-  height:8px;
-  background:linear-gradient(#00000014,#0000);
-  margin-top:-4px;
-}
-
-/* ปุ่มย้อนกลับ */
-.back{
-  width:36px;height:36px;
-  border:1px solid #fff8;
-  border-radius:50%;
-  background:transparent;
-  display:grid;place-items:center;
-  cursor:pointer;
-}
-
-/* กล่องขาว */
-.content{
-  background:var(--paper);
-  margin:12px 14px 6px;
-  border-radius:14px;
-  padding:18px;
-  box-shadow:0 2px 8px #00000010;
-}
-
-/* รูปอาหาร */
-.photo-wrap{
-  background:#3a241a;
-  border-radius:14px;
-  padding:14px;
-  display:grid;
-  place-items:center;
-}
-.photo-wrap img{
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  border-radius:10px;
-  box-shadow:0 6px 0 #00000020;
-}
-
-/* ชื่อเมนู */
-.title{
-  text-align:center;
-  font-size:22px;
-  font-weight:800;
-  margin:16px 0 6px;
-}
-
-/* แถวข้อมูล */
-.line{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 0;
-  gap:12px;
-}
-.column{
-  flex-direction:column;
-  align-items:stretch;
-}
-
-/* ฟอนต์ */
-.label{font-weight:700;}
-.price{color:#0b7a2a;font-weight:700;white-space:nowrap;}
-.radio-line input[type="radio"]{
-  width:18px;height:18px;accent-color:var(--brand);
-}
-.left{display:flex;align-items:center;gap:8px;}
-.right{display:flex;align-items:center;gap:10px;}
-
-/* ปุ่มจำนวน */
-.row-ctrl{gap:12px;}
-.qty{
-  display:inline-flex;
-  align-items:center;
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-}
-.qty button{
-  width:36px;height:32px;border:none;
-  background:#f3f3f3;cursor:pointer;font-size:18px;
-}
-.qty input{
-  width:40px;height:32px;border:none;text-align:center;font-size:15px;
-}
-
-/* ช่องเพิ่มเติม */
-textarea{
-  width:100%;min-height:100px;resize:vertical;
-  border:1px solid var(--border);border-radius:10px;
-  padding:10px;font-family:inherit;font-size:15px;
-}
-
-/* ปุ่มยืนยัน + จำนวนหลัก */
-.cta-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding-top:14px;
-}
-.main-qty{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:2px 8px;
-  background:#fafafa;
-}
-.main-qty button{
-  width:32px;height:32px;
-  border:none;background:#f0f0f0;
-  font-size:18px;cursor:pointer;
-  border-radius:6px;
-}
-.main-qty span{min-width:20px;text-align:center;font-weight:700;}
-.btn {
-  flex: 1;
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 14px 18px;            
-  font-family: "Sarabun", sans-serif; 
-  font-weight: 600;                
-  font-size: 14px;                
-  letter-spacing: 0.2px;
-  cursor: pointer;
-  transition: background 0.25s ease, transform 0.1s ease;
-}
-
-.btn:hover {
-  background: #b71c1c;
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-/* แถบล่างแดง */
-.bottombar{
-  position:relative;
-  height:38px;
-  background:var(--brand);
-  margin:0 14px 18px;
-  border-top-left-radius:14px;
-  border-top-right-radius:14px;
-}
-.bottombar::before{
-  content:"";
-  position:absolute;
-  top:-8px;left:0;right:0;height:8px;
-  background:linear-gradient(#00000014,#0000);
-  border-top-left-radius:14px;
-  border-top-right-radius:14px;
-  pointer-events:none;
-}
+:root{ --brand:#d32323; --bg:#eeeeee; --paper:#fff; --text:#111; --border:#e6e6e6; }
+html,body{ margin:0; font-family:"Noto Sans Thai",sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:flex-start; min-height:100vh; }
+.phone{ background:var(--bg); width:min(420px,92vw); border-radius:22px; overflow:hidden; margin:24px auto; box-shadow:0 0 12px #00000015; }
+.topbar{ height:64px; background:var(--brand); display:flex; align-items:center; padding:0 14px; border-bottom-left-radius:14px; border-bottom-right-radius:14px; }
+.topbar-shadow{ height:8px; background:linear-gradient(#00000014,#0000); margin-top:-4px; }
+.back{ width:36px;height:36px; border:1px solid #fff8; border-radius:50%; background:transparent; display:grid; place-items:center; cursor:pointer; }
+.content{ background:var(--paper); margin:12px 14px 6px; border-radius:14px; padding:18px; box-shadow:0 2px 8px #00000010; }
+.photo-wrap{ background:#3a241a; border-radius:14px; padding:14px; display:grid; place-items:center; }
+.photo-wrap img{ width:100%; height:260px; object-fit:cover; border-radius:10px; box-shadow:0 6px 0 #00000020; }
+.title{ text-align:center; font-size:22px; font-weight:800; margin:16px 0 6px; }
+.line{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; gap:12px; }
+.column{ flex-direction:column; align-items:stretch; }
+.label{ font-weight:700; }
+.price{ color:#0b7a2a; font-weight:700; white-space:nowrap; }
+.radio-line input[type="radio"]{ width:18px; height:18px; accent-color:var(--brand); }
+.left{ display:flex; align-items:center; gap:8px; }
+.right{ display:flex; align-items:center; gap:10px; }
+.row-ctrl{ gap:12px; }
+.qty{ display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.qty button{ width:36px; height:32px; border:none; background:#f3f3f3; cursor:pointer; font-size:18px; }
+.qty input{ width:40px; height:32px; border:none; text-align:center; font-size:15px; }
+textarea{ width:100%; min-height:100px; resize:vertical; border:1px solid var(--border); border-radius:10px; padding:10px; font-family:inherit; font-size:15px; }
+.cta-row{ display:flex; align-items:center; gap:12px; padding-top:14px; }
+.main-qty{ display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:10px; padding:2px 8px; background:#fafafa; }
+.main-qty button{ width:32px; height:35px; border:none; background:#f0f0f0; font-size:18px; cursor:pointer; border-radius:6px; }
+.main-qty span{ min-width:20px; text-align:center; font-weight:700; }
+.btn{ flex:1; background:var(--brand); color:#fff; border:none; border-radius:12px; padding:14px 18px; font-family:"Sarabun",sans-serif; font-weight:600; font-size:15px; letter-spacing:.2px; cursor:pointer; transition:background .25s ease, transform .1s ease; }
+.btn:hover{ background:#b71c1c; } .btn:active{ transform:scale(.98); }
+.bottombar{ position:relative; height:38px; background:var(--brand); margin:0 14px 18px; border-top-left-radius:14px; border-top-right-radius:14px; }
+.bottombar::before{ content:""; position:absolute; top:-8px; left:0; right:0; height:8px; background:linear-gradient(#00000014,#0000); border-top-left-radius:14px; border-top-right-radius:14px; pointer-events:none; }
