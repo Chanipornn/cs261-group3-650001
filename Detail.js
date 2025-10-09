@@ -1,111 +1,106 @@
+// Detail.js
 
-const CART_KEY = "cart";
-const BASE_PRICE = 55;          
-const SIZE_EXTRA = 10;          
-const ADDON_PRICE = 10;         
+// ====== CONFIG ======
+const BASE_PRICE = 55;           // ราคาพื้นฐาน "ข้าวผัดกะเพรา"
+const EXTRA_PRICE = 10;          // ราคาเพิ่มของ "พิเศษ" และไข่แต่ละใบ
+const IMG_PATH = document.getElementById("food-photo").getAttribute("src");
 
-// --------- helpers: cart storage ----------
-function loadCart() {
-  try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]"); }
-  catch { return []; }
-}
-function saveCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-}
+// ====== DOM ======
+const qtyMain      = document.getElementById("mainQty");
+const btnMinusMain = document.getElementById("mainMinus");
+const btnPlusMain  = document.getElementById("mainPlus");
+const priceEl      = document.getElementById("totalPrice");
 
-function signatureOf(item){
-  const addonsSig = (item.addons||[])
-    .filter(a => a.qty>0)
-    .map(a => `${a.name}:${a.price}x${a.qty}`).sort().join("|");
-  return [item.name, item.price, item.size||"", item.sizeExtra||0, addonsSig, item.note||""].join("#");
-}
+// ช่องไข่
+const omeletInput  = document.getElementById("omelet");
+const friedInput   = document.getElementById("fried");
 
-const $ = (sel) => document.querySelector(sel);
-const omeletEl = $("#omelet");
-const friedEl  = $("#fried");
-const noteEl   = $("#note");
-const mainMinus= $("#mainMinus");
-const mainPlus = $("#mainPlus");
-const mainQtyEl= $("#mainQty");
-const totalEl  = $("#totalPrice");
-const titleEl  = $("#item-title");
-const imgEl    = $("#food-photo");
+// ====== UTILS ======
+const clamp = (n, min=0, max=999) => Math.min(Math.max(n, min), max);
+const getInt = (el) => parseInt(el.value || "0", 10) || 0;
 
-// ปุ่ม +/- ของ addon (เรียกจาก onclick ใน HTML)
-window.chg = function(id, d){
-  const el = (id === "omelet") ? omeletEl : friedEl;
-  let v = Math.max(0, Math.min(99, (parseInt(el.value || "0", 10) + d)));
-  el.value = String(v);
-  updateTotal();
-};
-
-// จำนวน “จานหลัก”
-function getMainQty(){ return Math.max(1, parseInt(mainQtyEl.textContent || "1", 10)); }
-function setMainQty(n){ mainQtyEl.textContent = String(Math.max(1, n)); }
-
-// อ่านขนาด
-function getSize() {
-  const checked = document.querySelector('input[name="size"]:checked');
-  if (!checked) return { label: "ปกติ", extra: 0 };
-  return checked.value === "special" ? { label: "พิเศษ", extra: SIZE_EXTRA } : { label: "ปกติ", extra: 0 };
+function getSizeExtra() {
+  const checked = document.querySelector('input[name="size"]:checked')?.value;
+  return checked === "special" ? EXTRA_PRICE : 0;
 }
 
-// คำนวณราคารวมแสดงบนปุ่ม
-function computeOnePlate() {
-  const { extra } = getSize();
-  const addonsTotal = (parseInt(omeletEl.value||"0",10) + parseInt(friedEl.value||"0",10)) * ADDON_PRICE;
-  return BASE_PRICE + extra + addonsTotal;
-}
-function updateTotal(){
-  const total = computeOnePlate() * getMainQty();
-  totalEl.textContent = "฿" + total.toLocaleString("th-TH");
+function getSizeLabel() {
+  const checked = document.querySelector('input[name="size"]:checked')?.value;
+  return checked === "special" ? "พิเศษ" : "ปกติ";
 }
 
-// เพิ่มลงตะกร้า
-window.addToCart = function addToCart(){
-  const name  = (titleEl?.textContent || "เมนู").trim();
-  const image = imgEl?.getAttribute("src") || "";
+function computeUnitPrice() {
+  const extraEggs = (getInt(omeletInput) + getInt(friedInput)) * EXTRA_PRICE;
+  return BASE_PRICE + getSizeExtra() + extraEggs;
+}
 
-  const { label:sizeLabel, extra:sizeExtra } = getSize();
-  const omeQty = parseInt(omeletEl.value || "0", 10) || 0;
-  const friQty = parseInt(friedEl.value  || "0", 10) || 0;
-  const qtyMain= getMainQty();
-  const note   = (noteEl?.value || "").trim();
+function computeTotal() {
+  return computeUnitPrice() * (parseInt(qtyMain.textContent, 10) || 1);
+}
 
-  const item = {
-    id: Date.now(),
-    name,
-    price: BASE_PRICE,          // ราคาฐาน
-    qty: qtyMain,               // จำนวนจานหลัก
-    image,
-    size: sizeLabel,            // "ปกติ" | "พิเศษ"
-    sizeExtra,                  // 0 หรือ 10
-    addons: [
-      ...(omeQty > 0 ? [{ name:"ไข่เจียว", price: ADDON_PRICE, qty: omeQty }] : []),
-      ...(friQty > 0 ? [{ name:"ไข่ดาว",  price: ADDON_PRICE, qty: friQty  }] : []),
-    ],
-    note
-  };
+// ====== RENDER PRICE ======
+function renderPrice() {
+  const total = computeTotal();
+  priceEl.textContent = `฿${total.toLocaleString("th-TH")}`;
+}
 
-  const cart = loadCart();
-  const sig = signatureOf(item);
-  const existIdx = cart.findIndex(x => signatureOf(x) === sig);
-  if (existIdx >= 0) {
-    cart[existIdx].qty += item.qty;
-  } else {
-    cart.push(item);
-  }
-  saveCart(cart);
+// ====== QTY HANDLERS ======
+function chg(id, step) {
+  const el = document.getElementById(id);
+  el.value = clamp(getInt(el) + step);
+  renderPrice();
+}
+window.chg = chg; // ให้ปุ่มใน HTML เรียกใช้ได้
 
-  alert("เพิ่มลงตะกร้าแล้ว!");
-  window.location.href = "Summary.html";
-};
+btnMinusMain.addEventListener("click", () => {
+  const now = clamp((parseInt(qtyMain.textContent, 10) || 1) - 1, 1);
+  qtyMain.textContent = now;
+  renderPrice();
+});
 
-mainMinus?.addEventListener("click", () => { setMainQty(getMainQty()-1); updateTotal(); });
-mainPlus ?.addEventListener("click", () => { setMainQty(getMainQty()+1); updateTotal(); });
+btnPlusMain.addEventListener("click", () => {
+  const now = clamp((parseInt(qtyMain.textContent, 10) || 1) + 1, 1);
+  qtyMain.textContent = now;
+  renderPrice();
+});
 
+// เมื่อเปลี่ยน ปกติ/พิเศษ ให้คำนวณใหม่
 document.querySelectorAll('input[name="size"]').forEach(r =>
-  r.addEventListener("change", updateTotal)
+  r.addEventListener("change", renderPrice)
 );
 
-updateTotal();
+// คำนวณราคาเริ่มต้น
+renderPrice();
+
+// ====== ADD TO CART ======
+function addToCart() {
+  const name = document.getElementById("item-title").textContent.trim();
+  const sizeLabel = getSizeLabel();
+  const note = (document.getElementById("note").value || "").trim();
+  const qty = parseInt(qtyMain.textContent, 10) || 1;
+
+  const extras = {
+    "ไข่เจียว": getInt(omeletInput),
+    "ไข่ดาว": getInt(friedInput)
+  };
+
+  const unitPrice = computeUnitPrice(); // ราคารายการต่อจาน (รวมพิเศษ/ไข่แล้ว)
+  const item = {
+    id: Date.now(),     // ไว้ลบ/อัปเดต
+    name,
+    size: sizeLabel,
+    qty,
+    price: unitPrice,   // เก็บเป็น "ราคาต่อหน่วย" จะสะดวกต่อการคิดรวม
+    img: IMG_PATH,
+    note,
+    extras // เก็บ breakdown ของไข่เพื่อแสดงผล
+  };
+
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  cart.push(item);
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // ไปหน้าสรุป
+  window.location.href = "Summary.html";
+}
+window.addToCart = addToCart;
