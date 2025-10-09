@@ -27,7 +27,8 @@
     }
 
     // ===== Consts =====
-    var STORAGE_KEY = 'simple_cart_v1';
+    // ใช้ key เดียวกับ Summary.js
+    var STORAGE_KEY = 'cart';
     var MENU_ID_FALLBACK = 'kapow_gai';
 
     var NORMAL_SPECIAL = [
@@ -80,34 +81,34 @@
       kapow_gai:{id:'kapow_gai',name:'ผัดกะเพราไก่',img:'kapowgai.webp',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       kapow_shrimp:{id:'kapow_shrimp',name:'ผัดกะเพรากุ้ง',img:'kapowkung.jpg',base:65,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 8..10 พริกแกง (ไข่ดาว/ไข่เจียว)
+      // 8..10 พริกแกง
       prikgaeng_pork:{id:'prikgaeng_pork',name:'ผัดพริกแกงหมู',img:'prikkang moo.jpg',base:45,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       prikgaeng_chicken:{id:'prikgaeng_chicken',name:'ผัดพริกแกงไก่',img:'prikkang gai.webp',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       prikgaeng_beef:{id:'prikgaeng_beef',name:'ผัดพริกแกงเนื้อ',img:'prikkang beef.webp',base:60,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 11..14 ผัดผัก (ไข่ดาว/ไข่เจียว)
+      // 11..14 ผัดผัก
       kana_moogrob:{id:'kana_moogrob',name:'ผัดคะน้าหมูกรอบ',img:'kanamukob.jpg',base:60,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       khaenang_moogrob:{id:'khaenang_moogrob',name:'ผัดแขนงหมูกรอบ',img:'kanangmukob.jpg',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       morning_glory:{id:'morning_glory',name:'ผัดผักบุ้ง',img:'padpakbung.jpeg',base:45,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       mixed_veg:{id:'mixed_veg',name:'ผัดผักรวม',img:'padpakruam.jpg',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 15..17 ผงกะหรี่ (ไข่ดาว/ไข่เจียว)
+      // 15..17 ผงกะหรี่
       curry_squid:{id:'curry_squid',name:'ผัดผงกะหรี่ปลาหมึก',img:'pongkaree pamuk.jpg',base:70,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       curry_shrimp:{id:'curry_shrimp',name:'ผัดผงกะหรี่กุ้ง',img:'pongkaree kung.jpg',base:65,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       curry_chicken:{id:'curry_chicken',name:'ผัดผงกะหรี่ไก่',img:'pongkaree gai.jpg',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 18..22 กระเทียม/น้ำมันหอย/พริกหยวก (ไข่ดาว/ไข่เจียว)
+      // 18..22 กระเทียม/น้ำมันหอย/พริกหยวก
       garlic_pork:{id:'garlic_pork',name:'หมูกระเทียม',img:'moo kateam.jpg',base:45,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       garlic_chicken:{id:'garlic_chicken',name:'ไก่กระเทียม',img:'gai kateam.jpg',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       oyster_pork:{id:'oyster_pork',name:'หมูผัดน้ำมันหอย',img:'moo nammanhoi.jpg',base:45,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       chilipork_caps:{id:'chilipork_caps',name:'หมูผัดพริกหยวก',img:'moo pikyuak.jpg',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       chilichicken_caps:{id:'chilichicken_caps',name:'ไก่ผัดพริกหยวก',img:'gai prikyuak.jpg',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 23..24 เปรี้ยวหวาน (ไข่ดาว/ไข่เจียว)
+      // 23..24 เปรี้ยวหวาน
       sweet_sour_pork:{id:'sweet_sour_pork',name:'ผัดเปรี้ยวหวานหมู',img:'preawwanmoo.jpg',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       sweet_sour_fish:{id:'sweet_sour_fish',name:'ผัดเปรี้ยวหวานปลา',img:'preawwanfish.webp',base:70,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 25..28 ขี้เมา (ไข่ดาว/ไข่เจียว)
+      // 25..28 ขี้เมา
       kee_mao_pork:{id:'kee_mao_pork',name:'ผัดขี้เมาหมู',img:'keemao moo.jpg',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       kee_mao_chicken:{id:'kee_mao_chicken',name:'ผัดขี้เมาไก่',img:'keemao gai.jpg',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       kee_mao_beef:{id:'kee_mao_beef',name:'ผัดขี้เมาเนื้อ',img:'keemao beef.jpg',base:65,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
@@ -122,13 +123,13 @@
       omelet_pork:{id:'omelet_pork',name:'ไข่เจียวหมูสับ',img:'kaijeaw moosub.jpg',base:45,sizes:NORMAL_SPECIAL},
       omelet_crab:{id:'omelet_crab',name:'ไข่เจียวปู',img:'kaijeaw poo.jpg',base:80,sizes:NORMAL_SPECIAL},
 
-      // 34..37 ข้าวผัด (ไข่ดาว/ไข่เจียว)
+      // 34..37 ข้าวผัด
       fried_rice_pork:{id:'fried_rice_pork',name:'ข้าวผัดหมู',img:'kaopad moo.jpg',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       fried_rice_shrimp:{id:'fried_rice_shrimp',name:'ข้าวผัดกุ้ง',img:'kaopadkung.png',base:65,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       fried_rice_sea:{id:'fried_rice_sea',name:'ข้าวผัดทะเล',img:'kaopad tale.jpg',base:70,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       fried_rice_canned_fish:{id:'fried_rice_canned_fish',name:'ข้าวผัดปลากระป๋อง',img:'kaopad papong.webp',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
 
-      // 38..40 เส้น/ราดหน้า/ผัดไทย (ไข่ดาว/ไข่เจียว)
+      // 38..40 เส้น/ราดหน้า/ผัดไทย
       pad_see_ew_pork:{id:'pad_see_ew_pork',name:'ผัดซีอิ๊วหมู',img:'padsiew moo.jpg',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       rad_na_pork:{id:'rad_na_pork',name:'ราดหน้าหมู',img:'radna moo.webp',base:55,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
       pad_thai_shrimp:{id:'pad_thai_shrimp',name:'ผัดไทยกุ้งสด',img:'padthai kungsod.webp',base:50,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},
@@ -269,34 +270,6 @@
     btnMinus.addEventListener('click', function(){ if (mainQty>1){ mainQty--; recalc(); } });
     btnPlus .addEventListener('click', function(){ if (mainQty<99){ mainQty++; recalc(); } });
 
-    // เพิ่มลงตะกร้า
-    window.addToCart = function(){
-      var noteEl = document.getElementById('note');
-      var note = noteEl ? (noteEl.value || '').trim() : '';
-
-      var radios = document.querySelectorAll('input[name="size"]');
-      var size = 'normal';
-      for (var i=0;i<radios.length;i++){ if (radios[i].checked){ size = radios[i].value; break; } }
-
-      var cart;
-      try{ cart = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ cart = {}; }
-      cart[currentMenu.id] = (cart[currentMenu.id] || 0) + mainQty;
-
-      try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-        localStorage.setItem('last_added_detail', JSON.stringify({
-          id: currentMenu.id,
-          name: currentMenu.name,
-          size: size,
-          note: note,
-          qty: mainQty,
-          timestamp: Date.now()
-        }));
-      }catch(e){}
-
-      window.location.href = 'Home.html';
-    };
-
     // ===== Init: pick menu + display =====
     var id = getMenuId();
     currentMenu = MENUS[id] || MENUS[MENU_ID_FALLBACK];
@@ -318,38 +291,76 @@
     renderSizes(currentMenu);
     renderAddons(currentMenu);
     recalc();
-    
+
+    // ====== ADD TO CART (รวมเมนูเดิม + รวมแอดออน) ======
+    window.addToCart = function () {
+      var noteEl = document.getElementById("note");
+      var note = noteEl ? noteEl.value.trim() : "";
+      var qty = mainQty;
+      var imgSrc = elImg ? elImg.src : "";
+      var name = currentMenu.name || "เมนู";
+
+      // ขนาด + ส่วนเพิ่มราคา
+      var size = 'normal';
+      var sizeExtra = getSizeExtra(currentMenu);
+
+      var r = document.querySelector('input[name="size"]:checked');
+      if (r) size = r.value || 'normal';
+
+      // แอดออน -> array {name, qty, price}
+      var addons = [];
+      (currentMenu.addons || []).forEach(function(ad){
+        var input = addonInputs[ad.id];
+        var q = input ? parseInt(input.value || '0', 10) : 0;
+        if (q > 0) addons.push({ name: ad.label, qty: q, price: ad.price || 0 });
+      });
+
+      // ราคาต่อหน่วย
+      var unit = (currentMenu.base || 0) + sizeExtra + addons.reduce(function(s,a){return s + (a.price||0)*(a.qty||0);}, 0);
+
+      // โหลด cart (array)
+      var cart = [];
+      try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e){ cart = []; }
+
+      // รวมรายการซ้ำ: ใช้ key จาก ชื่อ + ขนาด
+      var idx = cart.findIndex(function(it){
+        return (it.name === name) && (String(it.size||'normal') === String(size||'normal'));
+      });
+
+      if (idx > -1) {
+        // รวมจำนวน
+        cart[idx].qty = (cart[idx].qty || 0) + qty;
+        // รวมโน้ต (สะสมข้อความ ไม่ซ้ำ)
+        if (note) {
+          var notes = cart[idx].note ? cart[idx].note.split(', ').filter(Boolean) : [];
+          if (notes.indexOf(note) === -1) notes.push(note);
+          cart[idx].note = notes.join(', ');
+        }
+        // รวมแอดออน (ชื่อเดียวกันบวก qty)
+        cart[idx].addons = cart[idx].addons || [];
+        addons.forEach(function(nw){
+          var old = cart[idx].addons.find(function(a){ return a.name === nw.name; });
+          if (old) old.qty += nw.qty;
+          else cart[idx].addons.push(nw);
+        });
+        // อัปเดตราคาต่อหน่วยเป็นตัวล่าสุด (หรือจะคงเดิมก็ได้)
+        cart[idx].price = unit;
+      } else {
+        cart.push({
+          id: Date.now(),
+          name: name,
+          qty: qty,
+          size: size,
+          sizeExtra: sizeExtra,
+          price: unit,         // ราคาต่อหน่วย (Summary จะคิดรวมเอง)
+          image: imgSrc,
+          addons: addons,
+          note: note
+        });
+      }
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      window.location.href = "home.html";
+    };
   }
 })();
-// ====== ADD TO CART ======
-function addToCart() {
-  const name = document.getElementById("item-title").textContent.trim();
-  const sizeLabel = getSizeLabel();
-  const note = (document.getElementById("note").value || "").trim();
-  const qty = parseInt(qtyMain.textContent, 10) || 1;
-
-  const extras = {
-    "ไข่เจียว": getInt(omeletInput),
-    "ไข่ดาว": getInt(friedInput)
-  };
-
-  const unitPrice = computeUnitPrice(); // ราคารายการต่อจาน (รวมพิเศษ/ไข่แล้ว)
-  const item = {
-    id: Date.now(),     // ไว้ลบ/อัปเดต
-    name,
-    size: sizeLabel,
-    qty,
-    price: unitPrice,   // เก็บเป็น "ราคาต่อหน่วย" จะสะดวกต่อการคิดรวม
-    img: IMG_PATH,
-    note,
-    extras // เก็บ breakdown ของไข่เพื่อแสดงผล
-  };
-
-  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  cart.push(item);
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  // ไปหน้าสรุป
-  window.location.href = "Summary.html";
-}
-window.addToCart = addToCart;

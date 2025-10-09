@@ -140,33 +140,73 @@
 
     recalc(cfg);
 
-    // ----- addToCart -----
-    window.addToCart = function(){
-      var note = (document.getElementById('note').value || '').trim();
-      var addonSummary = {checks:[], radios:[]};
-      (cfg.checks||[]).forEach(c=>{ if(state.checks[c.id]) addonSummary.checks.push({id:c.id,label:c.label,price:c.price}); });
-      (cfg.radios||[]).forEach(rg=>{
-        var chosen = state.radios[rg.name];
-        var opt = (rg.options||[]).find(o=>o.value===chosen);
-        addonSummary.radios.push({group:rg.name,label:rg.label,choice: opt ? {value:opt.value,label:opt.label,price:opt.price}:null});
-      });
+// ====== ADD TO CART (เวอร์ชันรวมเมนูซ้ำ สำหรับของทานเล่น) ======
+window.addToCart = function(){
+  const note = (document.getElementById('note')?.value || '').trim();
+  const qtyMain = parseInt(document.getElementById('mainQty').textContent, 10) || 1;
+  const img = document.getElementById('food-photo')?.src || '';
+  const name = document.getElementById('item-title')?.textContent?.trim() || 'ของทานเล่น';
 
-      var unit = computeUnitPrice(cfg);
-      var cart = {};
-      try{ cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }catch{ cart = {}; }
-      var cid = state.id ? ('dessert_'+state.id) : ('dessert_'+(state.name||'item'));
-      cart[cid] = (cart[cid] || 0) + state.qtyMain;
+  // === เก็บแอดออนจาก checkbox + radio ===
+  const addons = [];
 
-      try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-        localStorage.setItem('last_added_detail', JSON.stringify({
-          id: cid, name: state.name, size: '-', // ไม่มี size
-          qty: state.qtyMain, unitPrice: unit, img: elImg.src,
-          note, addons: addonSummary, timestamp: Date.now()
-        }));
-      }catch{}
-      window.location.href = 'dessert.html';
-    };
+  // checkbox (ชีสดิป)
+  (cfg.checks || []).forEach(c => {
+    if (state.checks && state.checks[c.id]) {
+      addons.push({ name: c.label, qty: 1, price: c.price || 0 });
+    }
+  });
+
+  // radio (รสชาติ)
+  (cfg.radios || []).forEach(group => {
+    const chosenValue = state.radios ? state.radios[group.name] : null;
+    const opt = (group.options || []).find(o => o.value === chosenValue);
+    if (opt) {
+      addons.push({ name: `${group.label}: ${opt.label}`, qty: 1, price: opt.price || 0 });
+    }
+  });
+
+  // ราคาต่อหน่วย
+  const unitPrice = (typeof computeUnitPrice === 'function') ? computeUnitPrice(cfg) : (state.base || 0);
+
+  // โหลด cart เดิม
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  // รวมรายการชื่อเดียวกัน
+  const existing = cart.find(it => it.name === name);
+  if (existing) {
+    existing.qty = (existing.qty || 0) + qtyMain;
+
+    // รวม note
+    if (note) {
+      const notes = existing.note ? existing.note.split(', ').filter(Boolean) : [];
+      if (!notes.includes(note)) notes.push(note);
+      existing.note = notes.join(', ');
+    }
+
+    // รวม addons
+    existing.addons = existing.addons || [];
+    addons.forEach(newAd => {
+      const same = existing.addons.find(a => a.name === newAd.name);
+      if (same) same.qty += newAd.qty;
+      else existing.addons.push(newAd);
+    });
+
+  } else {
+    cart.push({
+      id: Date.now(),
+      name,
+      qty: qtyMain,
+      price: unitPrice,
+      image: img,
+      addons,
+      note
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  window.location.href = "dessert.html";
+};
 
     // ----- renderers -----
     function renderAddons(cfg){
