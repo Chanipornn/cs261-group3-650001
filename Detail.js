@@ -171,7 +171,6 @@
       return id;
     }
 
-    // อ่าน “XX บาท” จาก pending_add ถ้ามี → override base
     function applyPriceFromPending(menu){
       try{
         var p = JSON.parse(localStorage.getItem('pending_add') || 'null');
@@ -236,6 +235,23 @@
       el.value = String(v);
       recalc();
     });
+
+    function addToCart() {
+        // ดึงข้อมูลจากหน้า
+        const title = document.getElementById("item-title").innerText;
+        const note = document.getElementById("note").value || "-";
+        const qty = parseInt(document.getElementById("mainQty").innerText);
+        const total = document.getElementById("totalPrice").innerText;
+      
+        // สร้างอ็อบเจ็กต์สำหรับเก็บข้อมูล
+        const order = {
+          title: title,
+          quantity: qty,
+          note: note,
+          total: total
+        };
+      }
+      
 
     function getSizeExtra(menu){
       var radios = document.querySelectorAll('input[name="size"]');
