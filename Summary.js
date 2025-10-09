@@ -34,6 +34,14 @@ const CONFIG = {
     localStorage.setItem("cart", JSON.stringify(CONFIG.DEMO_CART));
     return CONFIG.DEMO_CART;
   }
+
+  // คำนวณราคาต่อรายการ = (ราคาฐาน + ค่าส่วนเพิ่มขนาด + ราคารวมท็อปปิ้ง) * qty
+function calcLineTotal(item){
+    const base = Number(item.price || 0);
+    const sizeExtra = Number(item.sizeExtra || 0);
+    const addonsTotal = (item.addons || []).reduce((s,a)=> s + (Number(a.price||0) * Number(a.qty||0)), 0);
+    return (base + sizeExtra + addonsTotal) * Number(item.qty || 0);
+  }  
   
   /* โหลด cart:
    *  - ถ้า CONFIG.API_CART_URL มีค่า => fetch จาก backend
@@ -53,9 +61,9 @@ const CONFIG = {
     localStorage.setItem("cart", JSON.stringify(cart));
   }
   
-// RENDER: วาดการ์ดสินค้า + ปุ่มควบคุมจำนวน (+ / − / ลบ)
-// - ตอนยังไม่มี backend: อ่าน/เขียนกับ localStorage
-// - ถ้ามี backend: ส่วนควบคุมจำนวนจะไปเรียก API ใน wireQtyActions()
+// วาดการ์ดสินค้า + ปุ่มควบคุมจำนวน (+ / − / ลบ)
+// ตอนยังไม่มี backend: อ่าน/เขียนกับ localStorage
+// ถ้ามี backend: ส่วนควบคุมจำนวนจะไปเรียก API ใน wireQtyActions()
 function renderCart(cart) {
     const list = document.querySelector(".menu-list");
     const totalEl = document.getElementById("grand-total");
@@ -85,30 +93,39 @@ function renderCart(cart) {
   
     // วาดการ์ดทีละชิ้น
     cart.forEach((item, idx) => {
-      const lineTotal = (item.qty || 0) * (item.price || 0);
-      grand += lineTotal;
+        const lineTotal = calcLineTotal(item);
+        grand += lineTotal;        
   
-      // รองรับทั้ง path ภาพแบบสัมพัทธ์และแบบ URL http(s)
-      const imgSrc = item.image
+        const imgSrc = item.image
         ? (isHttpUrl(item.image) || item.image.startsWith("/") ? item.image : `./${item.image}`)
         : "images/placeholder.jpg";
-  
-      // id สำหรับจับ DOM/อัปเดต (ถ้าไม่มี id ใช้ name หรือ index)
+      
       const domId = String(item.id ?? item.name ?? idx);
-  
+      
+      // สร้างรายการท็อปปิ้งแสดงผลแบบย่อ
+      const addonsView = (item.addons || [])
+        .filter(a => Number(a.qty||0) > 0)
+        .map(a => `${a.name} ×${a.qty} (+${toTHB(a.price*a.qty)})`)
+        .join(" · ");
+      
+      const sizeView = item.size ? `${item.size}${item.sizeExtra ? ` (+${toTHB(item.sizeExtra)})` : ""}` : "";
+      
       const card = htmlel(`
         <div class="menu-item" data-id="${domId}">
           <div class="menu-img">
             <img src="${imgSrc}" alt="${item.name || "เมนู"}">
           </div>
-  
+      
           <div class="menu-name">
             <span>${item.name || "เมนู"}</span>
+            ${sizeView ? `<p>ขนาด: ${sizeView}</p>` : ""}
+            ${addonsView ? `<p class="extras">เพิ่ม: ${addonsView}</p>` : ""}
+            ${item.note ? `<p class="note">หมายเหตุ: ${item.note}</p>` : ""}
+      
             <p>จำนวน: <strong class="qty">${item.qty || 0}</strong></p>
             <p>ราคา: <strong class="line-total">${toTHB(lineTotal)}</strong></p>
           </div>
-  
-          <!-- แผงควบคุมจำนวน -->
+      
           <div class="qty-actions">
             <button class="qty-btn minus" data-action="minus" data-id="${domId}">−</button>
             <span class="qty-count">${item.qty || 0}</span>
@@ -117,6 +134,7 @@ function renderCart(cart) {
           </div>
         </div>
       `);
+      
   
       list.appendChild(card);
     });
@@ -142,8 +160,6 @@ function renderCart(cart) {
     });
   }
   
-// ACTION: จัดการคลิกปุ่ม + / − / ลบ บนการ์ด (Event Delegation)
-// - ตอนยังไม่มี backend: อัปเดตที่ localStorage -> render ใหม่
 // - ถ้ามี backend: เปลี่ยนส่วน TODO ให้ fetch API แล้วค่อยโหลด cart ใหม่
 function wireQtyActions() {
     const list = document.querySelector(".menu-list");
