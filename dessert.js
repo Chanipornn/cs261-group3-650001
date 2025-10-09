@@ -128,15 +128,6 @@
       if (!menuItem) return;
       const id = String(menuItem.dataset.id);
 
-      // ข้อยกเว้น: ถ้าเป็นข้าวสวย (data-id === "1") ให้เพิ่มจำนวนทันที
-      if (id === '1') {
-        cart[id] = (cart[id] || 0) + 1;
-        updateItemUI(menuItem, id);
-        saveCart();
-        updateCartBadge();
-        return;
-      }
-
       // เมนูอื่น ๆ ให้ไปหน้า detail (เก็บ pending_add ก่อน)
       goToDetailPageFor(menuItem);
       return;
