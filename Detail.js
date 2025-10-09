@@ -49,24 +49,32 @@
 
     // ===== Image helpers =====
     function getImgBase() {
-      try {
-        var b = (localStorage.getItem('img_base') || '').replace(/\\/g,'/');
-        if (b && !/\/$/.test(b)) b += '/';
-        return b;
-      } catch(e){ return ''; }
-    }
-    function resolveImgSmart(raw) {
-      var s = String(raw || '').trim().replace(/\\/g,'/'); // normalize slash
-      if (!s) return '';
-      if (/^(https?:)?\/\//.test(s) || /^data:/.test(s) || s.startsWith('/')) return s;
-      if (s.indexOf('/') !== -1) {
-        return s.split('/').map(encodeURIComponent).join('/');
+        try {
+          var viaAttr = (document.body && document.body.getAttribute('data-imgbase')) || '';
+          if (viaAttr) {
+            var b1 = viaAttr.replace(/\\/g,'/');
+            if (b1 && !/\/$/.test(b1)) b1 += '/';
+            return b1;
+          }
+          var b = (localStorage.getItem('img_base') || '').replace(/\\/g,'/');
+          if (b && !/\/$/.test(b)) b += '/';
+          return b;
+        } catch(e){ return ''; }
       }
-      var base = getImgBase() || 'src/img-oneDishMeal/';
-      if (!base.endsWith('/')) base += '/';
-      var joined = base + s;
-      return joined.split('/').map(encodeURIComponent).join('/');
-    }
+      
+      function resolveImgSmart(raw) {
+        var s = String(raw || '').trim().replace(/\\/g,'/');
+        if (!s) return '';
+        if (/^(https?:)?\/\//.test(s) || /^data:/.test(s) || s.startsWith('/')) return s;
+        if (s.indexOf('/') !== -1) {
+          return s.split('/').map(encodeURIComponent).join('/');
+        }
+        var base = getImgBase() || 'src/img-oneDishMeal/'; // จะกลายเป็น beverage/dessert ตามหน้า
+        if (!base.endsWith('/')) base += '/';
+        var joined = base + s;
+        return joined.split('/').map(encodeURIComponent).join('/');
+      }
+      
 
     // ===== MENUS 1–50 (เต็ม) =====
     var MENUS = {
@@ -162,14 +170,13 @@
     function toTH(n){ return Number(n).toLocaleString('th-TH'); }
 
     function getMenuId() {
-      var urlId = null;
-      try { urlId = new URLSearchParams(window.location.search).get('id'); } catch(e){}
-      var pending = null;
-      try { pending = JSON.parse(localStorage.getItem('pending_add') || 'null'); } catch(e){}
-      var id = urlId || (pending ? pending.id : null) || MENU_ID_FALLBACK;
-      if (!MENUS[id]) { console.warn('[Detail] Unknown id:', id, '→ fallback to', MENU_ID_FALLBACK); id = MENU_ID_FALLBACK; }
-      return id;
-    }
+        var urlId = null;
+        try { urlId = new URLSearchParams(window.location.search).get('id'); } catch(e){}
+        var id = urlId || MENU_ID_FALLBACK;
+        if (!MENUS[id]) id = MENU_ID_FALLBACK;
+        return id;
+      }
+  
 
     function applyPriceFromPending(menu){
       try{
@@ -234,24 +241,7 @@
       if (v<0) v=0; if (v>5) v=5;
       el.value = String(v);
       recalc();
-    });
-
-    function addToCart() {
-        // ดึงข้อมูลจากหน้า
-        const title = document.getElementById("item-title").innerText;
-        const note = document.getElementById("note").value || "-";
-        const qty = parseInt(document.getElementById("mainQty").innerText);
-        const total = document.getElementById("totalPrice").innerText;
-      
-        // สร้างอ็อบเจ็กต์สำหรับเก็บข้อมูล
-        const order = {
-          title: title,
-          quantity: qty,
-          note: note,
-          total: total
-        };
-      }
-      
+    });   
 
     function getSizeExtra(menu){
       var radios = document.querySelectorAll('input[name="size"]');
@@ -289,6 +279,11 @@
     // ===== Init: pick menu + display =====
     var id = getMenuId();
     currentMenu = MENUS[id] || MENUS[MENU_ID_FALLBACK];
+    elTitle.textContent = currentMenu.name;
+    elImg.src = resolveImgSmart(currentMenu.img);
+    elImg.alt = currentMenu.name;
+
+    recalc();
 
     // ถ้า Home ส่ง “XX บาท” มากับ pending_add → override base
     applyPriceFromPending(currentMenu);
@@ -309,74 +304,55 @@
     recalc();
 
     // ====== ADD TO CART (รวมเมนูเดิม + รวมแอดออน) ======
+
     window.addToCart = function () {
-      var noteEl = document.getElementById("note");
-      var note = noteEl ? noteEl.value.trim() : "";
-      var qty = mainQty;
-      var imgSrc = elImg ? elImg.src : "";
-      var name = currentMenu.name || "เมนู";
-
-      // ขนาด + ส่วนเพิ่มราคา
-      var size = 'normal';
-      var sizeExtra = getSizeExtra(currentMenu);
-
-      var r = document.querySelector('input[name="size"]:checked');
-      if (r) size = r.value || 'normal';
-
-      // แอดออน -> array {name, qty, price}
-      var addons = [];
-      (currentMenu.addons || []).forEach(function(ad){
-        var input = addonInputs[ad.id];
-        var q = input ? parseInt(input.value || '0', 10) : 0;
-        if (q > 0) addons.push({ name: ad.label, qty: q, price: ad.price || 0 });
-      });
-
-      // ราคาต่อหน่วย
-      var unit = (currentMenu.base || 0) + sizeExtra + addons.reduce(function(s,a){return s + (a.price||0)*(a.qty||0);}, 0);
-
-      // โหลด cart (array)
-      var cart = [];
-      try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e){ cart = []; }
-
-      // รวมรายการซ้ำ: ใช้ key จาก ชื่อ + ขนาด
-      var idx = cart.findIndex(function(it){
-        return (it.name === name) && (String(it.size||'normal') === String(size||'normal'));
-      });
-
-      if (idx > -1) {
-        // รวมจำนวน
-        cart[idx].qty = (cart[idx].qty || 0) + qty;
-        // รวมโน้ต (สะสมข้อความ ไม่ซ้ำ)
-        if (note) {
-          var notes = cart[idx].note ? cart[idx].note.split(', ').filter(Boolean) : [];
-          if (notes.indexOf(note) === -1) notes.push(note);
-          cart[idx].note = notes.join(', ');
+        var noteEl = document.getElementById("note");
+        var note = noteEl ? noteEl.value.trim() : "";
+        var qty = mainQty;
+  
+        var imgBase = getImgBase() || "src/img-oneDishMeal/";
+        if (!imgBase.endsWith("/")) imgBase += "/";
+        var imgFile = currentMenu.img || "";
+  
+        var name = currentMenu.name || "เมนู";
+        var size = "normal";
+        var sizeExtra = getSizeExtra(currentMenu);
+  
+        var r = document.querySelector('input[name="size"]:checked');
+        if (r) size = r.value || "normal";
+  
+        var addons = [];
+        (currentMenu.addons || []).forEach(function (ad) {
+          var input = addonInputs[ad.id];
+          var q = input ? parseInt(input.value || "0", 10) : 0;
+          if (q > 0) addons.push({ name: ad.label, qty: q, price: ad.price || 0 });
+        });
+  
+        var unit = (currentMenu.base || 0) + sizeExtra + addons.reduce((s, a) => s + (a.price || 0) * (a.qty || 0), 0);
+  
+        var cart = [];
+        try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch (e) {}
+  
+        var idx = cart.findIndex(it => it.name === name && it.size === size);
+        if (idx > -1) {
+          cart[idx].qty += qty;
+        } else {
+          cart.push({
+            id: Date.now(),
+            name,
+            qty,
+            size,
+            sizeExtra,
+            price: unit,
+            imgBase,
+            image: imgFile,
+            addons,
+            note
+          });
         }
-        // รวมแอดออน (ชื่อเดียวกันบวก qty)
-        cart[idx].addons = cart[idx].addons || [];
-        addons.forEach(function(nw){
-          var old = cart[idx].addons.find(function(a){ return a.name === nw.name; });
-          if (old) old.qty += nw.qty;
-          else cart[idx].addons.push(nw);
-        });
-        // อัปเดตราคาต่อหน่วยเป็นตัวล่าสุด (หรือจะคงเดิมก็ได้)
-        cart[idx].price = unit;
-      } else {
-        cart.push({
-          id: Date.now(),
-          name: name,
-          qty: qty,
-          size: size,
-          sizeExtra: sizeExtra,
-          price: unit,         // ราคาต่อหน่วย (Summary จะคิดรวมเอง)
-          image: imgSrc,
-          addons: addons,
-          note: note
-        });
-      }
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-      window.location.href = "home.html";
-    };
-  }
-})();
+  
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        window.location.href = "summary.html"; // ✅ ไปหน้า summary
+      };
+    }
+  })();
