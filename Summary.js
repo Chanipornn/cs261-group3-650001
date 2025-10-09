@@ -35,7 +35,6 @@ const CONFIG = {
     return CONFIG.DEMO_CART;
   }
 
-  // คำนวณราคาต่อรายการ = (ราคาฐาน + ค่าส่วนเพิ่มขนาด + ราคารวมท็อปปิ้ง) * qty
 function calcLineTotal(item){
     const base = Number(item.price || 0);
     const sizeExtra = Number(item.sizeExtra || 0);
@@ -94,49 +93,51 @@ function renderCart(cart) {
     // วาดการ์ดทีละชิ้น
     cart.forEach((item, idx) => {
         const lineTotal = calcLineTotal(item);
-        grand += lineTotal;        
-  
+        grand += lineTotal;
+        
         const imgSrc = item.image
         ? (isHttpUrl(item.image) || item.image.startsWith("/") ? item.image : `./${item.image}`)
         : "images/placeholder.jpg";
-      
-      const domId = String(item.id ?? item.name ?? idx);
-      
-      // สร้างรายการท็อปปิ้งแสดงผลแบบย่อ
-      const addonsView = (item.addons || [])
+        
+        const domId = String(item.id ?? item.name ?? idx);
+
+        // สร้างรายการท็อปปิ้งแสดงผลแบบย่อ
+        const addonsView = (item.addons || [])
         .filter(a => Number(a.qty||0) > 0)
         .map(a => `${a.name} ×${a.qty} (+${toTHB(a.price*a.qty)})`)
         .join(" · ");
-      
-      const sizeView = item.size ? `${item.size}${item.sizeExtra ? ` (+${toTHB(item.sizeExtra)})` : ""}` : "";
-      
-      const card = htmlel(`
-        <div class="menu-item" data-id="${domId}">
-          <div class="menu-img">
+        
+        // แสดงขนาด (ปกติ/พิเศษ)
+        const sizeView = item.size ? `${item.size}${item.sizeExtra ? ` (+${toTHB(item.sizeExtra)})` : ""}` : "";
+        
+        // การ์ดสินค้าใหม่
+        const card = htmlel(`
+            <div class="menu-item" data-id="${domId}">
+            <div class="menu-img">
             <img src="${imgSrc}" alt="${item.name || "เมนู"}">
-          </div>
-      
-          <div class="menu-name">
+            </div>
+
+            <div class="menu-name">
             <span>${item.name || "เมนู"}</span>
             ${sizeView ? `<p>ขนาด: ${sizeView}</p>` : ""}
             ${addonsView ? `<p class="extras">เพิ่ม: ${addonsView}</p>` : ""}
             ${item.note ? `<p class="note">หมายเหตุ: ${item.note}</p>` : ""}
-      
+            
             <p>จำนวน: <strong class="qty">${item.qty || 0}</strong></p>
             <p>ราคา: <strong class="line-total">${toTHB(lineTotal)}</strong></p>
-          </div>
-      
-          <div class="qty-actions">
+            </div>
+
+            <div class="qty-actions">
             <button class="qty-btn minus" data-action="minus" data-id="${domId}">−</button>
             <span class="qty-count">${item.qty || 0}</span>
             <button class="qty-btn plus"  data-action="plus"  data-id="${domId}">+</button>
             <button class="delete-btn"    data-action="delete" data-id="${domId}">ลบ</button>
-          </div>
-        </div>
-      `);
-      
-  
-      list.appendChild(card);
+            </div>
+            </div>
+`);
+
+list.appendChild(card);
+
     });
   
     // อัปเดตราคารวมทั้งหมด
