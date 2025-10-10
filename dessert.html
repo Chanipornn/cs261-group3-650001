@@ -24,7 +24,7 @@
                  onclick="window.location.href='Summary.html'" 
                  style="cursor:pointer; filter: brightness(0) invert(1);"
             >
-
+            <span id="cartBadge" class="badge" aria-label="จำนวนในตะกร้า">0</span>
           </div>
         </div>
 
@@ -166,6 +166,35 @@
   
   <script src="dessert.js"></script>
   <script defer src="dessert.hook.js"></script>
+  <script type="module" src="js/cart.js" defer></script>
+
+  <script type="module">
+    import { addToCart, updateCartBadge } from './js/cart.js';
+  
+    function bindAddButtons(){
+      document.querySelectorAll('.menu-item').forEach(card => {
+        const id = card.dataset.id;                                      // id จาก data-id
+        const name = card.querySelector('p')?.textContent.trim() || '';  // ชื่อจาก <p> แรก
+        const priceText = card.querySelector('.price')?.textContent || '0';
+        const price = Number(priceText.replace(/[^\d.]/g, '')) || 0;     // ดึงตัวเลขจาก "40 บาท"
+        const image = card.querySelector('img')?.getAttribute('src') || '';
+  
+        const btn = card.querySelector('[data-action="add"]');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            addToCart({ id, name, price, image });
+          });
+        }
+      });
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();  // ให้ตัวเลขโชว์ทันทีที่เปิดหน้า
+      bindAddButtons();   // ผูกปุ่มทั้งหมด
+    });
+  </script>
+  
+
 </body>
 </html>
 

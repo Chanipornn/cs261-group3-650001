@@ -322,4 +322,29 @@ header {
   .categories button.active {
     background-color: #ddd8d8; 
   }
+
+  .cart-icon{
+    position: relative;
+    display: inline-block;     /* ให้ขนาดพอดีกับรูป */
+    line-height: 0;            /* กันช่องว่างแนวตั้ง */
+  }
+
+  .cart-icon .badge{
+    position: absolute;
+    right: -6px;
+    top: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    display: none;             /* ซ่อนตอน 0 ชิ้น */
+    align-items: center;
+    justify-content: center;
+    background: #ffd400;
+    color: #000;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  }
+
 }
