@@ -21,17 +21,21 @@
 
     // ---------- Helpers ----------
     function loadCart() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-      catch { return {}; }
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return {};
+        for (const k of Object.keys(data)) data[k] = Math.max(0, Number(data[k] || 0));
+        return data;
+      } catch { return {}; }
     }
-    function saveCart(cart) {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch {}
+    function saveCart(obj) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch {}
     }
     const cart = loadCart();
 
     function updateCartBadge() {
       if (!cartBadge) return;
-      const total = Object.values(cart).reduce((s, v) => s + (v||0), 0);
+      const total = Object.values(cart).reduce((s, v) => s + Number(v || 0), 0);
       cartBadge.style.display = total > 0 ? 'inline-block' : 'none';
       if (total > 0) cartBadge.textContent = String(total);
     }
@@ -39,18 +43,19 @@
     function createQtyControl(count) {
       const w = document.createElement('div');
       w.className = 'qty-control';
-      const minus = Object.assign(document.createElement('button'), { type:'button', className:'minus', textContent:'−' });
+      const minus = Object.assign(document.createElement('button'), { type:'button', className:'minus', textContent:'−', 'aria-label':'ลดจำนวน' });
       const span  = Object.assign(document.createElement('span'), { className:'count', textContent:String(count) });
-      const plus  = Object.assign(document.createElement('button'), { type:'button', className:'plus', textContent:'+' });
+      const plus  = Object.assign(document.createElement('button'), { type:'button', className:'plus', textContent:'+', 'aria-label':'เพิ่มจำนวน' });
       w.append(minus, span, plus);
       return w;
     }
 
     function updateItemUI(itemEl, key) {
       const box = itemEl.querySelector('.image-box') || itemEl;
+      if (!box) return;
       const addBtn = box.querySelector('.add-btn');
       const qtyCtl = box.querySelector('.qty-control');
-      const count = cart[key] || 0;
+      const count = Number(cart[key] || 0);
 
       if (count > 0) {
         if (!qtyCtl) {
@@ -58,7 +63,8 @@
           if (addBtn) addBtn.remove();
           box.appendChild(qc);
         } else {
-          qtyCtl.querySelector('.count').textContent = String(count);
+          const c = qtyCtl.querySelector('.count');
+          if (c) c.textContent = String(count);
         }
       } else {
         if (!addBtn) {
@@ -66,20 +72,22 @@
           btn.className = 'add-btn';
           btn.dataset.action = 'add';
           btn.textContent = '+';
+          btn.setAttribute('role', 'button');
+          btn.setAttribute('aria-label', 'เพิ่มลงตะกร้า');
           if (qtyCtl) qtyCtl.remove();
           box.appendChild(btn);
-        } else {
-          if (qtyCtl) qtyCtl.remove();
+        } else if (qtyCtl) {
+          qtyCtl.remove();
         }
       }
     }
 
-    // ---------- Normalize + ทำ absolute URL ----------
+    // ---------- Normalize + absolute URL ----------
     function normalizeImg(path){
       if (!path) return '';
-      const s = String(path).replace(/\\/g,'/'); // \ -> /
+      const s = String(path).trim().replace(/\\/g,'/');
+      if (/^data:/.test(s)) return s; // data URI
       if (/^(https?:)?\/\//.test(s) || s.startsWith('/')) {
-        // ทำ absolute ถ้ายังเป็น // หรือ / เฉย ๆ
         try { return new URL(s, window.location.href).href; } catch { return s; }
       }
       const encoded = s.split('/').map(seg => /%/.test(seg) ? seg : encodeURIComponent(seg)).join('/');
@@ -88,11 +96,13 @@
 
     // ---------- Go to Detail ----------
     function goToDessertDetail(menuItem) {
+      if (!menuItem) return;
       const idStr     = String(menuItem.getAttribute('data-id') || '').trim();
+      if (!idStr) return;
       const name      = (menuItem.querySelector('p')?.textContent || '').trim();
       const priceText = (menuItem.querySelector('.price')?.textContent || '').trim();
       const imgRaw    = menuItem.querySelector('img')?.getAttribute('src') || '';
-      const imageAbs  = normalizeImg(imgRaw); // << absolute
+      const imageAbs  = normalizeImg(imgRaw);
 
       try { localStorage.removeItem('pending_add'); } catch {}
       try {
@@ -103,12 +113,16 @@
         console.warn('[DessertHook] set pending_add failed:', e);
       }
 
+      // ใช้ pending_add เป็นแหล่งความจริง → ไม่ต้องส่ง id ใน query ก็ได้
+      // (ถ้าอยากส่งด้วยก็ใช้: dessertdetail.html?id=${encodeURIComponent(idStr)})
       window.location.href = 'dessertdetail.html?t=' + Date.now(); // กัน cache
     }
 
     // ---------- Init tiles ----------
     document.querySelectorAll('.menu-item').forEach(mi => {
-      const key = mi.getAttribute('data-id'); // ใช้เลข 1..14 เป็น key ของ cart
+      const key = String(mi.getAttribute('data-id') || '');
+      if (!key) return;
+
       if (!(key in cart)) cart[key] = 0;
       updateItemUI(mi, key);
 
@@ -119,13 +133,15 @@
         if (fixed) img.setAttribute('src', fixed);
       }
 
-      // ให้คลิกได้ทั้งกรอบ/รูป/ชื่อ
+      // ผูกคลิกเฉพาะ element ที่ตั้งใจ เพื่อไม่ให้ trigger ซ้ำซ้อน
       const imgBox = mi.querySelector('.image-box');
       const nameEl = mi.querySelector('p');
-      [mi, imgBox, img, nameEl].forEach(el => {
+
+      [imgBox, nameEl].forEach(el => {
         if (!el) return;
         el.style.cursor = 'pointer';
         el.addEventListener('click', function (ev) {
+          // กันกรณีคลิกซ้อนบนปุ่ม/ตัวควบคุมจำนวน
           if (ev.target.closest('.add-btn') || ev.target.closest('.qty-control')) return;
           goToDessertDetail(mi);
         });
@@ -145,8 +161,9 @@
       const plus = e.target.closest('.qty-control .plus');
       if (plus) {
         const mi  = plus.closest('.menu-item');
-        const key = mi.getAttribute('data-id');
-        cart[key] = (cart[key] || 0) + 1;
+        const key = String(mi?.getAttribute('data-id') || '');
+        if (!key) return;
+        cart[key] = (Number(cart[key]) || 0) + 1;
         updateItemUI(mi, key); saveCart(cart); updateCartBadge();
         return;
       }
@@ -154,8 +171,9 @@
       const minus = e.target.closest('.qty-control .minus');
       if (minus) {
         const mi  = minus.closest('.menu-item');
-        const key = mi.getAttribute('data-id');
-        cart[key] = Math.max(0, (cart[key] || 0) - 1);
+        const key = String(mi?.getAttribute('data-id') || '');
+        if (!key) return;
+        cart[key] = Math.max(0, (Number(cart[key]) || 0) - 1);
         updateItemUI(mi, key); saveCart(cart); updateCartBadge();
         return;
       }
@@ -179,7 +197,9 @@
       Object.keys(cart).forEach(k => delete cart[k]);
       Object.assign(cart, fresh || {});
       document.querySelectorAll('.menu-item').forEach(mi => {
-        updateItemUI(mi, mi.getAttribute('data-id'));
+        const id = String(mi.getAttribute('data-id') || '');
+        if (!id) return;
+        updateItemUI(mi, id);
       });
       updateCartBadge();
     });

@@ -19,15 +19,20 @@
     var btnPlus    = document.getElementById('mainPlus');
     if (!elTitle || !elImg || !addonsWrap || !elMainQty || !totalPrice || !btnMinus || !btnPlus) return;
 
-    var STORAGE_KEY = 'simple_cart_v1';
+    var STORAGE_KEY = 'simple_cart_v1';          // (ไม่ใช้ในไฟล์นี้ แต่เผื่ออนาคต)
+    var CART_ARRAY_KEY = 'cart';                 // เก็บตะกร้าแบบ array สำหรับ Summary
     var DEFAULT_BASE_PRICE = 39;
+    var DEFAULT_IMG_PLACEHOLDER = 'img/placeholder.webp';
 
     function toTH(n){ return Number(n).toLocaleString('th-TH'); }
 
-    // ----- pending -----
+    // ----- pending / URL fallback -----
     var pending = null;
     try { pending = JSON.parse(localStorage.getItem('pending_add') || 'null'); } catch {}
-    var idStr = String(pending?.id || '').trim();
+    var urlId = null;
+    try { urlId = new URLSearchParams(location.search).get('id'); } catch {}
+    var idStr = String((pending && pending.id) || urlId || '').trim();
+
     var basePrice = DEFAULT_BASE_PRICE;
     if (pending?.priceText) {
       var n = parseInt(String(pending.priceText).replace(/\D+/g,''),10);
@@ -126,8 +131,7 @@
 
     // ----- render title & image -----
     elTitle.textContent = state.name;
-    // ลองโหลดหลายแบบ ถ้าไม่ได้ค่อยใช้ placeholder
-    tryLoadImage(elImg, state.img, 'img/placeholder.webp');
+    tryLoadImage(elImg, state.img, DEFAULT_IMG_PLACEHOLDER);
     elImg.alt = state.name || 'ของทานเล่น';
 
     // ----- render addons -----
@@ -140,73 +144,87 @@
 
     recalc(cfg);
 
-// ====== ADD TO CART (เวอร์ชันรวมเมนูซ้ำ สำหรับของทานเล่น) ======
-window.addToCart = function(){
-  const note = (document.getElementById('note')?.value || '').trim();
-  const qtyMain = parseInt(document.getElementById('mainQty').textContent, 10) || 1;
-  const img = document.getElementById('food-photo')?.src || '';
-  const name = document.getElementById('item-title')?.textContent?.trim() || 'ของทานเล่น';
+    // ====== ADD TO CART (รวมเมนูซ้ำ + แจ้งหน้า list ผ่าน pending_add) ======
+    window.addToCart = function(){
+      const note = (document.getElementById('note')?.value || '').trim();
+      const qtyMain = parseInt(document.getElementById('mainQty').textContent, 10) || 1;
+      const img = document.getElementById('food-photo')?.src || '';
+      const name = document.getElementById('item-title')?.textContent?.trim() || 'ของทานเล่น';
 
-  // === เก็บแอดออนจาก checkbox + radio ===
-  const addons = [];
+      // === เก็บแอดออนจาก checkbox + radio ===
+      const addons = [];
 
-  // checkbox (ชีสดิป)
-  (cfg.checks || []).forEach(c => {
-    if (state.checks && state.checks[c.id]) {
-      addons.push({ name: c.label, qty: 1, price: c.price || 0 });
-    }
-  });
+      // checkbox
+      (cfg.checks || []).forEach(c => {
+        if (state.checks && state.checks[c.id]) {
+          addons.push({ name: c.label, qty: 1, price: c.price || 0 });
+        }
+      });
 
-  // radio (รสชาติ)
-  (cfg.radios || []).forEach(group => {
-    const chosenValue = state.radios ? state.radios[group.name] : null;
-    const opt = (group.options || []).find(o => o.value === chosenValue);
-    if (opt) {
-      addons.push({ name: `${group.label}: ${opt.label}`, qty: 1, price: opt.price || 0 });
-    }
-  });
+      // radio (รสชาติ)
+      (cfg.radios || []).forEach(group => {
+        const chosenValue = state.radios ? state.radios[group.name] : null;
+        const opt = (group.options || []).find(o => o.value === chosenValue);
+        if (opt) {
+          addons.push({ name: `${group.label}: ${opt.label}`, qty: 1, price: opt.price || 0 });
+        }
+      });
 
-  // ราคาต่อหน่วย
-  const unitPrice = (typeof computeUnitPrice === 'function') ? computeUnitPrice(cfg) : (state.base || 0);
+      // ราคาต่อหน่วย
+      const unitPrice = (typeof computeUnitPrice === 'function') ? computeUnitPrice(cfg) : (state.base || 0);
 
-  // โหลด cart เดิม
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      // โหลด cart เดิม (array)
+      let cartArr;
+      try {
+        const raw = localStorage.getItem(CART_ARRAY_KEY);
+        cartArr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(cartArr)) cartArr = [];
+      } catch { cartArr = []; }
 
-  // รวมรายการชื่อเดียวกัน
-  const existing = cart.find(it => it.name === name);
-  if (existing) {
-    existing.qty = (existing.qty || 0) + qtyMain;
+      // รวมรายการชื่อเดียวกัน
+      const existing = cartArr.find(it => it.name === name);
+      if (existing) {
+        existing.qty = (existing.qty || 0) + qtyMain;
 
-    // รวม note
-    if (note) {
-      const notes = existing.note ? existing.note.split(', ').filter(Boolean) : [];
-      if (!notes.includes(note)) notes.push(note);
-      existing.note = notes.join(', ');
-    }
+        if (note) {
+          const notes = existing.note ? existing.note.split(', ').filter(Boolean) : [];
+          if (!notes.includes(note)) notes.push(note);
+          existing.note = notes.join(', ');
+        }
 
-    // รวม addons
-    existing.addons = existing.addons || [];
-    addons.forEach(newAd => {
-      const same = existing.addons.find(a => a.name === newAd.name);
-      if (same) same.qty += newAd.qty;
-      else existing.addons.push(newAd);
-    });
+        existing.addons = existing.addons || [];
+        addons.forEach(newAd => {
+          const same = existing.addons.find(a => a.name === newAd.name);
+          if (same) same.qty += newAd.qty;
+          else existing.addons.push(newAd);
+        });
 
-  } else {
-    cart.push({
-      id: Date.now(),
-      name,
-      qty: qtyMain,
-      price: unitPrice,
-      image: img,
-      addons,
-      note
-    });
-  }
+        existing.price = unitPrice; // อัปเดตราคาต่อหน่วยล่าสุด
+      } else {
+        cartArr.push({
+          id: Date.now(),
+          name,
+          qty: qtyMain,
+          price: unitPrice,   // ราคาต่อหน่วย
+          image: img,
+          addons,
+          note
+        });
+      }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  window.location.href = "dessert.html";
-};
+      try { localStorage.setItem(CART_ARRAY_KEY, JSON.stringify(cartArr)); } catch {}
+
+      // 💡 สำคัญ: แจ้งหน้า dessert.html ให้บวก badge/จำนวน ด้วย pending_add (id + qty)
+      try {
+        localStorage.setItem('pending_add', JSON.stringify({
+          id: idStr || (pending?.id || urlId || ''),  // ส่งคืน id ที่หน้า list ใช้เป็น key หรือใช้ reverse map
+          qty: qtyMain,
+          amount: qtyMain
+        }));
+      } catch {}
+
+      window.location.href = "dessert.html";
+    };
 
     // ----- renderers -----
     function renderAddons(cfg){
@@ -239,6 +257,7 @@ window.addToCart = function(){
         else if (t && t.type==='radio' && t.name) { state.radios[t.name]=t.value; recalc(cfg); }
       });
     }
+
     function computeUnitPrice(cfg){
       var sum = state.base;
       (cfg.checks||[]).forEach(c=>{ if(state.checks[c.id]) sum += (c.price||0); });
@@ -248,6 +267,7 @@ window.addToCart = function(){
       });
       return sum;
     }
+
     function recalc(cfg){
       var unit=computeUnitPrice(cfg);
       var total=unit*(state.qtyMain||1);

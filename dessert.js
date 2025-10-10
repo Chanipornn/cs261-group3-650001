@@ -1,22 +1,36 @@
 (function () {
   const STORAGE_KEY = 'simple_cart_v1';
   const menuList = document.querySelector('.menu-list');
-
   const cartBadge = document.querySelector('.cart-badge');
 
-  // loadCart ถูกประกาศก่อนใช้
+  // โหลด cart เป็น map: { [data-id]: number }
   function loadCart() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return {};
-      return JSON.parse(raw);
+      const data = JSON.parse(raw);
+      // ต้องเป็น object เท่านั้น
+      if (!data || typeof data !== 'object' || Array.isArray(data)) return {};
+      // บังคับทุกค่าเป็น number ≥ 0
+      for (const k of Object.keys(data)) {
+        data[k] = Math.max(0, Number(data[k] || 0));
+      }
+      return data;
     } catch (e) {
-      console.warn('โหลด cart ผิดพลาด, เริ่มใหม่:', e);
+      console.warn('[Dessert] โหลด cart ผิดพลาด, เริ่มใหม่:', e);
       return {};
     }
   }
 
   const cart = loadCart();
+
+  function saveCart() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    } catch (e) {
+      console.warn('[Dessert] ไม่สามารถบันทึก localStorage:', e);
+    }
+  }
 
   function createQtyControl(count) {
     const wrapper = document.createElement('div');
@@ -45,9 +59,11 @@
 
   function updateItemUI(itemEl, itemId) {
     const box = itemEl.querySelector('.image-box');
+    if (!box) return;
+
     const existingAdd = box.querySelector('.add-btn');
     const existingQty = box.querySelector('.qty-control');
-    const count = cart[itemId] || 0;
+    const count = Number(cart[itemId] || 0);
 
     if (count > 0) {
       if (!existingQty) {
@@ -55,7 +71,8 @@
         if (existingAdd) existingAdd.remove();
         box.appendChild(qtyControl);
       } else {
-        existingQty.querySelector('.count').textContent = String(count);
+        const cnt = existingQty.querySelector('.count');
+        if (cnt) cnt.textContent = String(count);
       }
     } else {
       if (!existingAdd) {
@@ -65,15 +82,15 @@
         addBtn.textContent = '+';
         if (existingQty) existingQty.remove();
         box.appendChild(addBtn);
-      } else {
-        if (existingQty) existingQty.remove();
+      } else if (existingQty) {
+        existingQty.remove();
       }
     }
   }
 
   function updateCartBadge() {
     if (!cartBadge) return;
-    const total = Object.values(cart).reduce((s, v) => s + v, 0);
+    const total = Object.values(cart).reduce((s, v) => s + Number(v || 0), 0);
     if (total > 0) {
       cartBadge.textContent = String(total);
       cartBadge.style.display = 'inline-block';
@@ -82,29 +99,21 @@
     }
   }
 
-  function saveCart() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-    } catch (e) {
-      console.warn('ไม่สามารถบันทึก localStorage:', e);
-    }
-  }
-
   // --- Initialize existing items & cart ---
   document.querySelectorAll('.menu-item').forEach(mi => {
-    const id = mi.dataset.id;
+    const id = String(mi.dataset.id || '');
+    if (!id) return;
     if (!(id in cart)) cart[id] = 0;
     updateItemUI(mi, id);
   });
   updateCartBadge();
 
-  // --- Helper: go to detail page for an item ---
+  // --- Helper: ไปหน้า dessertdetail พร้อมเก็บ pending_add ---
   function goToDetailPageFor(menuItem) {
-    const id = menuItem.dataset.id;
+    const id = String(menuItem.dataset.id || '');
     const name = (menuItem.querySelector('p') || {}).textContent || '';
     const priceText = (menuItem.querySelector('.price') || {}).textContent || '';
 
-    // เก็บข้อมูลชั่วคราวไว้ใช้ที่หน้า Detail (หรือหน้า add)
     try {
       localStorage.setItem('pending_add', JSON.stringify({
         id,
@@ -112,83 +121,76 @@
         priceText
       }));
     } catch (e) {
-      console.warn('ไม่สามารถเขียน pending_add:', e);
+      console.warn('[Dessert] ไม่สามารถเขียน pending_add:', e);
     }
 
-    // ไปยังหน้ารายละเอียด พร้อม query param id (Detail.html อ่าน id หรือ pending_add ได้)
     window.location.href = `dessertdetail.html?id=${encodeURIComponent(id)}`;
   }
 
   // --- Cart click handlers ---
-  menuList.addEventListener('click', function (e) {
-    // ถ้าคลิกที่ปุ่ม add (dataset action="add")
-    const addBtn = e.target.closest('[data-action="add"]');
-    if (addBtn) {
-      const menuItem = addBtn.closest('.menu-item');
-      if (!menuItem) return;
-      const id = String(menuItem.dataset.id);
+  if (menuList) {
+    menuList.addEventListener('click', function (e) {
+      // ปุ่ม add บนการ์ด → ไปหน้า detail (เพื่อเลือกตัวเลือก)
+      const addBtn = e.target.closest('[data-action="add"]');
+      if (addBtn) {
+        const menuItem = addBtn.closest('.menu-item');
+        if (!menuItem) return;
+        goToDetailPageFor(menuItem);
+        return;
+      }
 
-      // เมนูอื่น ๆ ให้ไปหน้า detail (เก็บ pending_add ก่อน)
-      goToDetailPageFor(menuItem);
-      return;
-    }
+      // กด + เพิ่มจำนวนทันที (สำหรับสินค้าไม่ต้องเลือกตัวเลือก)
+      const plus = e.target.closest('.qty-control .plus');
+      if (plus) {
+        const menuItem = plus.closest('.menu-item');
+        const id = String(menuItem?.dataset.id || '');
+        if (!id) return;
+        cart[id] = (Number(cart[id]) || 0) + 1;
+        updateItemUI(menuItem, id);
+        saveCart();
+        updateCartBadge();
+        return;
+      }
 
-    // กด + ที่ qty-control (ถ้ามี) ให้เพิ่ม
-    const plus = e.target.closest('.qty-control .plus');
-    if (plus) {
-      const menuItem = plus.closest('.menu-item');
-      const id = menuItem.dataset.id;
-      cart[id] = (cart[id] || 0) + 1;
-      updateItemUI(menuItem, id);
-      saveCart();
-      updateCartBadge();
-      return;
-    }
-
-    // กด - ที่ qty-control (ถ้ามี) ให้ลด
-    const minus = e.target.closest('.qty-control .minus');
-    if (minus) {
-      const menuItem = minus.closest('.menu-item');
-      const id = menuItem.dataset.id;
-      cart[id] = Math.max(0, (cart[id] || 0) - 1);
-      updateItemUI(menuItem, id);
-      saveCart();
-      updateCartBadge();
-      return;
-    }
-  });
+      // กด − ลดจำนวน
+      const minus = e.target.closest('.qty-control .minus');
+      if (minus) {
+        const menuItem = minus.closest('.menu-item');
+        const id = String(menuItem?.dataset.id || '');
+        if (!id) return;
+        cart[id] = Math.max(0, (Number(cart[id]) || 0) - 1);
+        updateItemUI(menuItem, id);
+        saveCart();
+        updateCartBadge();
+        return;
+      }
+    });
+  }
 
   // --- SEARCH: filter เมนูตามคีย์เวิร์ดใน input ---
   const searchInput = document.querySelector('.search-box input');
-
   if (searchInput) {
-    // ตัวกรองแบบเรียลไทม์: เมื่อพิมพ์ ให้โชว์เฉพาะเมนูที่ชื่อมีคำที่ค้นหา (ไม่สนตัวพิมพ์)
     searchInput.addEventListener('input', function (e) {
       const q = (e.target.value || '').trim().toLowerCase();
-
-      // วนทุกเมนู ถ้า match ให้โชว์ ถ้าไม่ match ให้ซ่อน
       document.querySelectorAll('.menu-item').forEach(menuItem => {
-        // สมมติชื่อเมนูอยู่ใน <p> แรกของ .menu-item
         const nameEl = menuItem.querySelector('p');
         const name = nameEl ? nameEl.textContent.trim().toLowerCase() : '';
-
-        if (q === '' || name.includes(q)) {
-          menuItem.style.display = ''; // แสดง (คืนค่า default)
-        } else {
-          menuItem.style.display = 'none'; // ซ่อน
-        }
+        menuItem.style.display = (q === '' || name.includes(q)) ? '' : 'none';
       });
     });
   }
 
-  // --- เมื่อกลับมาหน้าจาก history (back/forward) ให้รีโหลด cart จาก localStorage เพื่ออัปเดต UI ---
+  // --- เมื่อกลับจาก history: sync cart + อัปเดต UI ---
   window.addEventListener('pageshow', function () {
     const fresh = loadCart();
-    // คัดลอกค่าใหม่เข้า cart object ปัจจุบัน
-    Object.keys(cart).forEach(k => delete cart[k]); // ล้างเดิม
+    Object.keys(cart).forEach(k => delete cart[k]); // ล้างของเดิม
     Object.assign(cart, fresh || {});
-    // อัปเดต UI ทุกเมนู
-    document.querySelectorAll('.menu-item').forEach(mi => updateItemUI(mi, mi.dataset.id));
+
+    document.querySelectorAll('.menu-item').forEach(mi => {
+      const id = String(mi.dataset.id || '');
+      if (!id) return;
+      updateItemUI(mi, id);
+    });
     updateCartBadge();
   });
 
