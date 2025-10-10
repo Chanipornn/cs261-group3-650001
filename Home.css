@@ -29,13 +29,41 @@ body {
   height: 36px;
   cursor: pointer;
   transition: transform 0.2s ease;
-  position: relative;
-  top: -12px;
-  margin-left: 15px;
 }
 
 .cart-icon img:hover {
   transform: scale(1.08);
+}
+
+/* กล่องไอคอน = กรอบอ้างอิง + ขยับทั้งชุดทางขวาได้จากตรงนี้ */
+.cart-icon{
+  position: relative;
+  display: inline-flex;     /* ให้จัดกึ่งกลางแนวตั้งง่าย */
+  align-items: center;
+  margin-left: 15px;        /* ถ้าต้องการระยะจากข้างซ้าย ให้ใส่ที่ container */
+}
+
+/* ป้ายตัวเลข: เกาะมุมขวาบนของ container */
+.cart-icon .badge{
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);  /* ปรับให้ชิด/ห่างมุม */
+  z-index: 2;
+
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: none;                    /* โชว์ตอนจำนวน > 0 */
+  align-items: center;
+  justify-content: center;
+  background: #fff;                 /* เปลี่ยนสีได้ */
+  color: #000;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  border: 2px solid rgba(0,0,0,.06);
 }
 
 /* search-box */
@@ -340,29 +368,5 @@ header {
 
   .categories button.active {
     background-color: #ddd8d8; 
-  }
-
-  .cart-icon{
-    position: relative;
-    display: inline-block;     /* ให้ขนาดพอดีกับรูป */
-    line-height: 0;            /* กันช่องว่างแนวตั้ง */
-  }
-
-  .cart-icon .badge{
-    position: absolute;
-    right: -6px;
-    top: -6px;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
-    display: none;             /* ซ่อนตอน 0 ชิ้น */
-    align-items: center;
-    justify-content: center;
-    background: #ffd400;
-    color: #000;
-    font-weight: 700;
-    font-size: 12px;
-    border-radius: 999px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.15);
   }
 }
