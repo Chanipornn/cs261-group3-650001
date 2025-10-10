@@ -1,20 +1,20 @@
 // ถ้ามี backend ให้ใส่ URL API ไว้ตรงนี้
 const CONFIG = {
-    API_CART_URL: null,                 
-    API_CREATE_ORDER_URL: null,         
+    API_CART_URL: null,
+    API_CREATE_ORDER_URL: null,
   
-    // เส้นทางสำหรับหน้าถัดไป 
+    // เส้นทางสำหรับหน้าถัดไป
     ROUTES: {
       HOME: "home.html",
       SUCCESS: "successful.html",
-      FAIL: "unsuccessful.html"
+      FAIL: "unsuccessful.html",
     },
   
     // สำหรับทดสอบ (ตอนไม่มี backend)
     DEMO_CART: [
       { id: 1, name: "ต้มยำกุ้ง", price: 80, qty: 1, image: "img/tomyum.jpg" },
-      { id: 2, name: "ผัดไทยกุ้งสด", price: 60, qty: 2, image: "img/padthai.jpg" }
-    ]
+      { id: 2, name: "ผัดไทยกุ้งสด", price: 60, qty: 2, image: "img/padthai.jpg" },
+    ],
   };
   
   const toTHB = (n) => `${Number(n || 0).toLocaleString("th-TH")} บาท`;
@@ -29,23 +29,27 @@ const CONFIG = {
   function readCartFromLocalStorage() {
     const raw = localStorage.getItem("cart");
     if (raw) {
-      try { return JSON.parse(raw); } catch { /* ignore */ }
+      try {
+        return JSON.parse(raw);
+      } catch {
+        /* ignore */
+      }
     }
     localStorage.setItem("cart", JSON.stringify(CONFIG.DEMO_CART));
     return CONFIG.DEMO_CART;
   }
-
-function calcLineTotal(item){
+  
+  function calcLineTotal(item) {
     const base = Number(item.price || 0);
     const sizeExtra = Number(item.sizeExtra || 0);
-    const addonsTotal = (item.addons || []).reduce((s,a)=> s + (Number(a.price||0) * Number(a.qty||0)), 0);
+    const addonsTotal = (item.addons || []).reduce(
+      (s, a) => s + Number(a.price || 0) * Number(a.qty || 0),
+      0
+    );
     return (base + sizeExtra + addonsTotal) * Number(item.qty || 0);
-  }  
+  }
   
-  /* โหลด cart:
-   *  - ถ้า CONFIG.API_CART_URL มีค่า => fetch จาก backend
-   *  - ไม่งั้น => localStorage
-   */
+  /* โหลด cart */
   async function loadCart() {
     if (CONFIG.API_CART_URL) {
       const res = await fetch(CONFIG.API_CART_URL, { credentials: "include" });
@@ -55,15 +59,34 @@ function calcLineTotal(item){
     return readCartFromLocalStorage();
   }
   
-  /* บันทึก cart ลง localStorage (ใช้ตอนลบ/เปลี่ยน qty) */
+  /* บันทึก cart ลง localStorage */
   function saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }
   
-// วาดการ์ดสินค้า + ปุ่มควบคุมจำนวน (+ / − / ลบ)
-// ตอนยังไม่มี backend: อ่าน/เขียนกับ localStorage
-// ถ้ามี backend: ส่วนควบคุมจำนวนจะไปเรียก API ใน wireQtyActions()
-function renderCart(cart) {
+  /* ====================== IMAGE HELPERS ====================== */
+  const isAbsoluteUrl2 = (s) =>
+    /^(https?:|file:)/.test(s || "") || (s || "").startsWith("/");
+  
+  function safeJoin(base, file) {
+    const b = String(base || "").replace(/\\/g, "/");
+    const f = String(file || "").replace(/\\/g, "/");
+    if (!f) return "img/placeholder.webp";
+    if (isAbsoluteUrl2(f) || f.startsWith("./")) return f;
+    const parts = (b + (b.endsWith("/") ? "" : "/") + f).split("/");
+    return parts.map((p) => encodeURIComponent(p)).join("/");
+  }
+  
+  function buildImageSrc(item) {
+    const file = item.image || "";
+    const base = item.imgBase || "";
+    if (!file && !base) return "img/placeholder.webp";
+    if (isAbsoluteUrl2(file) || file.startsWith("./")) return file;
+    return safeJoin(base, file);
+  }
+  
+  /* ====================== แสดงตะกร้า ====================== */
+  function renderCart(cart) {
     const list = document.querySelector(".menu-list");
     const totalEl = document.getElementById("grand-total");
     const confirmBtn = document.querySelector(".confirm-btn");
@@ -84,76 +107,75 @@ function renderCart(cart) {
         `)
       );
       totalEl.textContent = toTHB(0);
-      if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.style.opacity = 0.7; }
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.style.opacity = 0.7;
+      }
       return;
     }
   
-    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.style.opacity = 1; }
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.style.opacity = 1;
+    }
   
     // วาดการ์ดทีละชิ้น
     cart.forEach((item, idx) => {
-        const lineTotal = calcLineTotal(item);
-        grand += lineTotal;
-        
-        const imgSrc = item.image
-        ? (isHttpUrl(item.image) || item.image.startsWith("/") ? item.image : `./${item.image}`)
-        : "images/placeholder.jpg";
-        
-        const domId = String(item.id ?? item.name ?? idx);
-
-        // สร้างรายการท็อปปิ้งแสดงผลแบบย่อ
-        const addonsView = (item.addons || [])
-        .filter(a => Number(a.qty||0) > 0)
-        .map(a => `${a.name} ×${a.qty} (+${toTHB(a.price*a.qty)})`)
+      const lineTotal = calcLineTotal(item);
+      grand += lineTotal;
+  
+      const imgSrc = buildImageSrc(item);
+      const domId = String(item.id ?? item.name ?? idx);
+  
+      const addonsView = (item.addons || [])
+        .filter((a) => Number(a.qty || 0) > 0)
+        .map((a) => `${a.name} ×${a.qty} (+${toTHB(a.price * a.qty)})`)
         .join(" · ");
-        
-        // แสดงขนาด (ปกติ/พิเศษ)
-        const sizeView = item.size ? `${item.size}${item.sizeExtra ? ` (+${toTHB(item.sizeExtra)})` : ""}` : "";
-        
-        // การ์ดสินค้าใหม่
-        const card = htmlel(`
-            <div class="menu-item" data-id="${domId}">
-            <div class="menu-img">
-            <img src="${imgSrc}" alt="${item.name || "เมนู"}">
-            </div>
-
-            <div class="menu-name">
+  
+      const sizeView = item.size
+        ? `${item.size}${
+            item.sizeExtra ? ` (+${toTHB(item.sizeExtra)})` : ""
+          }`
+        : "";
+  
+      const card = htmlel(`
+        <div class="menu-item" data-id="${domId}">
+          <div class="menu-img">
+            <img src="${imgSrc}" alt="${item.name || "เมนู"}"
+                 onerror="this.onerror=null;this.src='img/placeholder.webp';">
+          </div>
+  
+          <div class="menu-name">
             <span>${item.name || "เมนู"}</span>
             ${sizeView ? `<p>ขนาด: ${sizeView}</p>` : ""}
             ${addonsView ? `<p class="extras">เพิ่ม: ${addonsView}</p>` : ""}
             ${item.note ? `<p class="note">หมายเหตุ: ${item.note}</p>` : ""}
-            
             <p>จำนวน: <strong class="qty">${item.qty || 0}</strong></p>
             <p>ราคา: <strong class="line-total">${toTHB(lineTotal)}</strong></p>
-            </div>
-
-            <div class="qty-actions">
+          </div>
+  
+          <div class="qty-actions">
             <button class="qty-btn minus" data-action="minus" data-id="${domId}">−</button>
             <span class="qty-count">${item.qty || 0}</span>
-            <button class="qty-btn plus"  data-action="plus"  data-id="${domId}">+</button>
-            <button class="delete-btn"    data-action="delete" data-id="${domId}">ลบ</button>
-            </div>
-            </div>
-`);
-
-list.appendChild(card);
-
+            <button class="qty-btn plus" data-action="plus" data-id="${domId}">+</button>
+            <button class="delete-btn" data-action="delete" data-id="${domId}">ลบ</button>
+          </div>
+        </div>
+      `);
+  
+      list.appendChild(card);
     });
   
-    // อัปเดตราคารวมทั้งหมด
     totalEl.textContent = toTHB(grand);
     return grand;
   }
   
-  
-  /* =========[ ย้อนกลับ / ยืนยัน ]========= */
+  /* =========[ ปุ่มย้อนกลับ / ยืนยัน ]========= */
   function wireBackButton() {
     const backBtn = document.querySelector(".back-btn");
     if (!backBtn) return;
     backBtn.addEventListener("click", () => {
-      // ถ้ามีหน้า Home ให้ใช้เส้นทางนั้น แทน history.back()
       if (CONFIG.ROUTES.HOME) {
-        // history.length > 1 ? history.back() : (location.href = CONFIG.ROUTES.HOME);
         location.href = CONFIG.ROUTES.HOME;
       } else {
         history.back();
@@ -161,8 +183,7 @@ list.appendChild(card);
     });
   }
   
-// - ถ้ามี backend: เปลี่ยนส่วน TODO ให้ fetch API แล้วค่อยโหลด cart ใหม่
-function wireQtyActions() {
+  function wireQtyActions() {
     const list = document.querySelector(".menu-list");
     if (!list) return;
   
@@ -170,56 +191,41 @@ function wireQtyActions() {
       const btn = e.target.closest("button[data-action]");
       if (!btn) return;
   
-      const action = btn.dataset.action; // "plus" | "minus" | "delete"
+      const action = btn.dataset.action;
       const targetId = btn.dataset.id;
   
-      // ====== แบบไม่มี backend (default) ======
-      // อ่าน/แก้/บันทึกใน localStorage
       let cart = readCartFromLocalStorage();
-      const idx = cart.findIndex(it => String(it.id ?? it.name) === String(targetId));
+      const idx = cart.findIndex(
+        (it) => String(it.id ?? it.name) === String(targetId)
+      );
       if (idx === -1) return;
   
       if (action === "plus") {
         cart[idx].qty = (cart[idx].qty || 0) + 1;
       } else if (action === "minus") {
         cart[idx].qty = (cart[idx].qty || 0) - 1;
-        if (cart[idx].qty <= 0) cart.splice(idx, 1); // ถ้าจำนวน <= 0 ลบทิ้ง
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
       } else if (action === "delete") {
         cart.splice(idx, 1);
       }
   
       saveCart(cart);
       renderCart(cart);
-  
-      // ====== TODO: ถ้ามี backend ให้แทนที่บล็อกด้านบนด้วยการเรียก API ======
-      // ตัวอย่าง (สมมติ endpoint):
-      // if (CONFIG.API_CART_URL) {
-      //   try {
-      //     if (action === "plus")   await fetch(`${CONFIG.API_CART_URL}/${targetId}/qty`, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ delta:+1 }) });
-      //     if (action === "minus")  await fetch(`${CONFIG.API_CART_URL}/${targetId}/qty`, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ delta:-1 }) });
-      //     if (action === "delete") await fetch(`${CONFIG.API_CART_URL}/${targetId}`,      { method: "DELETE" });
-      //     const fresh = await loadCart();   // ดึง cart ล่าสุดจาก backend
-      //     renderCart(fresh);
-      //   } catch(err){ console.error(err); }
-      // }
     });
   }
   
-
   async function submitOrder(cart, grandTotal) {
-    // ถ้ามี API สำหรับสร้างคำสั่งซื้อ => POST
     if (CONFIG.API_CREATE_ORDER_URL) {
       const res = await fetch(CONFIG.API_CREATE_ORDER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ items: cart, total: grandTotal })
+        body: JSON.stringify({ items: cart, total: grandTotal }),
       });
       if (!res.ok) throw new Error(`สั่งซื้อไม่สำเร็จ: ${res.status}`);
-      return await res.json(); // สมมติ backend ส่ง { orderId, status } กลับมา
+      return await res.json();
     }
   
-    // ถ้าไม่มี backend: จำลอง 85% สำเร็จ
     const success = Math.random() < 0.85;
     return { status: success ? "success" : "fail" };
   }
@@ -229,20 +235,20 @@ function wireQtyActions() {
     if (!btn) return;
   
     btn.addEventListener("click", async () => {
-      btn.disabled = true; btn.style.opacity = 0.7;
+      btn.disabled = true;
+      btn.style.opacity = 0.7;
   
       try {
-        const cart = await cartProvider();        // อ่าน cart ล่าสุด (เผื่อมีแก้ qty ในอนาคต)
-        const grand = cart.reduce((s, it) => s + (it.price || 0) * (it.qty || 0), 0);
+        const cart = await cartProvider();
+        const grand = cart.reduce(
+          (s, it) => s + (it.price || 0) * (it.qty || 0),
+          0
+        );
   
         const result = await submitOrder(cart, grand);
   
         if (result.status === "success") {
-
-          // ล้าง cart ฝั่ง front (เฉพาะเคสไม่มี backend)
           if (!CONFIG.API_CREATE_ORDER_URL) localStorage.removeItem("cart");
-          
-          // แนบยอดรวมไปหน้า success (ผ่าน query string)
           const url = new URL(CONFIG.ROUTES.SUCCESS, location.href);
           url.searchParams.set("total", grand);
           location.href = url.toString();
@@ -253,8 +259,10 @@ function wireQtyActions() {
         console.error(err);
         location.href = CONFIG.ROUTES.FAIL;
       } finally {
-        // ปล่อยปุ่ม (กันกรณีเปลี่ยนใจไม่ออกหน้าใหม่)
-        setTimeout(() => { btn.disabled = false; btn.style.opacity = 1; }, 600);
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.style.opacity = 1;
+        }, 600);
       }
     });
   }
@@ -263,10 +271,13 @@ function wireQtyActions() {
   document.addEventListener("DOMContentLoaded", async () => {
     wireBackButton();
   
-    // provider: โหลด cart ใหม่เสมอก่อน submit
     const getCart = async () => {
-      try { return await loadCart(); }
-      catch (e) { console.error(e); return []; }
+      try {
+        return await loadCart();
+      } catch (e) {
+        console.error(e);
+        return [];
+      }
     };
   
     try {
