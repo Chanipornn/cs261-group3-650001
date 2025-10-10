@@ -68,6 +68,9 @@
       return joined.split('/').map(encodeURIComponent).join('/');
     }
 
+    var mainQty = 1;
+
+
     // ===== MENUS 1–50 (เต็ม) =====
     var MENUS = {
       // 1
