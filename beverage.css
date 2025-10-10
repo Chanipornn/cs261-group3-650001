@@ -275,6 +275,24 @@ header {
     border-radius: 10px;
   }
 
+  .categories {
+    display: flex;
+    justify-content: space-between; 
+    gap: 6px;                       
+    padding: 8px;
+  }
+
+  .categories button {
+    display: flex;              
+    justify-content: center;    
+    align-items: center;       
+    text-align: center;        
+    padding: 10px 20px;         
+    white-space: nowrap;        
+    box-sizing: border-box;
+  }
+  
+
   
   
   
