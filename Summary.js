@@ -6,7 +6,7 @@ const CONFIG = {
     // เส้นทางสำหรับหน้าถัดไป
     ROUTES: {
       HOME: "home.html",
-      SUCCESS: "successful.html",
+      SUCCESS: "received.html",
       FAIL: "unsuccessful.html",
     },
   
