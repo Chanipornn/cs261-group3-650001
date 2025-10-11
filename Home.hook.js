@@ -1,7 +1,7 @@
 (function () {
-  const STORAGE_KEY = 'simple_cart_v1';
+  const CART_KEY = 'cart'; // ✅ ใช้ cart เดียวกับ Summary
   const menuList = document.querySelector('.menu-list');
-  const cartBadge = document.querySelector('.cart-badge');
+  const cartBadge = document.getElementById('cartBadge');
 
   const MENU_ID_MAP = {
     "1":"rice_plain","2":"kapow_moosub","3":"kapow_moodeng","4":"kapow_squid","5":"kapow_moogrob",
@@ -17,109 +17,35 @@
     "50":"khao_tom_fish"
   };
 
-  // ==============================
-  // 🛒 LocalStorage Cart
-  // ==============================
-  const cart = loadCart();
-
+  // ✅ ใช้ cart array
   function loadCart() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
+      const raw = localStorage.getItem(CART_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
     } catch (e) {
-      console.warn('โหลด cart ผิดพลาด, เริ่มใหม่:', e);
-      return {};
+      console.warn('[Home] โหลด cart ผิดพลาด:', e);
+      return [];
     }
   }
 
-  function saveCart() {
+  function saveCart(cart) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
     } catch (e) {
-      console.warn('ไม่สามารถบันทึก localStorage:', e);
+      console.warn('[Home] บันทึก cart ผิดพลาด:', e);
     }
   }
 
   function updateCartBadge() {
     if (!cartBadge) return;
-    const total = Object.values(cart).reduce((s, v) => s + v, 0);
-    cartBadge.style.display = total > 0 ? 'inline-block' : 'none';
+    const cart = loadCart();
+    const total = cart.reduce((s, item) => s + Number(item.qty || 0), 0);
+    cartBadge.style.display = total > 0 ? 'inline-flex' : 'none';
     if (total > 0) cartBadge.textContent = String(total);
   }
 
-  // ==============================
-  // 🧩 UI สลับ Add / Qty
-  // ==============================
-  function createQtyControl(count) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'qty-control';
-
-    const btnMinus = document.createElement('button');
-    btnMinus.type = 'button';
-    btnMinus.className = 'minus';
-    btnMinus.textContent = '-';
-
-    const span = document.createElement('span');
-    span.className = 'count';
-    span.textContent = String(count);
-
-    const btnPlus = document.createElement('button');
-    btnPlus.type = 'button';
-    btnPlus.className = 'plus';
-    btnPlus.textContent = '+';
-
-    wrapper.appendChild(btnMinus);
-    wrapper.appendChild(span);
-    wrapper.appendChild(btnPlus);
-
-    return wrapper;
-  }
-
-  function updateItemUI(itemEl, itemId) {
-    const box = itemEl.querySelector('.image-box');
-    if (!box) return;
-
-    const existingAdd = box.querySelector('.add-btn');
-    const existingQty = box.querySelector('.qty-control');
-    const count = cart[itemId] || 0;
-
-    if (count > 0) {
-      if (!existingQty) {
-        const qty = createQtyControl(count);
-        if (existingAdd) existingAdd.remove();
-        box.appendChild(qty);
-      } else {
-        const cntEl = existingQty.querySelector('.count');
-        if (cntEl) cntEl.textContent = String(count);
-      }
-    } else {
-      if (!existingAdd) {
-        const addBtn = document.createElement('div');
-        addBtn.className = 'add-btn';
-        addBtn.dataset.action = 'add';
-        addBtn.textContent = '+';
-        if (existingQty) existingQty.remove();
-        box.appendChild(addBtn);
-      } else {
-        if (existingQty) existingQty.remove();
-      }
-    }
-  }
-
-  // ==============================
-  // 📦 โหลดครั้งแรก
-  // ==============================
-  document.querySelectorAll('.menu-item').forEach(mi => {
-    const id = mi.dataset.id;
-    if (!(id in cart)) cart[id] = 0;
-    updateItemUI(mi, id);
-  });
-
-  updateCartBadge();
-
-  // ==============================
-  // 🔗 ไปหน้า Detail
-  // ==============================
+  // ✅ ไปหน้า Detail (ไม่มีปุ่ม +/- แล้ว)
   function goToDetailPageFor(menuItem) {
     const id = String(menuItem.dataset.id);
     const menuId = MENU_ID_MAP[id];
@@ -130,23 +56,25 @@
 
     const name = (menuItem.querySelector('p') || {}).textContent || '';
     const priceText = (menuItem.querySelector('.price') || {}).textContent || '';
+    const imgSrc = menuItem.querySelector('img')?.getAttribute('src') || '';
 
     try {
       localStorage.setItem('pending_add', JSON.stringify({
         id: menuId,
         name: name.trim(),
-        priceText: priceText.trim()
+        priceText: priceText.trim(),
+        image: imgSrc
       }));
     } catch (e) {
-      console.warn('ไม่สามารถเขียน pending_add:', e);
+      console.warn('[Home] ไม่สามารถเขียน pending_add:', e);
     }
 
     window.location.href = `Detail.html?id=${encodeURIComponent(menuId)}`;
   }
 
-  // ==============================
-  // 🖱 จัดการคลิก Add / + / −
-  // ==============================
+  updateCartBadge();
+
+  // ✅ กด + → ไป Detail ทันที (ไม่มีปุ่ม +/- บนการ์ด)
   if (menuList) {
     menuList.addEventListener('click', function (e) {
       const addBtn = e.target.closest('[data-action="add"]');
@@ -156,32 +84,10 @@
         goToDetailPageFor(menuItem);
         return;
       }
-
-      const plus = e.target.closest('.qty-control .plus');
-      if (plus) {
-        const menuItem = plus.closest('.menu-item');
-        if (!menuItem) return;
-        goToDetailPageFor(menuItem);
-        return;
-      }
-
-      const minus = e.target.closest('.qty-control .minus');
-      if (minus) {
-        const menuItem = minus.closest('.menu-item');
-        if (!menuItem) return;
-        const id = String(menuItem.dataset.id);
-        cart[id] = Math.max(0, (cart[id] || 0) - 1);
-        updateItemUI(menuItem, id);
-        saveCart();
-        updateCartBadge();
-        return;
-      }
     });
   }
 
-  // ==============================
-  // 🔍 ค้นหาเมนู
-  // ==============================
+  // ✅ ค้นหาเมนู
   const searchInput = document.querySelector('.search-box input');
   if (searchInput) {
     searchInput.addEventListener('input', function (e) {
@@ -194,24 +100,14 @@
     });
   }
 
-  // ==============================
-  // ♻️ รีเฟรชหน้าจอเมื่อกลับจาก Detail (แก้บั๊กจำนวนเพิ่มเอง)
-  // ==============================
+  // ✅ รีเฟรชเมื่อกลับจาก Detail
   window.addEventListener('pageshow', function () {
     try {
-      const fresh = loadCart();
-      Object.keys(cart).forEach(k => delete cart[k]);
-      Object.assign(cart, fresh || {});
-
-      // ✅ ไม่เพิ่มจำนวนอัตโนมัติจาก pending_add อีกต่อไป
-      // ❌ ตัดส่วน auto increment ออก
       localStorage.removeItem('pending_add');
-
-      document.querySelectorAll('.menu-item').forEach(mi => updateItemUI(mi, mi.dataset.id));
       updateCartBadge();
-      console.log('[pageshow] cart refreshed (no auto increment)');
+      console.log('[Home] cart badge refreshed');
     } catch (e) {
-      console.error('[pageshow] unexpected error', e);
+      console.error('[Home] pageshow error', e);
     }
   });
 })();
