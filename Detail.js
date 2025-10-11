@@ -370,7 +370,18 @@
         });
       }
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+
+      // ✅ แจ้งหน้า Home ให้เด้งเลขบนการ์ด
+      try {
+        localStorage.setItem('pending_add', JSON.stringify({
+          id: currentMenu.id,    // ใช้ id ของเมนู (เช่น 'kapow_gai')
+          qty: qty,
+          amount: qty
+        }));
+      } catch {}
+
+      window.location.href = "home.html";
       window.location.href = "home.html";
     };
   }
