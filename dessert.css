@@ -29,6 +29,7 @@ body {
   height: 36px;
   cursor: pointer;
   transition: transform 0.2s ease;
+  margin-top: -20px;
 }
 
 .cart-icon img:hover {
