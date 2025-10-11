@@ -73,8 +73,16 @@
 
     // ===== MENUS 1–50 (เต็ม) =====
     var MENUS = {
-      // 1
-      rice_plain:{id:'rice_plain',name:'ข้าวสวย',img:'kaosuay.png',base:10,sizes:NORMAL_SPECIAL},
+      rice_plain: {
+  id:'rice_plain',
+  name:'ข้าวสวย',
+  img:'kaosuay.png',
+  base:10,
+  sizes:[
+    { key:'normal', label:'จานธรรมดา', price:0 },
+    { key:'bowl', label:'เสิร์ฟเป็นโถ (+40 บาท)', price:40 }
+  ]
+},
 
       // 2..7 กะเพรา (ไข่ดาว/ไข่เจียว)
       kapow_moosub:{id:'kapow_moosub',name:'ผัดกะเพราหมูสับ',img:'padkrapaomoosap.avif',base:45,sizes:NORMAL_SPECIAL,addons:ADDON_EGG_FRY},

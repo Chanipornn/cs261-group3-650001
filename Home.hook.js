@@ -153,15 +153,6 @@
       if (addBtn) {
         const menuItem = addBtn.closest('.menu-item');
         if (!menuItem) return;
-        const id = String(menuItem.dataset.id);
-        const menuId = MENU_ID_MAP[id];
-        if (menuId === 'rice_plain') {
-          cart[id] = (cart[id] || 0) + 1;
-          updateItemUI(menuItem, id);
-          saveCart();
-          updateCartBadge();
-          return;
-        }
         goToDetailPageFor(menuItem);
         return;
       }
@@ -170,18 +161,8 @@
       if (plus) {
         const menuItem = plus.closest('.menu-item');
         if (!menuItem) return;
-        const id = String(menuItem.dataset.id);
-        const menuId = MENU_ID_MAP[id];
-        if (menuId === 'rice_plain') {
-          cart[id] = (cart[id] || 0) + 1;
-          updateItemUI(menuItem, id);
-          saveCart();
-          updateCartBadge();
-          return;
-        } else {
-          goToDetailPageFor(menuItem);
-          return;
-        }
+        goToDetailPageFor(menuItem);
+        return;
       }
 
       const minus = e.target.closest('.qty-control .minus');
@@ -214,50 +195,21 @@
   }
 
   // ==============================
-  // ♻️ รีเฟรชหน้าจอเมื่อกลับจาก Detail
+  // ♻️ รีเฟรชหน้าจอเมื่อกลับจาก Detail (แก้บั๊กจำนวนเพิ่มเอง)
   // ==============================
   window.addEventListener('pageshow', function () {
     try {
       const fresh = loadCart();
       Object.keys(cart).forEach(k => delete cart[k]);
       Object.assign(cart, fresh || {});
-      console.log('[pageshow] loaded cart', cart);
 
-      const pendingRaw = localStorage.getItem('pending_add');
-      if (pendingRaw) {
-        try {
-          const pending = JSON.parse(pendingRaw);
-          console.log('[pageshow] pending_add', pending);
-
-          const pendingIdRaw = pending.id || '';
-          const qty = Math.max(1, Number(pending.qty || pending.amount || 1));
-          let menuIdKey = null;
-
-          if (String(pendingIdRaw) in cart) {
-            menuIdKey = String(pendingIdRaw);
-          } else {
-            menuIdKey = Object.keys(MENU_ID_MAP).find(k => MENU_ID_MAP[k] === String(pendingIdRaw));
-          }
-
-          if (menuIdKey) {
-            cart[menuIdKey] = (cart[menuIdKey] || 0) + qty;
-            saveCart();
-            console.log('[pageshow] incremented', menuIdKey, qty);
-          } else {
-            console.warn('[pageshow] ไม่พบ mapping สำหรับ pending.id=', pendingIdRaw);
-          }
-
-          localStorage.removeItem('pending_add');
-        } catch (e) {
-          console.warn('pending_add parse error', e, pendingRaw);
-          try { localStorage.removeItem('pending_add'); } catch (_) {}
-        }
-      } else {
-        console.log('[pageshow] no pending_add');
-      }
+      // ✅ ไม่เพิ่มจำนวนอัตโนมัติจาก pending_add อีกต่อไป
+      // ❌ ตัดส่วน auto increment ออก
+      localStorage.removeItem('pending_add');
 
       document.querySelectorAll('.menu-item').forEach(mi => updateItemUI(mi, mi.dataset.id));
       updateCartBadge();
+      console.log('[pageshow] cart refreshed (no auto increment)');
     } catch (e) {
       console.error('[pageshow] unexpected error', e);
     }
