@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TU Reatuarant Helper</title>
+
+  <link rel="stylesheet" href="beverage.css">
+</head>
+<body>
+
+    <header>
+        <div class="top-bar">
+          <div class="search-box">
+            <input type="text" placeholder="ค้นหาเมนู...">
+              <button class="search-btn" aria-label="ค้นหา">
+                <img src="src\Icon\search-interface-symbol.png" alt="" />
+              </button>
+          </div>
+          <div class="cart-icon">
+            <img src="src\Icon\shopping-cart.png" 
+                 alt="Cart Icon" 
+                 onclick="window.location.href='Summary.html'" 
+                 style="cursor:pointer; filter: brightness(0) invert(1);"
+            >
+            <span id="cartBadge" class="badge" aria-label="จำนวนในตะกร้า">0</span>
+
+          </div>
+
+
+          
+        </div>
+
+        <div class="categories">
+          <button onclick="window.location.href='Home.html'">อาหารจานเดียว</button>
+          <button class="active" onclick="window.location.href='beverage.html'">เครื่องดื่ม</button>
+          <button onclick="window.location.href='dessert.html'">ของทานเล่น</button>
+        </div>
+  </header>
+
+  <section class="menu-list">
+    <div class="menu-item" data-id="1">
+      <div class="image-box">
+        <img src="src/img-beverage/น้ำทิพย์.jpeg" alt="น้ำเปล่า">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>น้ำเปล่า</p>
+      <p class="price">10 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="2">
+      <div class="image-box">
+        <img src="src/img-beverage/pepsi.webp" alt="เป๊ปซี่">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>เป๊ปซี่</p>
+      <p class="price">25 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="3">
+      <div class="image-box">
+        <img src="src/img-beverage/4277_Strawberry Lime Soda.jpg" alt="สตอเบอรี่โซดา">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>สตอเบอรี่โซดา</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="4">
+      <div class="image-box">
+        <img src="src/img-beverage/blue hawaii.jpg" alt="บลูฮาวายโซดา">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>บลูฮาวายโซดา</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="5">
+      <div class="image-box">
+        <img src="src/img-beverage/แดงโซดาสอง.webp" alt="แดงโซดา">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>แดงโซดา</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="6">
+      <div class="image-box">
+        <img src="src/img-beverage/พีช1.jpg" alt="ชาพีช">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ชาพีช</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="7">
+      <div class="image-box">
+        <img src="src/img-beverage/ลิ้นจี่.webp" alt="ลิ้นจี่">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ลิ้นจี่</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="8">
+      <div class="image-box">
+        <img src="src/img-beverage/ชามะนาว.jpg" alt="ชามะนาว">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ชามะนาว</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="9">
+      <div class="image-box">
+        <img src="src/img-beverage/แอปเปิ้ล.avif" alt="ชาแอปเปิ้ล">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ชาแอปเปิ้ล</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="10">
+      <div class="image-box">
+        <img src="src/img-beverage/ชาไทย.jpg" alt="ชาไทย">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ชาไทย</p>
+      <p class="price">40 บาท</p>
+    </div>
+
+    <div class="menu-item" data-id="11">
+      <div class="image-box">
+        <img src="src/img-beverage/ชาเขียว.webp" alt="ชาเขียว">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ชาเขียว</p>
+      <p class="price">40 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="12">
+      <div class="image-box">
+        <img src="src/img-beverage/โอเลี้ยง.webp" alt="โอเลี้ยง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>โอเลี้ยง</p>
+      <p class="price">40 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="13">
+      <div class="image-box">
+        <img src="src/img-beverage/โอวัลติน.jpg" alt="โอวัลติน">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>โอวัลติน</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="14">
+      <div class="image-box">
+        <img src="src/img-beverage/กาแฟ.jpg" alt="กาแฟโบราณ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>กาแฟโบราณ</p>
+      <p class="price">40 บาท</p>
+    </div>
+    
+  </section>
+  
+  
+  <script src="beverage.js" defer></script>
+  <script src="beveragedetail.js" defer></script>
+  <script type="module" src="js/cart.js" defer></script>
+
+  <script>
+    (function(){
+      const CART_KEY = 'tu_cart';
+      const readCart  = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+      const writeCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
+      const cartCount = (c) => c.reduce((s,i)=> s + (Number(i.qty)||0), 0);
+    
+      function updateCartBadge(){
+        const badge = document.getElementById('cartBadge');
+        if(!badge) return;
+        const n = cartCount(readCart());
+        badge.textContent = n;
+        badge.style.display = n > 0 ? 'inline-flex' : 'none';
+      }
+    
+      function addFromCard(btn){
+        const card = btn.closest('.menu-item');
+        if(!card) return;
+        const id = card.dataset.id;
+        const name = card.querySelector('p')?.textContent.trim() || '';
+        const priceTxt = card.querySelector('.price')?.textContent || '0';
+        const price = Number(priceTxt.replace(/[^\d.]/g,'')) || 0;
+        const image = card.querySelector('img')?.getAttribute('src') || '';
+    
+        const cart = readCart();
+        const f = cart.find(x => String(x.id) === String(id));
+        if (f) f.qty += 1; else cart.push({ id, name, price, image, qty: 1 });
+        writeCart(cart);
+        updateCartBadge();
+      }
+    
+      // จับปุ่ม + ที่มี data-action="add" ทุกใบ (ไม่ต้องผูกทีละปุ่ม)
+      document.addEventListener('click', (e)=>{
+        const btn = e.target.closest('[data-action="add"]');
+        if (btn) addFromCard(btn);
+      });
+    
+      document.addEventListener('DOMContentLoaded', updateCartBadge);
+    })();
+    </script>
+    
+  
+
+</body>
+</html>
+

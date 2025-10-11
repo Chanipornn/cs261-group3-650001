@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>รายละเอียดเมนู – ของทานเล่น</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dessertdetail.css" />
+</head>
+<body data-imgbase="src/img-dessert/">
+<div class="phone">
+  <header class="topbar">
+    <button class="back" onclick="window.location.href='dessert.html'" aria-label="ย้อนกลับ">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#fff"/></svg>
+    </button>
+  </header>
+  <div class="topbar-shadow"></div>
+
+  <main class="content">
+    <div class="photo-wrap">
+      <img id="food-photo" src="" alt="">
+    </div>
+
+    <h1 class="title" id="item-title">ชื่อเมนู</h1>
+
+    <section id="addonsWrap"></section>
+
+    <div class="line column">
+      <label class="label" for="note">เพิ่มเติม</label>
+      <textarea id="note" placeholder="โปรดระบุรายละเอียด"></textarea>
+    </div>
+
+    <div class="cta-row">
+      <div class="main-qty">
+        <button id="mainMinus">−</button>
+        <span id="mainQty">1</span>
+        <button id="mainPlus">+</button>
+      </div>
+      <button id="confirmBtn" class="btn" onclick="addToCart()">
+        ยืนยัน · <span id="totalPrice">฿0</span>
+      </button>
+    </div>
+  </main>
+
+  <div class="bottombar"></div>
+</div>
+
+<script defer src="dessertdetail.js"></script>
+</body>
+</html>
