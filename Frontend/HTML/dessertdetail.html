@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>รายละเอียดเมนู</title>
+  <title>รายละเอียดเมนู – ของทานเล่น</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="Detail.css" />
+  <link rel="stylesheet" href="..//CSS/dessertdetail.css" />
 </head>
-<body data-imgbase="src/img-oneDishMeal/">
+<body data-imgbase="src/img-dessert/">
 <div class="phone">
   <header class="topbar">
-    <button class="back" onclick="window.location.href='Home.html'" aria-label="ย้อนกลับ">
+    <button class="back" onclick="window.location.href='dessert.html'" aria-label="ย้อนกลับ">
       <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#fff"/></svg>
     </button>
   </header>
@@ -18,12 +18,11 @@
 
   <main class="content">
     <div class="photo-wrap">
-      <img id="food-photo" src="img/placeholder.webp" alt="">
+      <img id="food-photo" src="" alt="">
     </div>
-      
+
     <h1 class="title" id="item-title">ชื่อเมนู</h1>
 
-    <section id="sizeWrap"></section>
     <section id="addonsWrap"></section>
 
     <div class="line column">
@@ -46,6 +45,6 @@
   <div class="bottombar"></div>
 </div>
 
-<script defer src="Detail.js"></script>
+<script defer src="..//JS/dessertdetail.js"></script>
 </body>
 </html>
