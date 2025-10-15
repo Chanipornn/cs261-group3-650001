@@ -1,4 +1,4 @@
-// Summary.js - ใช้ cart array เดียวกันทั้งระบบ
+// Summary.js - แก้ไขให้รูป beverage แสดงผลถูกต้อง
 const CONFIG = {
   API_CART_URL: null,
   API_CREATE_ORDER_URL: null,
@@ -57,21 +57,38 @@ function saveCart(cart) {
 const isAbsoluteUrl2 = (s) =>
   /^(https?:|file:)/.test(s || "") || (s || "").startsWith("/");
 
+// 🔧 แก้ไข: ไม่ encode ส่วนที่เป็น path แล้ว
 function safeJoin(base, file) {
   const b = String(base || "").replace(/\\/g, "/");
   const f = String(file || "").replace(/\\/g, "/");
   if (!f) return "img/placeholder.webp";
   if (isAbsoluteUrl2(f) || f.startsWith("./")) return f;
-  const parts = (b + (b.endsWith("/") ? "" : "/") + f).split("/");
-  return parts.map((p) => encodeURIComponent(p)).join("/");
+  
+  // ใช้ path ตรงๆ ไม่ encode เพราะ browser รองรับอยู่แล้ว
+  const fullPath = b + (b.endsWith("/") ? "" : "/") + f;
+  return fullPath;
 }
 
+// 🔧 แก้ไข: รองรับทั้ง path เต็มและแยกส่วน
 function buildImageSrc(item) {
   const file = item.image || "";
   const base = item.imgBase || "";
+  
+  // ถ้าไม่มีข้อมูล
   if (!file && !base) return "img/placeholder.webp";
-  if (isAbsoluteUrl2(file) || file.startsWith("./")) return file;
-  return safeJoin(base, file);
+  
+  // ถ้า image เป็น absolute URL หรือ path เต็มอยู่แล้ว
+  if (isAbsoluteUrl2(file) || file.startsWith("./") || file.includes("/")) {
+    return file;
+  }
+  
+  // ถ้ามี base ให้ join
+  if (base) {
+    return safeJoin(base, file);
+  }
+  
+  // default: ใช้ path ตรงๆ
+  return file || "img/placeholder.webp";
 }
 
 function renderCart(cart) {
@@ -211,7 +228,6 @@ async function submitOrder(cart, grandTotal) {
   return { status: success ? "success" : "fail" };
 }
 
-// ✅ ล้างตะกร้าเดียว
 function clearCart() {
   localStorage.removeItem("cart");
   localStorage.removeItem("pending_add");
@@ -233,7 +249,6 @@ function wireConfirmButton(cartProvider) {
       const result = await submitOrder(cart, grand);
 
       if (result.status === "success") {
-        // ✅ ล้างตะกร้า
         clearCart();
         
         const url = new URL(CONFIG.ROUTES.SUCCESS, location.href);
