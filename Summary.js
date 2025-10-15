@@ -4,7 +4,7 @@ const CONFIG = {
   API_CREATE_ORDER_URL: null,
 
   ROUTES: {
-    HOME: "Home.html",
+    HOME: "index.html",
     SUCCESS: "received.html",
     FAIL: "unsuccessful.html",
   },
