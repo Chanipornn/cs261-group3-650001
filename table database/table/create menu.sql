@@ -1,0 +1,6 @@
+SELECT TOP (1000) [menu_id]
+      ,[name]
+      ,[category_id]
+      ,[price]
+      ,[allow_notes]
+  FROM [pos_system].[dbo].[menu]
