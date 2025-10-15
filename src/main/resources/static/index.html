@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TU Reatuarant Helper</title>
+
+  <link rel="stylesheet" href="..//CSS/..//CSS/Home.css">
+</head>
+<body>
+
+    <header>
+        <div class="top-bar">
+          <div class="search-box">
+            <input type="text" placeholder="ค้นหาเมนู...">
+
+            <button class="search-btn" aria-label="ค้นหา">
+              <img src="../src-front\Icon\search-interface-symbol.png" alt="" />
+            </button>
+            
+          </div>
+
+          <div class="cart-icon">
+            <img src="../src-front\Icon\shopping-cart.png" 
+                 alt="Cart Icon" 
+                 onclick="window.location.href='Summary.html'" 
+                 style="cursor:pointer; filter: brightness(0) invert(1);"
+            >
+            <span id="cartBadge" class="badge" aria-label="จำนวนในตะกร้า">0</span>
+          </div>
+          
+        </div>
+
+    <div class="categories">
+      <button class="active">อาหารจานเดียว</button>
+      <button onclick="window.location.href='beverage.html'">เครื่องดื่ม</button>
+      <button onclick="window.location.href='dessert.html'">ของทานเล่น</button>
+    </div>
+  </header>
+
+  <section class="menu-list">
+    <div class="menu-item" data-id="1">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaosuay.png" alt="ข้าวสวย">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวสวย</p>
+      <p class="price">10 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="2">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\padkrapaomoosap.avif" alt="ผัดกะเพราหมูสับ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดกะเพราหมูสับ</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="3">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\moodeng.jpg" alt="ผัดกะเพราหมูเด้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดกะเพราหมูเด้ง</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="4">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kapowpamuk.webp" alt="ผัดกะเพราปลาหมึก">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดกะเพราปลาหมึก</p>
+      <p class="price">70 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="5">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kapowmukob.webp" alt="ผัดกะเพราหมูกรอบ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดกะเพราหมูกรอบ</p>
+      <p class="price">60 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="6">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kapowgai.webp" alt="ผัดกะเพราไก่">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดกะเพราไก่</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="7">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kapowkung.jpg" alt="ผัดกะเพรากุ้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดกะเพรากุ้ง</p>
+      <p class="price">65 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="8">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\prikkang moo.jpg" alt="ผัดพริกแกงหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดพริกแกงหมู</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="9">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\prikkang gai.webp" alt="ผัดพริกแกงไก่">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดพริกแกงไก่</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="10">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\prikkang beef.webp" alt="ผัดพริกแกงเนื้อ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดพริกแกงเนื้อ</p>
+      <p class="price">60 บาท</p>
+    </div>
+    <div class="menu-item" data-id="11">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kanamukob.jpg" alt="ผัดคะน้าหมูกรอบ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดคะน้าหมูกรอบ</p>
+      <p class="price">60 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="12">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kanangmukob.jpg" alt="ผัดแขนงหมูกรอบ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดแขนงหมูกรอบ</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="13">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\padpakbung.jpeg" alt="ผัดผักบุ้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดผักบุ้ง</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="14">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\padpakruam.jpg" alt="ผัดผักรวม">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดผักรวม</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="15">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\pongkaree pamuk.jpg" alt="ผัดผงกะหรี่ปลาหมึก">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดผงกะหรี่ปลาหมึก</p>
+      <p class="price">70 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="16">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\pongkaree kung.jpg" alt="ผัดผงกะหรี่กุ้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดผงกะหรี่กุ้ง</p>
+      <p class="price">65 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="17">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\pongkaree gai.jpg" alt="ผัดผงกะหรี่ไก่">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดผงกะหรี่ไก่</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="18">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\moo kateam.jpg" alt="หมูกระเทียม">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>หมูกระเทียม</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="19">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\gai kateam.jpg" alt="ไก่กระเทียม">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ไก่กระเทียม</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="20">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\moo nammanhoi.jpg" alt="หมูผัดน้ำมันหอย">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>หมูผัดน้ำมันหอย</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+
+    <div class="menu-item" data-id="21">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\moo pikyuak.jpg" alt="หมูผัดพริกหยวก">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>หมูผัดพริกหยวก</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="22">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\gai prikyuak.jpg" alt="ไก่ผัดพริกหยวก">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ไก่ผัดพริกหยวก</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="23">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\preawwanmoo.jpg" alt="ผัดเปรี้ยวหวานหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดเปรี้ยวหวานหมู</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="24">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\preawwanfish.webp" alt="ผัดเปรี้ยวหวานปลา">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดเปรี้ยวหวานปลา</p>
+      <p class="price">70 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="25">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\keemao moo.jpg" alt="ผัดขี้เมาหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดขี้เมาหมู</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="26">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\keemao gai.jpg" alt="ผัดขี้เมาไก่">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดขี้เมาไก่</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="27">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\keemao beef.jpg" alt="ผัดขี้เมาเนื้อ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดขี้เมาเนื้อ</p>
+      <p class="price">65 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="28">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\keemao tale.png" alt="ผัดขี้เมาทะเล">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดขี้เมาทะเล</p>
+      <p class="price">75 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="29">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\spa keemao.jpg" alt="สปาเกตตีผัดขี้เมา">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>สปาเกตตีผัดขี้เมา</p>
+      <p class="price">65 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="30">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaokaijeaw.jpg" alt="ข้าวไข่เจียว">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวไข่เจียว</p>
+      <p class="price">35 บาท</p>
+    </div>
+    
+
+    <div class="menu-item" data-id="31">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaijeaw kung.jpg" alt="ไข่เจียวกุ้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ไข่เจียวกุ้ง</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="32">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaijeaw moosub.jpg" alt="ไข่เจียวหมูสับ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ไข่เจียวหมูสับ</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="33">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaijeaw poo.jpg" alt="ไข่เจียวปู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ไข่เจียวปู</p>
+      <p class="price">80 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="34">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaopad moo.jpg" alt="ข้าวผัดหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวผัดหมู</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="35">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaopadkung.png" alt="ข้าวผัดกุ้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวผัดกุ้ง</p>
+      <p class="price">65 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="36">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaopad tale.jpg" alt="ข้าวผัดทะเล">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวผัดทะเล</p>
+      <p class="price">70 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="37">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaopad papong.webp" alt="ข้าวผัดปลากระป๋อง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวผัดปลากระป๋อง</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="38">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\padsiew moo.jpg" alt="ผัดซีอิ๊วหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดซีอิ๊วหมู</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="39">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\radna moo.webp" alt="ราดหน้าหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ราดหน้าหมู</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="40">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\padthai kungsod.webp" alt="ผัดไทยกุ้งสด">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ผัดไทยกุ้งสด</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+
+    <div class="menu-item" data-id="41">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\tomjuad moo.webp" alt="ต้มจืดหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ต้มจืดหมู</p>
+      <p class="price">50 บาท</p>
+    </div>
+
+    <div class="menu-item" data-id="42">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\sukinam moo.jpg" alt="สุกี้น้ำหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>สุกี้น้ำหมู</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="43">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\sukinam tale.jpg" alt="สุกี้น้ำทะเล">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>สุกี้น้ำทะเล</p>
+      <p class="price">70 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="44">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\suki hang moo.jpg" alt="สุกี้แห้งหมู">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>สุกี้แห้งหมู</p>
+      <p class="price">55 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="45">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\yum moo yor.jpg" alt="ยำหมูยอ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ยำหมูยอ</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="46">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\yum wonsen tale.jpg" alt="ยำวุ้นเส้นทะเล">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ยำวุ้นเส้นทะเล</p>
+      <p class="price">70 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="47">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\yum pakapong.jpg" alt="ยำปลากระป๋อง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ยำปลากระป๋อง</p>
+      <p class="price">50 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="48">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaotom kung.jpg" alt="ข้าวต้มกุ้ง">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวต้มกุ้ง</p>
+      <p class="price">65 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="49">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaotom moosab.jpg" alt="ข้าวต้มหมูสับ">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวต้มหมูสับ</p>
+      <p class="price">45 บาท</p>
+    </div>
+    
+    <div class="menu-item" data-id="50">
+      <div class="image-box">
+        <img src="../src-front\img-oneDishMeal\kaotom pla.jpg" alt="ข้าวต้มปลา">
+        <div class="add-btn" data-action="add">+</div>
+      </div>
+      <p>ข้าวต้มปลา</p>
+      <p class="price">60 บาท</p>
+    </div>
+    
+  </section>
+  
+  
+  <script src="..//JS/Home.js"></script>
+  <script defer src="..//JS/Home.hook.js"></script>
+  <script type="module" src="..//JS/js/cart.js" defer></script>
+
+  <script>
+    (function(){
+      const CART_KEY = 'tu_cart';
+      const readCart  = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+      const writeCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
+      const cartCount = (c) => c.reduce((s,i)=> s + (Number(i.qty)||0), 0);
+    
+      function updateCartBadge(){
+        const badge = document.getElementById('cartBadge');
+        if(!badge) return;
+        const n = cartCount(readCart());
+        badge.textContent = n;
+        badge.style.display = n > 0 ? 'inline-flex' : 'none';
+      }
+    
+      function addFromCard(btn){
+        const card = btn.closest('.menu-item');
+        if(!card) return;
+        const id = card.dataset.id;
+        const name = card.querySelector('p')?.textContent.trim() || '';
+        const priceTxt = card.querySelector('.price')?.textContent || '0';
+        const price = Number(priceTxt.replace(/[^\d.]/g,'')) || 0;
+        const image = card.querySelector('img')?.getAttribute('src') || '';
+    
+        const cart = readCart();
+        const f = cart.find(x => String(x.id) === String(id));
+        if (f) f.qty += 1; else cart.push({ id, name, price, image, qty: 1 });
+        writeCart(cart);
+        updateCartBadge();
+      }
+    
+      // จับปุ่ม + ที่มี data-action="add" ทุกใบ (ไม่ต้องผูกทีละปุ่ม)
+      document.addEventListener('click', (e)=>{
+        const btn = e.target.closest('[data-action="add"]');
+        if (btn) addFromCard(btn);
+      });
+    
+      document.addEventListener('DOMContentLoaded', updateCartBadge);
+    })();
+    </script>
+    
+
+</body>
+</html>

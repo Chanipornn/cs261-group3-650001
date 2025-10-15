@@ -1,0 +1,374 @@
+:root{
+  --bg: #fff;
+  --menu-width: 170px;       /* ขนาดการ์ด (desktop default) */
+  --image-size: 140px;       /* ความสูงรูปภายในการ์ด */
+  --add-btn-size: 34px;
+  --font-base: 16px;
+  --font-small: 14px;
+}
+
+/* รีเซ็ตและพื้นฐาน */
+body {
+  margin: 0;
+  font-family: "Prompt", sans-serif;
+  background-color: var(--bg);
+}
+
+/* กล่องรวม search + ตะกร้า */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0px 10px;
+}
+
+/* ตะกร้า */
+.cart-icon img {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-top: -20px;
+}
+
+.cart-icon img:hover {
+  transform: scale(1.08);
+}
+
+/* กล่องไอคอน = กรอบอ้างอิง + ขยับทั้งชุดทางขวาได้จากตรงนี้ */
+.cart-icon{
+  position: relative;
+  display: inline-flex;     /* ให้จัดกึ่งกลางแนวตั้งง่าย */
+  align-items: center;
+  margin-left: 15px;        /* ถ้าต้องการระยะจากข้างซ้าย ให้ใส่ที่ container */
+}
+
+/* ป้ายตัวเลข: เกาะมุมขวาบนของ container */
+.cart-icon .badge{
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);  /* ปรับให้ชิด/ห่างมุม */
+  z-index: 2;
+
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: none;                    /* โชว์ตอนจำนวน > 0 */
+  align-items: center;
+  justify-content: center;
+  background: #fff;                 /* เปลี่ยนสีได้ */
+  color: #000;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  border: 2px solid rgba(0,0,0,.06);
+  margin-top: -20px;
+}
+
+/* search-box */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  padding: 6px 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  width: 100%;
+  margin: 0 auto 25px auto; 
+}
+
+.search-box button {
+  border: none;
+  background: none;
+  padding: 0 8px;
+  font-size: 18px;    
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-box button img {
+  width: 1.1em;
+  height: 1.1em;
+  display: block;
+  object-fit: contain;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: var(--font-base);
+}
+
+/* ส่วนหัว */
+header {
+  background-color: #d9251d;
+  color: white;
+  padding: 30px;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* categories */
+.categories {
+  display: flex;
+  justify-content: space-around;
+  gap: 50px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.categories button {
+  border: none;
+  background-color: white;
+  padding: 10px 10px;   
+  border-radius: 25px;  
+  font-size: 15px;      
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+  transition: all 0.2s ease; 
+}
+
+.categories button:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.05);
+}
+
+.categories button.active {
+  background-color: #ddd8d8;
+  color: rgb(0, 0, 0);
+  font-weight: 600; 
+}
+
+/* ส่วนรายการเมนู - ทำเป็นการ์ด (กรอบมน) */
+.menu-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center; 
+}
+
+/* การ์ดแต่ละเมนู */
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: var(--menu-width);
+  background: #ffffff;
+  border-radius: 14px;            /* กรอบมน */
+  padding: 10px;                  /* ช่องว่างรอบๆ */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;               /* ตัดขอบรูปที่เลยมุม */
+}
+
+.menu-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.cart-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  display: none;
+}
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.qty-control button {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* กล่องรูป */
+.image-box {
+  position: relative;
+  width: 100%;
+  height: var(--image-size);
+  background-color: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ปุ่ม + หรือ qty-control (ขยายให้ใหญ่ขึ้น) */
+.add-btn, .qty-control {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+
+.add-btn {
+  background: #ffd600;
+  border-radius: 8px;
+  width: var(--add-btn-size);
+  height: var(--add-btn-size);
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.qty-control {
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  gap: 6px;
+  padding: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.qty-control button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  background: #f1f1f1;
+  font-weight: 700;
+}
+
+.qty-control .count {
+  min-width: 26px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* ข้อความชื่อและราคา -> ขนาดใหญ่ขึ้น */
+.menu-item p {
+  margin: 6px 0 0 0;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.2;
+  color: #222;
+}
+
+.menu-item .price {
+  color: #d9251d;
+  text-align: center;
+  font-weight: 700;
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+/* responsive: ปรับให้มือถือใหญ่ขึ้นและ spacing มากขึ้น */
+@media (max-width: 480px) {
+  :root{
+    --menu-width: 180px;     /* กว้างขึ้นบนมือถือ */
+    --image-size: 160px;     /* รูปใหญ่ขึ้นบนมือถือ */
+    --add-btn-size: 40px;
+    --font-base: 18px;
+  }
+
+  .menu-list {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .menu-item {
+    width: var(--menu-width);
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .menu-item p {
+    font-size: 16px;    /* ชื่อเมนูใหญ่ขึ้น */
+  }
+
+  .menu-item .price {
+    font-size: 15px;    /* ราคาใหญ่ขึ้น */
+  }
+
+  .image-box {
+    height: var(--image-size);
+  }
+
+  .add-btn {
+    width: var(--add-btn-size);
+    height: var(--add-btn-size);
+    font-size: 20px;
+    border-radius: 10px;
+  }
+
+  .categories {
+    display: flex;
+    justify-content: space-between; 
+    gap: 6px;                       
+    padding: 8px;
+  }
+
+  .categories button {
+    display: flex;              
+    justify-content: center;    
+    align-items: center;       
+    text-align: center;        
+    padding: 10px 20px;         
+    white-space: nowrap;        
+    box-sizing: border-box;
+  }
+  
+  
+}
+
+/* desktop adjustments */
+@media (min-width: 768px) {
+  :root{
+    --menu-width: 170px;
+    --image-size: 140px;
+    --add-btn-size: 34px;
+  }
+
+  .categories {
+    gap: 80px;
+    margin-top: 0px;
+  }
+
+  .categories button {
+    padding: 12px 28px;   
+    border-radius: 30px;  
+    font-size: 15px;      
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+  }
+
+  .categories button.active {
+    background-color: #ddd8d8; 
+  }
+}
