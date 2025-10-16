@@ -51,10 +51,10 @@ public class OrderItem {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public List<OrderItemModifier> setModifiers() {
+	public List<OrderItemModifier> getModifiers() {
 		return modifiers;
 	}
-	public void getModifiers(List<OrderItemModifier> modifiers) {
+	public void setModifiers(List<OrderItemModifier> modifiers) {
 		this.modifiers = modifiers;
 	}
 }
