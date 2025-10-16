@@ -1,34 +1,21 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name="OrderItemModifier")
 public class OrderItemModifier {
-	private Long id;
-	private OrderItem orderItem;
-	private Modifier modifier;
-	
-	public OrderItemModifier() {}
-	
-	public OrderItemModifier(Long id, OrderItem orderItem, Modifier modifier) {
-		this.id = id;
-		this.orderItem = orderItem;
-		this.modifier = modifier;
-	}
-	
-	public Long getId() { 
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public OrderItem getOrderItem() {
-		return orderItem;
-	}
-	public void setOrderItem(OrderItem orderItem) {
-		this.orderItem = orderItem;
-	}
-	public Modifier getModifier() {
-		return modifier;
-	}
-	public void setModifier(Modifier modifier) {
-		this.modifier = modifier;
-	}
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int order_item_modifier_id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(columnDefinition = "order_item_id")
+	private int order_item_id;
+	@Column(columnDefinition = "modifier_id")
+	private int modifier_id;
+	@Column(columnDefinition = "note_text")
+	private String note_text;
 }

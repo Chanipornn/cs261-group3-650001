@@ -1,43 +1,21 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name="Menu")
 public class Menu {
-	private Long id;
+	@Id
+	@Column(columnDefinition = "menu_id")
+	private int menu_id;
+	@Column(columnDefinition = "name")
 	private String name;
-	private double price;
-	private MenuCategory category;
-	
-	public Menu() {}
-	
-	public Menu(Long id, String name, double price, MenuCategory category) {
-		this.id = id;
-		this.name = name;
-		this.price = price;
-		this.category = category;
-	}
-	
-	public Long getId() { 
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public double getPrice() {
-		return price;
-	}
-	public void setPrice(double price) {
-		this.price = price;
-	}
-	public MenuCategory getCategory() {
-		return category;
-	}
-	public void setCategory(MenuCategory category) {
-		this.category = category;
-	}
-	
+	@Column(columnDefinition = "category_id")
+	private int category_id;
+	@Column(columnDefinition = "price")
+	private int price;
+	@Column(columnDefinition = "allow_notes")
+	private String allow_notes;
 }
