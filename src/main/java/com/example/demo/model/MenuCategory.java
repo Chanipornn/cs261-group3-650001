@@ -30,7 +30,7 @@ public class MenuCategory {
 	public List<Menu> getMenus() {
 		return menus;
 	}
-	public void setId(List<Menu> menus) {
+	public void setMenus(List<Menu> menus) {
 		this.menus = menus;
 	}
 }
