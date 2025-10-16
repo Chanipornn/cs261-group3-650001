@@ -32,14 +32,11 @@ function readCartFromLocalStorage() {
 }
 
 function calcLineTotal(item) {
-  const base = Number(item.price || 0);
-  const sizeExtra = Number(item.sizeExtra || 0);
-  const addonsTotal = (item.addons || []).reduce(
-    (s, a) => s + Number(a.price || 0) * Number(a.qty || 0),
-    0
-  );
-  return (base + sizeExtra + addonsTotal) * Number(item.qty || 0);
+  const perUnit = Number(item?.price || 0);
+  const qty = Number(item?.qty || 0);
+  return perUnit * qty;
 }
+
 
 async function loadCart() {
   if (CONFIG.API_CART_URL) {
@@ -57,7 +54,7 @@ function saveCart(cart) {
 const isAbsoluteUrl2 = (s) =>
   /^(https?:|file:)/.test(s || "") || (s || "").startsWith("/");
 
-// 🔧 แก้ไข: ไม่ encode ส่วนที่เป็น path แล้ว
+// แก้ไข: ไม่ encode ส่วนที่เป็น path แล้ว
 function safeJoin(base, file) {
   const b = String(base || "").replace(/\\/g, "/");
   const f = String(file || "").replace(/\\/g, "/");
