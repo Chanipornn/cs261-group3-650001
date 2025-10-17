@@ -1,7 +1,7 @@
-// Summary.js - แก้ไขให้รูป beverage แสดงผลถูกต้อง
 const CONFIG = {
   API_CART_URL: null,
-  API_CREATE_ORDER_URL: null,
+  API_CREATE_ORDER_URL: "http://localhost:8080/orders",
+  API_GET_ORDERS_URL: "http://localhost:8080/orders",
 
   ROUTES: {
     HOME: "index.html",
@@ -209,21 +209,61 @@ function wireQtyActions() {
   });
 }
 
+function toOrderPayload(cart, grandTotal) {
+  return {
+    orderNo: "web-" + Date.now(),
+    createdAt: new Date().toISOString(),
+    currency: "THB",
+    total: Number(grandTotal || 0),
+    items: (cart || []).map((it) => ({
+      name: it.name,
+      qty: Number(it.qty || 0),
+      unitPrice: Number(it.price || 0), // ราคาต่อหน่วยที่รวม addons แล้ว
+      size: it.size || null,
+      sizeExtra: Number(it.sizeExtra || 0) || 0,
+      addons: (it.addons || []).map(a => ({
+        name: a.name,
+        price: Number(a.price || 0),
+        qty: Number(a.qty || 1)
+      })),
+      note: it.note || null,
+      image: it.image || null
+    }))
+  };
+}
+
 async function submitOrder(cart, grandTotal) {
-  if (CONFIG.API_CREATE_ORDER_URL) {
-    const res = await fetch(CONFIG.API_CREATE_ORDER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ items: cart, total: grandTotal }),
-    });
-    if (!res.ok) throw new Error(`สั่งซื้อไม่สำเร็จ: ${res.status}`);
-    return await res.json();
+  if (!CONFIG.API_CREATE_ORDER_URL) {
+    const success = Math.random() < 0.85;
+    return { status: success ? "success" : "fail" };
   }
 
-  const success = Math.random() < 0.85;
-  return { status: success ? "success" : "fail" };
+  const payload = toOrderPayload(cart, grandTotal);
+
+  const res = await fetch(CONFIG.API_CREATE_ORDER_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`POST /orders ${res.status} ${text}`);
+  }
+
+  if (CONFIG.API_GET_ORDERS_URL) {
+    try {
+      const check = await fetch(CONFIG.API_GET_ORDERS_URL /*, { credentials: "include" }*/);
+      const data = await check.json().catch(() => null);
+      console.log("[Summary] GET /orders =>", data);
+    } catch (e) {
+      console.warn("[Summary] ตรวจ GET /orders ไม่ได้ แต่คำสั่งซื้อถูกส่งแล้ว", e);
+    }
+  }
+
+  return { status: "success" };
 }
+
 
 function clearCart() {
   localStorage.removeItem("cart");
