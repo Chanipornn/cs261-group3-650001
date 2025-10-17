@@ -1,21 +1,65 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
 @Entity
-@Table(name="Menu")
+@Table(name = "menu")
 public class Menu {
-	@Id
-	@Column(name = "menu_id")
-	private int menu_id;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "category_id")
-	private int category_id;
-	@Column(name = "price")
-	private int price;
-	@Column(name = "allow_notes")
-	private String allow_notes;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "menu_id")
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "category_id")
+    private int categoryId;
+
+    @Column(name = "price")
+    private double price;
+
+    @Column(name = "allow_notes")
+    private boolean allowNotes;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public boolean isAllowNotes() {
+        return allowNotes;
+    }
+
+    public void setAllowNotes(boolean allowNotes) {
+        this.allowNotes = allowNotes;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
 }
