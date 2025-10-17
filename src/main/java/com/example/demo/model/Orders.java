@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="Order")
-public class Order {
+@Table(name="Orders")
+public class Orders {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int order_id;
