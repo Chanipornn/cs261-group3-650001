@@ -19,4 +19,10 @@ public class MenuController {
     public List<Menu> getAllMenu() {
         return repo.findAll();
     }
+    // ดึงข้อมูลตาม id
+    @GetMapping("/{id}")
+    public Menu getMenuById(@PathVariable Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
 }
