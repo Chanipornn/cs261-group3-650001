@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,11 +10,11 @@ import lombok.Data;
 public class Orders {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int order_id;
-	@Column(columnDefinition = "order_date")
-	private Date order_date;
-	@Column(columnDefinition = "total_amount")
+	private Integer order_id;
+	@Column(name = "order_date")
+	private LocalDateTime order_date = LocalDateTime.now();
+	@Column(name = "total_amount")
 	private int total_amount;
-	@Column(columnDefinition = "payment_status")
+	@Column(name = "payment_status")
 	private String payment_status;
 }

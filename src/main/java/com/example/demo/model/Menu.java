@@ -8,14 +8,14 @@ import lombok.Data;
 @Table(name="Menu")
 public class Menu {
 	@Id
-	@Column(columnDefinition = "menu_id")
+	@Column(name = "menu_id")
 	private int menu_id;
-	@Column(columnDefinition = "name")
+	@Column(name = "name")
 	private String name;
-	@Column(columnDefinition = "category_id")
+	@Column(name = "category_id")
 	private int category_id;
-	@Column(columnDefinition = "price")
+	@Column(name = "price")
 	private int price;
-	@Column(columnDefinition = "allow_notes")
+	@Column(name = "allow_notes")
 	private String allow_notes;
 }
