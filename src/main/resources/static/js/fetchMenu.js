@@ -30,7 +30,7 @@ const nameMap = {
   kee_mao_beef: "ขี้เมาเนื้อ",
   kee_mao_sea: "ขี้เมาทะเล",
   spaghetti_kee_mao: "สปาเก็ตตี้ขี้เมา",
-  kai_omelet_rice: "ไข่เจียวข้าว",
+  kai_omelet_rice: "ข้าวไข่เจียว",
   omelet_shrimp: "ไข่เจียวกุ้ง",
   omelet_pork: "ไข่เจียวหมู",
   omelet_crab: "ไข่เจียวปู",
