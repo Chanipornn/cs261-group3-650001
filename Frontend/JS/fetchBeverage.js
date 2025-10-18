@@ -1,4 +1,3 @@
-// fetchBeverage.js
 const menuList = document.querySelector('.menu-list');
 
 // แผนที่ชื่ออังกฤษ -> ไทย
