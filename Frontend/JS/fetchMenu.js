@@ -3,10 +3,10 @@ const menuList = document.querySelector('.menu-list');
 const nameMap = {
   rice_plain: "ข้าวสวย",
   kapow_moosub: "ผัดกะเพราหมูสับ",
-  kapow_moodeng: "ผัดกะเพราหมูแดง",
+  kapow_moodeng: "ผัดกะเพราหมูเด้ง",
   kapow_squid: "ผัดกะเพราปลาหมึก",
   kapow_moogrob: "ผัดกะเพราหมูกรอบ",
-  kapow_gai: "ผัดกะเพราหมูไก่",
+  kapow_gai: "ผัดกะเพราไก่",
   kapow_shrimp: "ผัดกะเพรากุ้ง",
   prikgaeng_pork: "พริกแกงหมู",
   prikgaeng_chicken: "พริกแกงไก่",
