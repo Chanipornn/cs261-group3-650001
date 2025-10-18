@@ -22,6 +22,9 @@ public class Menu {
 
     @Column(name = "allow_notes")
     private boolean allowNotes;
+    
+    @Column(name = "image")
+    private String image;
 
     public Long getId() {
         return id;
@@ -61,5 +64,13 @@ public class Menu {
     public void setPrice(double price) {
         this.price = price;
     }
+    
+    public String getImage() {
+        return image;
+    }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
 }
