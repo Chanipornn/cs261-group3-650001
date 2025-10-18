@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- FOOD (category_id = 1, id 1–50)
 INSERT INTO menu (menu_id, name, category_id, price, image) VALUES
 (1, 'ข้าวสวย', 1, 10.00, '/img-oneDishMeal/kaosuay.png'),
