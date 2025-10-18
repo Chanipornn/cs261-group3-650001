@@ -46,7 +46,7 @@ INSERT INTO menu (menu_id, name, category_id, price, image) VALUES
 (41, 'tom_jued_pork', 1, 50.00, 'src-front/img-oneDishMeal/tomjuad moo.webp'),
 (42, 'suki_water_pork', 1, 55.00, 'src-front/img-oneDishMeal/sukinam moo.jpg'),
 (43, 'suki_water_sea', 1, 70.00, 'src-front/img-oneDishMeal/sukinam tale.jpg'),
-(44, 'suki_dry_porkู', 1, 55.00, 'src-front/img-oneDishMeal/suki hang moo.jpg'),
+(44, 'suki_dry_pork', 1, 55.00, 'src-front/img-oneDishMeal/suki hang moo.jpg'),
 (45, 'yum_mu_yo', 1, 50.00, 'src-front/img-oneDishMeal/yum moo yor.jpg'),
 (46, 'yum_woonsen_sea', 1, 70.00, 'src-front/img-oneDishMeal/yum wonsen tale.jpg'),
 (47, 'yum_canned_fish', 1, 50.00, 'src-front/img-oneDishMeal/yum pakapong.jpg'),
