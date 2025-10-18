@@ -6,7 +6,7 @@ const nameMap = {
   kapow_moodeng: "ผัดกะเพราหมูแดง",
   kapow_squid: "ผัดกะเพราปลาหมึก",
   kapow_moogrob: "ผัดกะเพราหมูกรอบ",
-  kapow_gai: "ผัดกะเพราหมูไก่",
+  kapow_gai: "ผัดกะเพราไก่",
   kapow_shrimp: "ผัดกะเพรากุ้ง",
   prikgaeng_pork: "พริกแกงหมู",
   prikgaeng_chicken: "พริกแกงไก่",
