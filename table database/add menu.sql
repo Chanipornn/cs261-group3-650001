@@ -1,5 +1,6 @@
-<<<<<<< HEAD
 -- FOOD (category_id = 1, id 1–50)
+--DRINKS (category_id = 2, id 51-64
+--Dessert(category_id = 3, id 65-78
 INSERT INTO menu (menu_id, name, category_id, price, image) VALUES
 (1, 'ข้าวสวย', 1, 10.00, '/img-oneDishMeal/kaosuay.png'),
 (2, 'ผัดกะเพราหมูสับ', 1, 45.00, '/img-oneDishMeal/padkrapaomoosap.avif'),
