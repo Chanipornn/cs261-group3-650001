@@ -9,7 +9,7 @@ INSERT INTO menu (menu_id, name, category_id, price, image) VALUES
 (4, 'kapow_squid', 1, 70.00, 'src-front/img-oneDishMeal/kapowpamuk.webp'),
 (5, 'kapow_moogrob', 1, 60.00, 'src-front/img-oneDishMeal/kapowmukob.webp'),
 (6, 'kapow_gai', 1, 50.00, 'src-front/img-oneDishMeal/kapowgai.webp'),
-(7, 'kapowkung', 1, 65.00, 'src-front/img-oneDishMeal/kapowkung.jpg'),
+(7, 'kapow_shrimp', 1, 65.00, 'src-front/img-oneDishMeal/kapowkung.jpg'),
 (8, 'prikgaeng_pork', 1, 45.00, 'src-front/img-oneDishMeal/prikkang moo.jpg'),
 (9, 'prikgaeng_chicken', 1, 50.00, 'src-front/img-oneDishMeal/prikkang gai.webp'),
 (10, 'prikgaeng_beef', 1, 60.00, 'src-front/img-oneDishMeal/prikkang beef.webp'),
