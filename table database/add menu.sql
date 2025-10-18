@@ -2,7 +2,7 @@
 --DRINKS (category_id = 2, id 51�64)
 --Dessert(category_id = 3, id 65�78)
 INSERT INTO menu (menu_id, name, category_id, price, image) VALUES
-(1, 'ข้าวสวย', 1, 10.00, TRUE, 'src-front/img-oneDishMeal/kaosuay.png'),
+(1, 'ข้าวสวย', 1, 10.00, TRUE, '/img-oneDishMeal/kaosuay.png'),
 (2, 'ผัดกะเพราหมูสับ', 1, 45.00, TRUE, 'src-front/img-oneDishMeal/padkrapaomoosap.avif'),
 (3, 'ผัดกะเพราหมูเด้ง', 1, 55.00, TRUE, 'src-front/img-oneDishMeal/moodeng.jpg'),
 (4, 'ผัดกะเพราปลาหมึก', 1, 70.00, TRUE, 'src-front/img-oneDishMeal/kapowpamuk.webp'),
