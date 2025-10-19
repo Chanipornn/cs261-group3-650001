@@ -29,20 +29,33 @@
     var STORAGE_CART = 'cart';
     var DEFAULT_PRICE = 20;
     var PLACEHOLDER_IMG = 'img/placeholder.webp';
-    var SWEET_IDS = new Set(['3','4','5','6','7','8','9','10','11','12','13','14']); // น้ำชง (ไม่รวมน้ำเปล่า/เป๊ปซี่)
 
     // ===== Utils =====
     function toTH(n){ return Number(n||0).toLocaleString('th-TH'); }
     function readPending(){ try { return JSON.parse(localStorage.getItem('pending_add') || 'null'); } catch { return null; } }
     function parsePriceText(s){ var n = parseInt(String(s||'').replace(/\D+/g,''),10); return isNaN(n)?null:n; }
-    function segEnc(p){ return p.split('/').map(seg => /%/.test(seg)?seg:encodeURIComponent(seg)).join('/'); }
+
+    // ✅ auto detect path image ทุกกรณี
     function resolveImg(raw){
       if (!raw) return PLACEHOLDER_IMG;
-      var s = String(raw).trim().replace(/\\/g,'/');
-      if (/^(https?:)?\/\//.test(s) || s.startsWith('/') || s.startsWith('data:')) return s;
-      if (s.indexOf('/') !== -1) return segEnc(s);
-      return segEnc('src/img-beverage/' + s);
+      let s = String(raw).trim().replace(/\\/g,'/');
+
+      // URL หรือ data URI
+      if (/^(https?:|file:|data:)/.test(s)) return s;
+
+      // เริ่มด้วย / → ใช้ตรงๆ
+      if (s.startsWith('/')) return s;
+
+      // ถ้ามี src-front → ตัดออก
+      if (s.startsWith('src-front/')) s = s.replace('src-front/', '');
+
+      // ถ้าเริ่มด้วย img-beverage/
+      if (s.startsWith('img-beverage/')) return '/src-front/' + s;
+
+      // เผื่อกรณีอื่น ๆ
+      return '/src-front/img-beverage/' + s;
     }
+
     function h(html){ var t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
 
     // ===== Init state from pending =====
@@ -55,7 +68,7 @@
       img:  resolveImg(pending.image || ''),
       qty: 1,
       sweetness: '50',
-      bottleSize: 'normal' // เพิ่ม: ขนาดขวด (normal/large)
+      bottleSize: 'normal'
     };
 
     // Header
@@ -68,12 +81,11 @@
     })();
     elImg.alt = state.name;
 
-    // ===== 🆕 Render ขนาดขวด (น้ำเปล่า/เป๊ปซี่) =====
+    // ===== Render ขนาดขวด (น้ำเปล่า/เป๊ปซี่) =====
     function renderBottleSize(){
       if (!sizeWrap) return;
       sizeWrap.innerHTML = '';
-      
-      // เฉพาะน้ำเปล่า (id=1) และเป๊ปซี่ (id=2)
+
       if (state.id !== '1' && state.id !== '2') return;
 
       var priceExtra = (state.id === '1') ? 10 : 20; // น้ำเปล่า +10, เป๊ปซี่ +20
@@ -109,7 +121,6 @@
 
       sizeWrap.appendChild(box);
       
-      // Event listener
       sizeWrap.addEventListener('change', function(e){
         if (e.target && e.target.name === 'bottleSize') {
           state.bottleSize = e.target.value;
@@ -121,7 +132,12 @@
     // ===== Render ความหวาน (เครื่องดื่มชง) =====
     function renderSweetness(){
       addonsWrap.innerHTML = '';
-      if (!SWEET_IDS.has(state.id)) return;
+
+      // ✅ แสดงความหวานถ้าเป็นเครื่องดื่มชง (ชื่อเมนูมีคำเหล่านี้)
+      var sweetKeywords = ['ชา', 'โกโก้', 'นม', 'กาแฟ', 'coffee', 'tea', 'milk', 'cocoa'];
+      var nameLower = (state.name || '').toLowerCase();
+      var shouldShowSweet = sweetKeywords.some(k => nameLower.includes(k));
+      if (!shouldShowSweet) return;
 
       var box = document.createElement('div');
       box.className = 'line column';
@@ -148,16 +164,13 @@
       });
     }
 
-    // ===== 🆕 คำนวณราคา (รวมขนาดขวด) =====
+    // ===== คำนวณราคา (รวมขนาดขวด) =====
     function unitPrice(){ 
       var price = Number(state.base || 0);
-      
-      // เพิ่มราคาขวดใหญ่
       if (state.bottleSize === 'large') {
-        if (state.id === '1') price += 10; // น้ำเปล่า
-        if (state.id === '2') price += 20; // เป๊ปซี่
+        if (state.id === '1') price += 10;
+        if (state.id === '2') price += 20;
       }
-      
       return price;
     }
 
@@ -169,11 +182,11 @@
     btnMinus.addEventListener('click', function(){ if (state.qty>1){ state.qty--; recalc(); } });
     btnPlus .addEventListener('click', function(){ if (state.qty<99){ state.qty++; recalc(); } });
 
-    renderBottleSize(); // 🆕 เรียกใหม่
+    renderBottleSize();
     renderSweetness();
     recalc();
 
-    // ===== 🆕 Add to cart (บันทึกขนาดขวด) =====
+    // ===== Add to cart =====
     window.addToCart = function () {
       var noteEl = document.getElementById('note');
       state.note = noteEl ? (noteEl.value || '').trim() : '';
@@ -181,46 +194,43 @@
       var cart = [];
       try { cart = JSON.parse(localStorage.getItem(STORAGE_CART) || '[]'); } catch { cart = []; }
 
+      // ✅ ใช้ id จริงจาก DB (menuId)
       var newItem = {
-        id: Date.now(),
+        menuId: state.id, // <<==== ใช้ ID จากฐานข้อมูลจริง
         name: state.name,
         qty: state.qty,
         price: unitPrice(),
+        sizeExtra: (state.bottleSize === 'large') 
+                    ? (state.id === '1' ? 10 : state.id === '2' ? 20 : 0) 
+                    : 0,
         image: state.img,
         addons: [],
         note: state.note
       };
 
-      // เพิ่ม Add-on ขนาดขวด
+      // Add-on: ขวดใหญ่
       if ((state.id === '1' || state.id === '2') && state.bottleSize === 'large') {
         var bottlePrice = (state.id === '1') ? 10 : 20;
-        newItem.addons.push({ 
-          name: 'ขวดใหญ่', 
-          qty: 1, 
-          price: bottlePrice 
-        });
+        newItem.addons.push({ name: 'ขวดใหญ่', qty: 1, price: bottlePrice });
       }
 
-      // เพิ่ม Add-on ความหวาน
-      if (SWEET_IDS.has(state.id)) {
-        newItem.addons.push({ 
-          name: 'ความหวาน ' + state.sweetness + '%', 
-          qty: 1, 
-          price: 0 
-        });
+      // Add-on: ความหวาน
+      var sweetKeywords = ['ชา', 'โกโก้', 'นม', 'กาแฟ', 'coffee', 'tea', 'milk', 'cocoa'];
+      var nameLower = (state.name || '').toLowerCase();
+      var shouldShowSweet = sweetKeywords.some(k => nameLower.includes(k));
+      if (shouldShowSweet) {
+        newItem.addons.push({ name: 'ความหวาน ' + state.sweetness + '%', qty: 1, price: 0 });
       }
 
       // รวมเมนูซ้ำ
       var bottleTxt = (state.id === '1' || state.id === '2') && state.bottleSize === 'large' ? 'ขวดใหญ่' : '';
-      var sweetTxt = SWEET_IDS.has(state.id) ? ('ความหวาน ' + state.sweetness + '%') : '';
+      var sweetTxt = shouldShowSweet ? ('ความหวาน ' + state.sweetness + '%') : '';
       
       var exist = cart.find(function(it){
         var hasBottle = (it.addons || []).some(a => a.name === 'ขวดใหญ่');
         var hasSame = hasBottle === (bottleTxt === 'ขวดใหญ่');
-        
         var s = (it.addons || []).find(a => a.name && a.name.indexOf('ความหวาน ') === 0);
         var sTxt = s ? s.name : '';
-        
         return it.name === newItem.name && 
                (it.note||'') === (newItem.note||'') && 
                sTxt === sweetTxt &&
@@ -232,7 +242,6 @@
 
       localStorage.setItem(STORAGE_CART, JSON.stringify(cart));
 
-      // แจ้งหน้า beverage
       try {
         localStorage.setItem('pending_add', JSON.stringify({
           id: state.id, qty: state.qty, amount: state.qty

@@ -114,7 +114,6 @@
     } catch (e) {
       console.warn('ไม่สามารถเขียน pending_add:', e);
     }
-
     // ไปยังหน้ารายละเอียด พร้อม query param id (Detail.html อ่าน id หรือ pending_add ได้)
     window.location.href = `Detail.html?id=${encodeURIComponent(id)}`;
   }
@@ -128,26 +127,6 @@
       if (!menuItem) return;
       const id = String(menuItem.dataset.id);
 
-      // ข้อยกเว้น: ถ้าเป็นข้าวสวย (data-id === "1") ให้เพิ่มจำนวนทันที
-      if (id === '1') { // ข้าวสวย
-        const existing = cart.find(item => item.id === 1);
-        if (existing) {
-          existing.qty += 1;
-        } else {
-          cart.push({
-            id: 1,
-            name: "ข้าวสวย",
-            price: 10,
-            qty: 1,
-            image: "img/rice.jpg"
-          });
-        }
-        updateItemUI(menuItem, 1, cart.find(item => item.id === 1).qty);
-        saveCart(cart);
-        updateCartBadge(cart);
-        return;
-      }
-      
 
       // เมนูอื่น ๆ ให้ไปหน้า detail (เก็บ pending_add ก่อน)
       goToDetailPageFor(menuItem);

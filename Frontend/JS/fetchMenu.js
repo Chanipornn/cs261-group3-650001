@@ -12,7 +12,7 @@ const nameMap = {
   prikgaeng_chicken: "พริกแกงไก่",
   prikgaeng_beef: "พริกแกงเนื้อ",
   kana_moogrob: "คะน้าหมูกรอบ",
-  khaenang_moogrob: "ผัดแขนงนหมูกรอบ",
+  khaenang_moogrob: "ผัดแขนงหมูกรอบ",
   morning_glory: "ผัดผักบุ้ง",
   mixed_veg: "ผัดผักรวม",
   curry_squid: "ผัดผงกะหรี่ปลาหมึก",

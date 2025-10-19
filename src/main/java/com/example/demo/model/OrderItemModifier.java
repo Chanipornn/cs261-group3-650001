@@ -5,17 +5,22 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="OrderItemModifier")
+@Table(name = "OrderItemModifier")
 public class OrderItemModifier {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int order_item_modifier_id;
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(columnDefinition = "order_item_id")
-	private int order_item_id;
-	@Column(columnDefinition = "modifier_id")
-	private int modifier_id;
-	@Column(columnDefinition = "note_text")
-	private String note_text;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_item_modifier_id")
+    private Integer orderItemModifierId;
+
+    @ManyToOne
+    @JoinColumn(name = "order_item_id")
+    private OrderItem orderItem;
+
+    @ManyToOne
+    @JoinColumn(name = "modifier_id")
+    private Modifier modifier;
+
+    @Column(name = "note_text")
+    private String noteText;
 }

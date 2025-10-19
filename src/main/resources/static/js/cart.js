@@ -13,14 +13,27 @@ export function updateCartBadge(){
   badge.style.display = n > 0 ? 'inline-flex' : 'none';
 }
 
-export function addToCart(item){  // item = {id,name,price,image}
+export function addToCart(item) {
   const cart = readCart();
-  const f = cart.find(x => String(x.id) === String(item.id));
-  if (f) f.qty += 1; else cart.push({...item, qty: 1});
+  const menuId = Number(item.id); // ✅ ใช้ id จาก data-id (ของ DB)
+
+  const existing = cart.find(x => x.menuId === menuId);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({
+      menuId,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      qty: 1,
+      note: ""
+    });
+  }
+
   writeCart(cart);
   updateCartBadge();
 }
-
 // === ผูกปุ่มแบบ Event Delegation (ใช้ได้ทุกหน้า) ===
 function bindAddButtonsGlobally(){
   document.addEventListener('click', (e) => {
@@ -36,8 +49,8 @@ function bindAddButtonsGlobally(){
     const price = Number(priceText.replace(/[^\d.]/g, '')) || 0;
     const image = card.querySelector('img')?.getAttribute('src') || '';
 
-    addToCart({ id, name, price, image });
-  });
+	addToCart({ id: Number(id), name, price, image });
+  });	
 }
 
 document.addEventListener('DOMContentLoaded', () => {
