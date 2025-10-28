@@ -39,53 +39,9 @@
 	<!-- เมนูจะถูกเติมจาก API ด้วย JS -->
   </section>
   
-  
   <script src="..//JS/beverage.js" defer></script>
   <script src="..//JS/fetchBeverage.js" defer></script>
-  <script src="..//JS/beveragedetail.js" defer></script>
   <script type="module" src="..//JS/cart.js" defer></script>
-
-  <script>
-    (function(){
-      const CART_KEY = 'tu_cart';
-      const readCart  = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-      const writeCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
-      const cartCount = (c) => c.reduce((s,i)=> s + (Number(i.qty)||0), 0);
-    
-      function updateCartBadge(){
-        const badge = document.getElementById('cartBadge');
-        if(!badge) return;
-        const n = cartCount(readCart());
-        badge.textContent = n;
-        badge.style.display = n > 0 ? 'inline-flex' : 'none';
-      }
-    
-      function addFromCard(btn){
-        const card = btn.closest('.menu-item');
-        if(!card) return;
-        const id = card.dataset.id;
-        const name = card.querySelector('p')?.textContent.trim() || '';
-        const priceTxt = card.querySelector('.price')?.textContent || '0';
-        const price = Number(priceTxt.replace(/[^\d.]/g,'')) || 0;
-        const image = card.querySelector('img')?.getAttribute('src') || '';
-    
-        const cart = readCart();
-        const f = cart.find(x => String(x.id) === String(id));
-        if (f) f.qty += 1; else cart.push({ id, name, price, image, qty: 1 });
-        writeCart(cart);
-        updateCartBadge();
-      }
-    
-      // จับปุ่ม + ที่มี data-action="add" ทุกใบ (ไม่ต้องผูกทีละปุ่ม)
-      document.addEventListener('click', (e)=>{
-        const btn = e.target.closest('[data-action="add"]');
-        if (btn) addFromCard(btn);
-      });
-    
-      document.addEventListener('DOMContentLoaded', updateCartBadge);
-    })();
-    </script>
-
 </body>
 </html>
 
