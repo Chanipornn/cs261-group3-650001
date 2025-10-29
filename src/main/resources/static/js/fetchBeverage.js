@@ -1,22 +1,5 @@
 const menuList = document.querySelector('.menu-list');
 
-const nameMap = {
-  water: "น้ำเปล่า",
-  pepsi: "เป๊ปซี่",
-  strawberry_soda: "สตอเบอรี่โซดา",
-  blue_hawaii_soda: "บลูฮาวายโซดา",
-  red_syrup_soda: "แดงโซดา",
-  peach_tea: "ชาพีช",
-  lychee_juice: "ลิ้นจี่",
-  lemon_tea: "ชามะนาว",
-  apple_tea: "ชาแอปเปิ้ล",
-  thai_tea: "ชาไทย",
-  green_tea: "ชาเขียว",
-  oleang: "โอเลี้ยง",
-  ovaltine: "โอวัลติน",
-  traditional_coffee: "กาแฟโบราณ"
-};
-
 fetch('http://localhost:8081/api/menu')
   .then(res => res.json())
   .then(data => {
@@ -32,10 +15,10 @@ fetch('http://localhost:8081/api/menu')
 
       div.innerHTML = `
         <div class="image-box">
-          <img src="${item.image}" alt="${nameMap[item.name] || item.name}">
+          <img src="${item.image}" alt="${item.name}">
           <div class="add-btn" data-action="add">+</div>
         </div>
-        <p>${nameMap[item.name] || item.name}</p>
+        <p>${item.name}</p>
         <p class="price">${item.price} บาท</p>
       `;
 

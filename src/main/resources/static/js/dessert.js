@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       allMenus = data
 	  .filter(item => item.categoryId === 3) // only categoryId == 3
-	  .map(item => ({
-	            ...item,
-	            nameTH: nameMap[item.name] || item.name // add thai name
-	  }));
       renderMenu(allMenus); // render menu
     })
     .catch(err => console.error('Fetch error:', err));
@@ -30,10 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       div.innerHTML = `
         <div class="image-box">
-          <img src="${item.image}" alt="${item.nameTH}">
+          <img src="${item.image}" alt="${item.name}">
           <div class="add-btn" data-action="add">+</div>
         </div>
-        <p>${item.nameTH}</p>
+        <p>${item.name}</p>
         <p class="price">${item.price} บาท</p>
       `;
 
@@ -63,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target.classList.contains("add-btn")) {
       const id = menuItem.dataset.id;
       if (id) {
-        window.location.href = `http://localhost:8081/Detail.html?id=${id}`;
+        window.location.href = `http://localhost:8081/dessertdetail.html?id=${id}`;
       }
     }
   });

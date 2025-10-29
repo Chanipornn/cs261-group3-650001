@@ -80,7 +80,6 @@ function renderCart(cart) {
   const list = document.querySelector(".menu-list");
   const totalEl = document.getElementById("grand-total");
   const confirmBtn = document.querySelector(".confirm-btn");
-
   list.innerHTML = "";
   let grand = 0;
 
@@ -125,11 +124,11 @@ function renderCart(cart) {
       )
       .join(" · ");
 
-    const sizeView = item.size
-      ? `${item.size}${
-          item.sizeExtra ? ` (+${toTHB(item.sizeExtra)})` : ""
-        }`
-      : "";
+	  const sizeView = item.sizeName
+	        ? `${item.sizeName}${
+	            item.sizeExtra > 0 ? ` (+${toTHB(item.sizeExtra * item.qty)})` : "" // 👈 คำนวณราคา extra ต่อบรรทัด
+	          }`
+	        : "";
 
     const card = htmlel(`
       <div class="menu-item" data-id="${domId}">
@@ -140,7 +139,7 @@ function renderCart(cart) {
 
         <div class="menu-name">
           <span>${item.name || "เมนู"}</span>
-          ${sizeView ? `<p>ขนาด: ${sizeView}</p>` : ""}
+          ${sizeView ? `<p>รูปแบบ: ${sizeView}</p>` : ""}
           ${addonsView ? `<p class="extras">เพิ่ม: ${addonsView}</p>` : ""}
           ${item.note ? `<p class="note">หมายเหตุ: ${item.note}</p>` : ""}
           <p>จำนวน: <strong class="qty">${item.qty || 0}</strong></p>

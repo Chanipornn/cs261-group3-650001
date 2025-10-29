@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       allMenus = data
 	  .filter(item => item.categoryId === 1) // only categoryId == 1
-	  .map(item => ({
-	            ...item,
-	            nameTH: nameMap[item.name] || item.name // add thai name
-	  }));
       renderMenu(allMenus); // render menu
     })
     .catch(err => console.error('Fetch error:', err));
@@ -31,10 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       div.innerHTML = `
         <div class="image-box">
-          <img src="${item.image}" alt="${item.nameTH}">
+          <img src="${item.image}" alt="${item.name}">
           <div class="add-btn" data-action="add">+</div>
         </div>
-        <p>${item.nameTH}</p>
+        <p>${item.name}</p>
         <p class="price">${item.price} บาท</p>
       `;
 
