@@ -55,12 +55,11 @@ const nameMap = {
 fetch('http://localhost:8081/api/menu')
   .then(res => res.json())
   .then(data => {
-    menuList.innerHTML = ''; // ล้าง menu-list เก่าก่อน
+    menuList.innerHTML = ''; 
 
-    // กรองเฉพาะจนถึง item.name === "water"
     for (const item of data) {
-      if (item.name === 'water') break; // เจอ water หยุด loop
-      if (item.categoryId !== 1) continue; // ข้ามถ้าไม่ใช่หมวดอาหาร
+      if (item.name === 'water') break;
+      if (item.categoryId !== 1) continue; 
      
       const div = document.createElement('div');
       div.classList.add('menu-item');

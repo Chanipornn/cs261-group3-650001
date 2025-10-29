@@ -1,6 +1,5 @@
 const menuList = document.querySelector('.menu-list');
 
-// แผนที่ชื่ออังกฤษ -> ไทย
 const nameMap = {
   water: "น้ำเปล่า",
   pepsi: "เป๊ปซี่",

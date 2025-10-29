@@ -1,83 +1,70 @@
-(function () {
-  const CART_KEY = 'cart'; // ✅ ใช้ cart เดียวกับ Summary
-  const menuList = document.querySelector('.menu-list');
-  const cartBadge = document.getElementById('cartBadge');
+document.addEventListener("DOMContentLoaded", () => {
+  const menuList = document.querySelector(".menu-list");
+  const searchInput = document.querySelector(".search-box input");
+  let allMenus = []; // keep all menu from fetchMenu.js
+  // ===== fetch Menu =====
+  fetch('http://localhost:8081/api/menu')
+    .then(res => res.json())
+    .then(data => {
+      allMenus = data
+	  .filter(item => item.categoryId === 3) // only categoryId == 3
+	  .map(item => ({
+	            ...item,
+	            nameTH: nameMap[item.name] || item.name // add thai name
+	  }));
+      renderMenu(allMenus); // render menu
+    })
+    .catch(err => console.error('Fetch error:', err));
+  // ===== function show menu =====
+  function renderMenu(menus) {
+    menuList.innerHTML = ''; // clear first
+    if (!menus.length) {
+      menuList.innerHTML = '<p style="text-align:center;">ไม่พบเมนูที่ค้นหา</p>';
+      return;
+    }
 
-  function loadCart() {
-    try {
-      const raw = localStorage.getItem(CART_KEY);
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    } catch {
-      return [];
+    for (const item of menus) {
+      const div = document.createElement('div');
+      div.classList.add('menu-item');
+      div.dataset.id = item.id;
+
+      div.innerHTML = `
+        <div class="image-box">
+          <img src="${item.image}" alt="${item.nameTH}">
+          <div class="add-btn" data-action="add">+</div>
+        </div>
+        <p>${item.nameTH}</p>
+        <p class="price">${item.price} บาท</p>
+      `;
+
+      menuList.appendChild(div);
     }
   }
 
-  function saveCart(cart) {
-    try {
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    } catch {}
+  // ===== searchMenu =====
+  function searchMenu(keyword) {
+    const filtered = allMenus.filter(item =>
+      item.nameTH.toLowerCase().includes(keyword.toLowerCase())
+    );
+    renderMenu(filtered);
   }
 
-  function updateCartBadge() {
-    if (!cartBadge) return;
-    const cart = loadCart();
-    const total = cart.reduce((s, item) => s + Number(item.qty || 0), 0);
-    cartBadge.style.display = total > 0 ? 'inline-flex' : 'none';
-    if (total > 0) cartBadge.textContent = String(total);
-  }
+  // Searching(render) while typing
+  searchInput.addEventListener('input', (e) => {
+    const keyword = e.target.value.trim();
+    searchMenu(keyword);
+  });
 
-  // ✅ ไปหน้า detail
-  function goToDetailPageFor(menuItem) {
-    const id = String(menuItem.dataset.id || '');
-    const name = (menuItem.querySelector('p')?.textContent || '').trim();
-    const priceText = (menuItem.querySelector('.price')?.textContent || '').trim();
-    const imgSrc = menuItem.querySelector('img')?.getAttribute('src') || '';
+  // ===== Go to Detail when click + =====
+  menuList.addEventListener("click", (event) => {
+    const menuItem = event.target.closest(".menu-item");
+    if (!menuItem) return;
 
-    try {
-      localStorage.setItem('pending_add', JSON.stringify({ 
-        id, name, priceText, image: imgSrc 
-      }));
-    } catch {}
-
-    window.location.href = 'dessertdetail.html?t=' + Date.now();
-  }
-
-  updateCartBadge();
-
-  // ✅ กด + → เด้งไป detail ทันที (ไม่มีปุ่ม +/- บนการ์ด)
-  if (menuList) {
-    menuList.addEventListener('click', function (e) {
-      const addBtn = e.target.closest('[data-action="add"]');
-      if (addBtn) {
-        const mi = addBtn.closest('.menu-item');
-        if (!mi) return;
-        goToDetailPageFor(mi);
-        return;
+    if (event.target.classList.contains("add-btn")) {
+      const id = menuItem.dataset.id;
+      if (id) {
+        window.location.href = `http://localhost:8081/Detail.html?id=${id}`;
       }
-    });
-  }
-
-  // ✅ ค้นหา
-  const searchInput = document.querySelector('.search-box input');
-  if (searchInput) {
-    searchInput.addEventListener('input', function (e) {
-      const q = (e.target.value || '').trim().toLowerCase();
-      document.querySelectorAll('.menu-item').forEach(mi => {
-        const name = mi.querySelector('p')?.textContent.trim().toLowerCase() || '';
-        mi.style.display = (!q || name.includes(q)) ? '' : 'none';
-      });
-    });
-  }
-
-  // ✅ refresh เมื่อกลับจาก detail
-  window.addEventListener('pageshow', function () {
-    try {
-      localStorage.removeItem('pending_add');
-      updateCartBadge();
-      console.log('[Dessert] cart badge refreshed');
-    } catch (e) {
-      console.error('[Dessert] pageshow error', e);
     }
   });
-})();
+});

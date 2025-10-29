@@ -1,8 +1,5 @@
 const menuList = document.querySelector('.menu-list');
-
-// แปลงชื่ออังกฤษ → ไทย
-function translateName(name) {
-  const map = {
+const nameMap = {
     nuggets: "นักเก็ต",
     chicken_pop: "ไก่ป๊อป",
     french_fries: "เฟรนช์ฟรายส์",
@@ -18,8 +15,6 @@ function translateName(name) {
     bua_loy: "บัวลอย",
     pa_tong_go: "ปาท่องโก๋"
   };
-  return map[name] || name;
-}
 
 fetch('http://localhost:8081/api/menu')
   .then(res => res.json())
