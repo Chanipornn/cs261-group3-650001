@@ -1,4 +1,4 @@
-const NEXT_PAGE = 'Home.html';
+const NEXT_PAGE = 'index.html';
 
 
 const EXTRA_DELAY_AFTER_ANIM_MS = 800;
