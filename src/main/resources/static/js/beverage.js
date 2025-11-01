@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== searchMenu =====
   function searchMenu(keyword) {
     const filtered = allMenus.filter(item =>
-      item.nameTH.toLowerCase().includes(keyword.toLowerCase())
+      item.name.toLowerCase().includes(keyword.toLowerCase())
     );
     renderMenu(filtered);
   }

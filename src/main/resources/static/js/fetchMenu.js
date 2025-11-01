@@ -6,7 +6,7 @@ fetch('http://localhost:8081/api/menu')
     menuList.innerHTML = ''; 
 
     for (const item of data) {
-      if (item.name === 'water') break;
+      if (item.name === 'water') continue;
       if (item.categoryId !== 1) continue; 
      
       const div = document.createElement('div');
