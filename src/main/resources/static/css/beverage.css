@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
 :root{
   --bg: #fff;
   --menu-width: 170px;       /* ขนาดการ์ด (desktop default) */
@@ -264,6 +265,75 @@ header {
   margin-top: 6px;
   font-size: 15px;
 }
+
+/* โครงแถบล่าง */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+/* ปุ่มแต่ละอัน */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0; /* ยกเลิกความโค้ง */
+}
+
+/* สีแยกแต่ละปุ่ม */
+.nav-item.home {
+  background-color: #CA1C1D; /* แดง */
+}
+
+.nav-item.order {
+  background-color: #BF090A; /* แดงเข้ม */
+}
+
+.bottom-nav a {
+  text-decoration: none;
+  color: inherit;
+  color: white;
+}
+
+
+
+/* เอฟเฟกต์ hover */
+.nav-item:hover {
+  transform: translateY(-2px);
+}
+
+/* ไอคอนในปุ่ม */
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* เปลี่ยนเป็นสีขาว */
+  margin-bottom: 3px;
+  
+}
+
+
+/* ข้อความ */
+.nav-item p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
 
 /* responsive: ปรับให้มือถือใหญ่ขึ้นและ spacing มากขึ้น */
 @media (max-width: 480px) {

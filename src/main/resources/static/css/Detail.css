@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
 :root{ --brand:#d32323; --bg:#eeeeee; --paper:#fff; --text:#111; --border:#e6e6e6; }
-html,body{ margin:0; font-family:"Noto Sans Thai",sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:flex-start; min-height:100vh; }
+html,body{ margin:0; font-family:"Prompt",sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:flex-start; min-height:100vh; }
 .phone{ background:var(--bg); width:min(420px,92vw); border-radius:22px; overflow:hidden; margin:24px auto; box-shadow:0 0 12px #00000015; }
 .topbar{ height:64px; background:var(--brand); display:flex; align-items:center; padding:0 14px; border-bottom-left-radius:14px; border-bottom-right-radius:14px; }
 .topbar-shadow{ height:8px; background:linear-gradient(#00000014,#0000); margin-top:-4px; }

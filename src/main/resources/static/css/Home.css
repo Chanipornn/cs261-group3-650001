@@ -1,0 +1,547 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+body {
+  background-color: #fdfdfd;
+  color: #333;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* Header */
+.header {
+  background-color: #c62828;
+  color: white;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 40px 30px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+/* ให้ header เต็มจอจริง */
+.header {
+  width: 100vw; /* เต็มความกว้างของ viewport */
+  margin-left: calc(-50vw + 50%); /* ดันออกจากกรอบ body ที่มี margin auto */
+  border-radius: 0 0 30px 30px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  margin-top: 11px;
+}
+
+
+.btn-eat.takeaway {
+  background-color: #C4C4C4; /* สีเทาเมื่อเปลี่ยนเป็นกลับบ้าน */
+  color: white;
+}
+
+.btn-eat {
+  background-color: #ffd54f;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 6px; /* เว้นระยะระหว่างข้อความกับรูป */
+  font-size: 16px;
+  margin-top: 11px;
+  color: #9d0a0a;
+}
+
+.icon-eat {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 0 2px rgba(225, 220, 220, 0.8));
+}
+
+
+/* Recommend */
+.recommend {
+  margin: 25px 40px;
+  background: #fff;
+  border-radius: 30px;
+  padding: 25px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+}
+
+.recommend h2 {
+  color: #b71c1c;
+  margin-bottom: 15px;
+}
+
+/* การ์ดแสดงแบนเนอร์ */
+.recommend-card {
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+
+  background: #fff;
+  height: 220px; /* ปรับขนาดกรอบ */
+}
+
+/* รูปแบนเนอร์เต็มกรอบ */
+.recommend-banner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ปุ่มกดสั่งเลยลอยอยู่บนรูป */
+.btn-order {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #e53935, #ef5350);
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.btn-order:hover {
+  transform: translate(-50%, -3px);
+}
+
+
+
+.dots {
+  margin: 12px 0;
+  text-align: center;
+}
+
+.dot {
+  height: 8px;
+  width: 8px;
+  background-color: #ddd;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 3px;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #f06262;
+}
+/* Slider */
+.recommend-slider {
+  position: relative;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.recommend-card {
+  min-width: 100%;
+}
+
+/* Root Variables */
+:root {
+  --menu-width: 180px;
+  --image-height: 180px;
+}
+
+/* Best Sellers */
+.best-sellers {
+  margin: 30px 40px;
+}
+
+.best-sellers h2 {
+  color: #b71c1c;
+  margin-bottom: 15px;
+}
+
+/* Menu Grid */
+.menu-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--menu-width), 1fr));
+  gap: 20px;
+  padding: 0;
+  justify-items: center;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  background: #f9dede;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+  height: 310px;
+}
+
+.menu-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* กล่องชื่อเมนู + ลูกศร */
+.menu-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+  padding: 0 8px;
+}
+
+/* ชื่อเมนู */
+.menu-info p {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  font-size: 22px;
+}
+
+/* ลูกศรในวงกลม */
+.arrow-link {
+  text-decoration: none;
+  color: white;
+  background-color: #e53935;
+  font-size: 18px;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.arrow-link:hover {
+  background-color: #c62828;
+  transform: translateX(3px);
+}
+
+.arrow-link:visited {
+  color: white;
+}
+
+/* Image Box */
+.image-box {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  margin-bottom: 10px;
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Promotion */
+.promotion {
+  margin: 30px 40px;
+}
+
+.promotion h2 {
+  color: #b71c1c;
+}
+
+.coupon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFEFEF;
+  border: 2px solid #f5d0d0;
+  border-radius: 20px;
+  padding: 15px 25px;
+  margin-top: 10px;
+}
+
+.coupon-info h3 {
+  font-weight: 700;
+}
+
+.coupon-info p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.btn-more {
+  background: linear-gradient(135deg, #e53935, #ef5350);
+  border: none;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Promo List – เหมือนกับ .menu-list */
+.promo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--menu-width), 1fr));
+  gap: 20px;
+  padding: 0;
+  justify-items: center;
+  margin-top: 20px;
+}
+
+/* Promo Item – เหมือน .menu-item */
+.promo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  background: #f9dede;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+  position: relative;
+
+}
+
+
+/* Image-box2 เหมือน image-box */
+.image-box2 {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.image-box2 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-box2:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.promo-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ffd54f;
+  color: #000;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+/* โครงแถบล่าง */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+/* ปุ่มแต่ละอัน */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0; /* ยกเลิกความโค้ง */
+}
+
+/* สีแยกแต่ละปุ่ม */
+.nav-item.home {
+  background-color: #BF090A; /* แดง */
+}
+
+.nav-item.order {
+  background-color: #CA1C1D; /* แดงเข้ม */
+}
+.bottom-nav a {
+  text-decoration: none;
+  color: inherit;
+  color: white;
+}
+/* เอฟเฟกต์ hover */
+.nav-item:hover {
+  transform: translateY(-2px);
+}
+
+/* ไอคอนในปุ่ม */
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* เปลี่ยนเป็นสีขาว */
+  margin-bottom: 3px;
+  
+}
+
+
+/* ข้อความ */
+.nav-item p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+
+
+/* --- Responsive Desktop --- */
+@media (min-width: 1024px) {
+  .recommend {
+    margin: 40px 50px; /* ขยายขอบรอบๆ */
+    padding: 40px;
+	
+  }
+
+  .recommend-card {
+    height: 300px; /* เพิ่มความสูง */
+  }
+
+  .recommend-banner {
+    border-radius: 25px;
+  }
+
+  .recommend-slider {
+    max-width: 1200px; /* กำหนดขนาดสูงสุดของ slider */
+    margin: 0 auto;    /* จัดให้อยู่ตรงกลาง */
+  }
+  
+}
+
+
+
+/* Responsive Tablet */
+@media (max-width: 768px) {
+  .menu-list {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .menu-item {
+    max-width: 100%;
+    height: 240px;
+  }
+
+  .menu-item p {
+    font-size: 20px; /* ย่อฟอนต์ลงหน่อย */
+  }
+
+
+  .image-box {
+    height: 140px;
+  }
+
+  .arrow-link {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .promo-list {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;                 /* เพิ่มระยะระหว่างกรอบ */
+  }
+
+  .promo-item {
+    max-width: 100%;
+    height: 240px;
+    font-size: 18px;                   /* ทำให้แต่ละกรอบเล็กลงและเว้นช่องว่างได้ */
+  }
+}
+
+/* Responsive Mobile */
+@media (max-width: 480px) {
+  .menu-list {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .menu-item {
+    max-width: 100%;
+    height: 240px;
+  }
+
+  .menu-item p {
+    font-size: 20px; /* ย่อฟอนต์ลงหน่อย */
+  }
+
+  .image-box {
+    height: 140px;
+  }
+
+  .arrow-link {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .promo-list {
+    display: flex;           /* ให้แน่ใจว่าใช้ flex layout */
+    flex-direction: column;  /* เรียงลงแนวตั้ง */
+    align-items: center;     /* จัดให้อยู่กลางแนวนอน */
+    gap: 20px;               /* ระยะห่างระหว่างกรอบ */
+    width: 100%;             /* เต็มความกว้างหน้าจอ */
+    padding: 0 15px;         /* เพิ่มขอบซ้ายขวานิดหน่อยไม่ให้ติดขอบจอ */
+    box-sizing: border-box;  /* ป้องกัน overflow */
+  }
+
+  .promo-item {
+    width: 100%;             /* กรอบกว้างเต็มจอ */
+    max-width: 360px;        /* แต่ไม่เกินขนาดที่กำหนด */
+    height: auto;            /* ปรับความสูงอัตโนมัติ */
+  }
+}
