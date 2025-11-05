@@ -1,55 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="..//JS/app.js" defer></script>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-
-    <link rel="stylesheet" href="..//CSS/Summary.css">
-    <script src="..//JS/Summary.js" defer></script>
-
-    <title>Summarry</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="../JS/app.js" defer></script>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../CSS/Summary.css" />
+  <script src="../JS/Summary.js" defer></script>
+  <title>Summary</title>
 </head>
 
 <body>
+  <header>
+    <h1>ตะกร้าของคุณ</h1>
+  </header>
 
-    <header>
-        <h1>ตะกร้าของคุณ</h1>
-
-    </header>
-
+  <div class="container">
     <main>
-        <div class="menu-list">
-
-        </div>
-
+      <div class="menu-list">
+        <!-- รายการสินค้า -->
+      </div>
     </main>
 
-
     <section class="coupon-section">
-        <div class="coupon-box">
-            <p>คูปอง</p>
-            <button onclick="window.location.href='MyCoupon.html'" class="apply-coupon-btn">เลือกคูปอง</button>
-        </div>
+      <div class="coupon-box">
+        <p>คูปอง</p>
+        <button onclick="window.location.href='MyCoupon.html'" class="apply-coupon-btn">
+          เลือกคูปอง
+        </button>
+      </div>
     </section>
-    
-    <div class="separator"></div>
 
     <footer>
-        <div class="price-total">
-            <p>ราคารวมทั้งหมด</p>
-        </div>
+      <div class="total-box">
+        <p>ราคารวมทั้งหมด</p>
+        <p id="grand-total">45 บาท</p>
+      </div>
 
-        <div class="price">
-            <p id="grand-total">จำนวนราคา บาท</p>
-        </div>
-
-        <button class="back-btn">กลับไปหน้าเมนู</button>
-        <button class="confirm-btn">ยืนยันคำสั่งซื้อ</button>        
-
+      <div class="footer-btns">
+        <button class="back-btn">ย้อนกลับไปหน้าเมนู</button>
+        <button class="confirm-btn">ยืนยันคำสั่งซื้อ</button>
+      </div>
     </footer>
-
+  </div>
 </body>
-
 </html>
