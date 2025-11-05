@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โค้ดของคุณ</title>
+  <link rel="stylesheet" href="../css/MyCoupon.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header">
+      <button class="back-btn" onclick="window.history.back()">&#8592;</button>
+      <h1>โค้ดของคุณ</h1>
+    </header>  
+
+    <!-- รายการโค้ดส่วนลด -->
+    <section class="coupon-section">
+      <h2>โค้ดส่วนลดที่สามารถใช้ได้ (4)</h2>
+
+      <div class="coupon-item">
+        <img src="../src-front/Icon/coupon-icon.PNG" alt="coupon" class="coupon-img">
+        <div class="coupon-text">ส่วนลด 10% ขั้นต่ำ 100</div>
+        <button class="use-btn">ใช้</button>
+      </div>
+
+      <div class="coupon-item">
+        <img src="../src-front/Icon/coupon-icon.PNG" alt="coupon" class="coupon-img">
+        <div class="coupon-text">ส่วนลดสำหรับลูกค้าใหม่</div>
+        <button class="use-btn">ใช้</button>
+      </div>
+
+      <div class="coupon-item">
+        <img src="../src-front/Icon/coupon-icon.PNG" alt="coupon" class="coupon-img">
+        <div class="coupon-text">ส่วนลด 10% ขั้นต่ำ 100</div>
+        <button class="use-btn">ใช้</button>
+      </div>
+
+      <div class="coupon-item">
+        <img src="../src-front/Icon/coupon-icon.PNG" alt="coupon" class="coupon-img">
+        <div class="coupon-text">ส่วนลดสำหรับลูกค้าประจำ</div>
+        <button class="use-btn">ใช้</button>
+      </div>
+    </section>
+
+    <!-- ปุ่มเพิ่มส่วนลด -->
+    <div class="add-coupon">
+      <button id="addBtn" class="add-btn">กดเพื่อเก็บส่วนลดเพิ่ม</button>
+    </div>
+  </div>  
+
+  <!-- แถบเมนูล่าง -->
+<nav class="bottom-nav">
+  <a href="Home.html" class="nav-item active">
+    <!-- ไอคอน Home -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 3l8 6v12h-5v-6H9v6H4V9z"/>
+    </svg>
+    <span>หน้าหลัก</span>
+  </a>
+
+  <a href="index.html" class="nav-item">
+    <!-- ไอคอน Order / Food -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M21 4H3v2h18V4zM3 9h18v2H3V9zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+    </svg>
+    <span>สั่งอาหาร</span>
+  </a>
+</nav>
+
+  <script src="../js/MyCoupon.js"></script>
+</body>
+</html>
