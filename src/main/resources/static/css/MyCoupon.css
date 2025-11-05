@@ -13,8 +13,9 @@ body {
 
 /* ====== Container & Layout ====== */
 .container {
-  max-width: 420px;
-  margin: auto;
+  width: 100%;               
+  max-width: none;           
+  margin: 0;
   background-color: #fff;
   min-height: 100vh;
   display: flex;
