@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
 :root{
     --bg: #c62828;
     --logo-size-desktop: 220px;
@@ -27,8 +35,41 @@
     height: auto;
     transform-origin: center;
     transform: scale(0);
-    filter: brightness(0) invert(1); /* เปลี่ยนเป็นสีขาว */
+    filter: brightness(0) invert(1); /* à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¹€à¸›à¹‡à¸™à¸ªà¸µà¸‚à¸²à¸§ */
   }
+
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn {
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-gray {
+  background: #ccc;
+  color: #333;
+}
+.btn-yellow {
+  background: #ffca28;
+  color: #000;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
   
   /* bounce / pop animation (single-run) */
   @keyframes popBounce {
@@ -51,4 +92,3 @@
   @media (max-width: 480px) {
     :root { --logo-size-desktop: var(--logo-size-mobile); }
   }
-  

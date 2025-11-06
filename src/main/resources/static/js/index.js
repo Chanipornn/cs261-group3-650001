@@ -1,45 +1,19 @@
-const NEXT_PAGE = 'Home.html';
+window.addEventListener("DOMContentLoaded", () => {
+  const logo = document.getElementById("logo");
+  logo.classList.add("pop");
 
+  const homeBtn = document.getElementById("homeBtn");
+  const dineInBtn = document.getElementById("dineInBtn");
 
-const EXTRA_DELAY_AFTER_ANIM_MS = 800;
-
-document.addEventListener('DOMContentLoaded', () => {
-  const logo = document.getElementById('logo');
-  if (!logo) return;
-
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      logo.classList.add('pop');
-    });
+  // เมื่อกดปุ่ม "กลับบ้าน"
+  homeBtn.addEventListener("click", () => {
+    localStorage.setItem("orderType", "takeaway");
+    window.location.href = "home.html"; 
   });
 
-  function goNextAfterDelay() {
-    setTimeout(() => {
-      // เปลี่ยนหน้าอัตโนมัติ
-      window.location.href = NEXT_PAGE;
-    }, EXTRA_DELAY_AFTER_ANIM_MS);
-  }
-
-  // ถ้า prefer-reduced-motion เปิดอยู่ ให้ข้าม animationend และไปหน้าเลย (หรือหลัง delay)
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) {
-
-    goNextAfterDelay();
-    return;
-  }
-
-  // ถ้าผลิตแอนิเมชัน: ฟัง event
-  logo.addEventListener('animationend', () => {
-    // เมื่อแอนิเมชันจบ ให้รอเล็กน้อยแล้วไปหน้าใหม่
-    goNextAfterDelay();
+  // เมื่อกดปุ่ม "ทานที่ร้าน"
+  dineInBtn.addEventListener("click", () => {
+    localStorage.setItem("orderType", "dinein");
+    window.location.href = "home.html";
   });
-
-
-  setTimeout(() => {
-
-    if (!document.hidden) {
-      window.location.href = NEXT_PAGE;
-    }
-  }, 2500);
 });
