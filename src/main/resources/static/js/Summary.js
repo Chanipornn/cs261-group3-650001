@@ -3,7 +3,7 @@ const CONFIG = {
   API_CREATE_ORDER_URL: "http://localhost:8081/api/orders",
 
   ROUTES: {
-    HOME: "index.html",
+    HOME: "menu.html",
     SUCCESS: "received.html",
     FAIL: "unsuccessful.html",
   },
