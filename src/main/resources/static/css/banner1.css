@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+:root {
+  --menu-width: 220px;      /* ✅ ขยายการ์ด */
+  --image-size: 200px;      /* ✅ ขยายรูป */
+  --add-btn-size: 40px;     /* ✅ ปุ่มใหญ่ขึ้น */
+}
+
+body {
+  background-color: #fdfdfd;
+  color: #333;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* Header */
+.header {
+  background-color: #c62828;
+  color: white;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 40px 30px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+  padding-top: 10px;
+}
+
+.header-content h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.back {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #fff8;
+  border-radius: 50%;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* ส่วนรายการเมนู */
+.menu-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* ✅ ช่องใหญ่ขึ้น */
+  gap: 25px;
+  padding: 25px;
+  justify-items: center;
+}
+
+/* การ์ดแต่ละเมนู */
+.menu-item {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  text-align: center;
+  width: var(--menu-width);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.menu-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* กล่องรูป */
+.image-box {
+  position: relative;
+  width: 100%;
+  height: var(--image-size);
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #eee;
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ✅ ปุ่ม + อยู่ขวาล่างของรูป */
+.add-btn {
+  position: absolute;
+  bottom: 10px;      /* ✅ ย้ายมาด้านล่าง */
+  right: 10px;
+  background: #ffd600;
+  color: #000;
+  font-weight: 700;
+  border-radius: 10px;
+  width: var(--add-btn-size);
+  height: var(--add-btn-size);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ชื่อและราคา */
+.menu-item p {
+  margin: 8px 0 0 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.menu-item .price {
+  color: #d9251d;
+  font-weight: 700;
+  margin-top: 6px;
+  font-size: 16px;
+}
+
+
+
+  /* โครงแถบล่าง */
+  /* Footer แถบแดงเต็มจอ */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;             /* ความสูงของแถบ */
+    background-color: #c62828; /* สีแดงเหมือน header */
+    border-radius: 20px 20px 0 0; /* มุมบนโค้งมน (ถ้าต้องการ) */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
