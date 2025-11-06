@@ -191,7 +191,7 @@ body {
   align-items: center;
   text-align: center;
   width: 100%;
-  background: #f9dede;
+  background: #ffffff;
   border-radius: 14px;
   padding: 10px;
   box-shadow: 0 6px 14px rgba(0,0,0,0.06);
@@ -325,7 +325,7 @@ body {
   align-items: center;
   text-align: center;
   width: 100%;
-  background: #f9dede;
+  background: #ffffff;
   border-radius: 10px;
   padding: 10px;
   box-shadow: 0 6px 14px rgba(0,0,0,0.06);
@@ -415,7 +415,19 @@ body {
 }
 /* เอฟเฟกต์ hover */
 .nav-item:hover {
-  transform: translateY(-2px);
+  background-color: #A50708; /* สีเข้มขึ้นให้รู้ว่าชี้อยู่ */
+  transform: none; /* ยกเลิกการกระดอนขึ้น */
+  transition: background-color 0.2s ease;
+}
+
+/* ถ้าต้องการให้แต่ละปุ่มเข้มขึ้นตามสีของตัวเอง */
+.nav-item.home:hover {
+  background-color: #A30707;
+}
+
+
+.nav-item.order:hover {
+  background-color: #B01718;
 }
 
 /* ไอคอนในปุ่ม */
@@ -458,6 +470,25 @@ body {
     margin: 0 auto;    /* จัดให้อยู่ตรงกลาง */
   }
   
+  .menu-item {
+     height: 380px; /* จากเดิม 310px เพิ่มความสูง */
+   }
+
+   .image-box {
+     height: 300px; /* จากเดิม 240px เพิ่มพื้นที่ให้รูป */
+   }
+
+   .menu-info p {
+     font-size: 24px; /* ปรับให้ตัวอักษรใหญ่ขึ้นเล็กน้อยให้สมดุล */
+   }
+   
+   .promo-item {
+        height: 290px; /* จากเดิม 310px เพิ่มความสูง */
+      }
+
+      .image-box2 {
+        height: 290px; /* จากเดิม 240px เพิ่มพื้นที่ให้รูป */
+      }
 }
 
 

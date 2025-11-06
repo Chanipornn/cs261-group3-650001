@@ -336,7 +336,19 @@ header {
 
 /* เอฟเฟกต์ hover */
 .nav-item:hover {
-  transform: translateY(-2px);
+  background-color: #A50708; /* สีเข้มขึ้นให้รู้ว่าชี้อยู่ */
+  transform: none; /* ยกเลิกการกระดอนขึ้น */
+  transition: background-color 0.2s ease;
+}
+
+/* ถ้าต้องการให้แต่ละปุ่มเข้มขึ้นตามสีของตัวเอง */
+.nav-item.home:hover {
+  background-color: #A30707;
+}
+
+
+.nav-item.order:hover {
+  background-color: #B01718;
 }
 
 /* ไอคอนในปุ่ม */
