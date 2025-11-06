@@ -3,58 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TU Reatuarant Helper</title>
-
-  <link rel="stylesheet" href="..//CSS/..//CSS/index.css">
+  <title>Restaurant Helper</title>
+  <link rel="stylesheet" href="..//CSS/index.css">
 </head>
 <body>
+    <img id="logo" src="../src-front/Icon/logohelper.png" alt="Restaurant Helper Logo" class="logo">
 
-    <header>
-        <div class="top-bar">
-          <div class="search-box">
-            <input type="text" placeholder="ค้นหาเมนู...">
-            <button class="search-btn" aria-label="ค้นหา">
-              <img src="../src-front\Icon\search-interface-symbol.png" alt="" />
-            </button>
-          </div>
-          <div class="cart-icon">
-            <img src="../src-front\Icon\shopping-cart.png" 
-                 alt="Cart Icon" 
-                 onclick="window.location.href='Summary.html'" 
-                 style="cursor:pointer; filter: brightness(0) invert(1);"
-            >
-            <span id="cartBadge" class="badge" aria-label="จำนวนในตะกร้า">0</span>
-          </div>
-          
-        </div>
-
-    <div class="categories">
-      <button class="active">อาหารจานเดียว</button>
-      <button onclick="window.location.href='beverage.html'">เครื่องดื่ม</button>
-      <button onclick="window.location.href='dessert.html'">ของทานเล่น</button>
-    </div>
-  </header>
-
-  <section class="menu-list">
-	
-  </section>
-
-  <!-- Bottom Nav -->
-  <footer class="bottom-nav">
-    <a href="Home.html" class="nav-item home active">
-      <img src="../src-front/Icon/home_icon.png" alt="หน้าแรก" class="nav-icon">
-      <p>หน้าแรก</p>
-    </a>
-    <a href="index.html" class="nav-item order">
-      <img src="../src-front/Icon/order.png" alt="สั่งอาหาร" class="nav-icon">
-      <p>สั่งอาหาร</p>
-    </a>
-  </footer>
-
-  
-  <script src="JS/cart.js"></script>
   <script src="..//JS/index.js"></script>
-  <script src="..//JS/fetchMenu.js"></script>
-  
 </body>
 </html>
