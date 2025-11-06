@@ -57,12 +57,12 @@
 }
 
 .btn-gray {
-  background: #ccc;
-  color: #333;
+	background-color: #C4C4C4;
+	color: white;
 }
 .btn-yellow {
-  background: #ffca28;
-  color: #000;
+	color: #9d0a0a;
+	background-color: #ffd54f;
 }
 
 .btn:hover {
