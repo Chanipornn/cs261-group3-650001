@@ -1,5 +1,6 @@
 :root{ 
   --brand:#d32323; 
+  --discount:#ff6b35;
   --bg:#eeeeee; 
   --paper:#fff; 
   --text:#111; 
@@ -62,11 +63,13 @@ html,body{
 }
 
 .photo-wrap{ 
-  background:#f7edd9; 
+  position: relative;
+  background:linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
   border-radius:14px; 
   padding:14px; 
   display:grid; 
-  place-items:center; 
+  place-items:center;
+  overflow: hidden;
 }
 
 .photo-wrap img{ 
@@ -74,14 +77,77 @@ html,body{
   height:260px; 
   object-fit:cover; 
   border-radius:10px; 
-  box-shadow:0 6px 0 #00000020; 
+  box-shadow:0 6px 0 #00000020;
+  display: block;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #d32323 0%, #ff4444 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 18px;
+  box-shadow: 0 4px 15px rgba(211, 35, 35, 0.4);
+  transform: rotate(-5deg);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  50% { transform: rotate(-5deg) scale(1.05); }
+}
+
+.badge-text {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .title{ 
   text-align:center; 
   font-size:22px; 
   font-weight:800; 
-  margin:16px 0 6px; 
+  margin:16px 0 12px; 
+}
+
+.promo-box {
+  background: linear-gradient(135deg, #fff0f0 0%, #ffe6e6 100%);
+  border: 2px dashed var(--discount);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.promo-icon {
+  font-size: 32px;
+  animation: shake 3s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(-5deg); }
+  20%, 40%, 60%, 80% { transform: rotate(5deg); }
+}
+
+.promo-detail {
+  flex: 1;
+}
+
+.promo-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--brand);
+  margin-bottom: 4px;
+}
+
+.promo-desc {
+  font-size: 14px;
+  color: #666;
 }
 
 .line{ 
@@ -169,7 +235,7 @@ html,body{
 
 .line.column textarea {
   width: 100%;
-  min-height: 140px;
+  min-height: 100px;
   resize: vertical;
   border: 2px solid var(--border);
   border-radius: 16px;

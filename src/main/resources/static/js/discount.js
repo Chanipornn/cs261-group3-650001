@@ -35,9 +35,10 @@
     // ===== ข้อมูลเมนู =====
     currentMenu = {
       id: 1,
-      name: 'สุกี้น้ำ',
-      img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&auto=format&fit=crop',
-      base: 50
+      name: 'สุกี้น้ำหมู',
+      img: '../src-front/img-oneDishMeal/sukinam moo.jpg',
+      base: 50,
+      discountPrice: 35 // ราคาโปรโมชั่น
     };
     modifiers = [
       { id: 1, groupId: 1, name: 'ปกติ', basePrice: 0, isAdditional: false },
@@ -60,34 +61,39 @@
         const radioGroup = group.filter(m => !m.isAdditional); 
         const addOnGroup = group.filter(m => m.isAdditional);  
 
-        // Radio - แสดงราคาลดสำหรับตัวแรก
+        // Radio - แสดงราคาลดสำหรับทุกตัวเลือก
         if (radioGroup.length > 0) {
           radioGroup.forEach((m, i) => {
             const row = document.createElement('label');
             row.className = 'line radio-line';
             
-            // ตัวแรกแสดงราคาลดเป็น 35 บาท
+            const originalPrice = currentMenu.base || 0;
+            const discountBase = currentMenu.discountPrice || originalPrice;
+            const finalPrice = discountBase + Number(m.basePrice || 0);
+            
             if (i === 0) {
-              const originalPrice = currentMenu.base || 0;
-              const discountPrice = 35; // ราคาโปรโมชั่น
+              // ตัวแรก: แสดงราคาเต็ม vs ราคาลด
               row.innerHTML = `
                 <div class="left">
-                  <input type="radio" name="group-${m.groupId}" value="${m.id}" checked data-discount-price="${discountPrice}" data-original-price="${originalPrice}">
+                  <input type="radio" name="group-${m.groupId}" value="${m.id}" checked>
                   <span>${m.name}</span>
                 </div>
                 <div class="right">
                   <span class="price-old">ราคา ${originalPrice} บาท</span>
-                  <span class="price-red">${discountPrice} บาท</span>
+                  <span class="price-red">${finalPrice} บาท</span>
                 </div>
               `;
             } else {
+              // ตัวอื่นๆ: แสดงราคาลด + ค่าเพิ่มเติม
+              const displayOriginal = originalPrice + Number(m.basePrice || 0);
               row.innerHTML = `
                 <div class="left">
                   <input type="radio" name="group-${m.groupId}" value="${m.id}">
-                  <span>${m.name}${m.basePrice>0?` (+${m.basePrice} บาท)`:''}</span>
+                  <span>${m.name}</span>
                 </div>
                 <div class="right">
-                  <span class="price">+${m.basePrice} บาท</span>
+                  <span class="price-old">ราคา ${displayOriginal} บาท</span>
+                  <span class="price-red">${finalPrice} บาท</span>
                 </div>
               `;
             }
@@ -135,20 +141,15 @@
     }
 
     function calcPerDish() {
-      let total = 0;
+      // ใช้ราคาลดเป็นฐาน
+      let total = currentMenu.discountPrice || currentMenu.base || 0;
 
-      // Radio - ตรวจสอบว่าเป็นขนาดที่ลดราคาหรือไม่
+      // Radio - บวกค่าเพิ่มเติมจาก modifier
       const selectedRadio = sizeWrap.querySelector('input[type="radio"]:checked');
       if (selectedRadio) {
-        const discountPrice = selectedRadio.dataset.discountPrice;
-        if (discountPrice) {
-          // ใช้ราคาลด
-          total = Number(discountPrice);
-        } else {
-          // ไม่มีส่วนลด ใช้ราคาปกติ + modifier
-          total = currentMenu.base || 0;
-          const mod = modifiers.find(m => m.id == selectedRadio.value);
-          if (mod) total += Number(mod.basePrice || 0);
+        const mod = modifiers.find(m => m.id == selectedRadio.value);
+        if (mod) {
+          total += Number(mod.basePrice || 0);
         }
       }
 
@@ -166,7 +167,30 @@
       const total = perDish * mainQty;
       elMainQty.textContent = String(mainQty);
       totalPrice.textContent = '฿' + toTH(total);
+      
+      // อัพเดท summary box
+      updateSummary(perDish, total);
+      
       return { perDish, total };
+    }
+
+    function updateSummary(perDish, total) {
+      const summaryBox = document.getElementById('summaryBox');
+      if (!summaryBox) return;
+      
+      const originalPerDish = currentMenu.base || 0;
+      const selectedRadio = sizeWrap.querySelector('input[type="radio"]:checked');
+      if (selectedRadio) {
+        const mod = modifiers.find(m => m.id == selectedRadio.value);
+        if (mod) {
+          const originalTotal = (originalPerDish + Number(mod.basePrice || 0)) * mainQty;
+          const saved = originalTotal - total;
+          
+          document.getElementById('originalPrice').textContent = '฿' + toTH(originalTotal);
+          document.getElementById('discountPrice').textContent = '฿' + toTH(total);
+          document.getElementById('savedAmount').textContent = '฿' + toTH(saved);
+        }
+      }
     }
 
     elTitle.textContent = currentMenu.name;
@@ -229,7 +253,8 @@
           price: perDish,
           image: elImg.src,
           addons: addons,
-          note: note
+          note: note,
+          promo: 'ลดราคา'
         });
       }
 
