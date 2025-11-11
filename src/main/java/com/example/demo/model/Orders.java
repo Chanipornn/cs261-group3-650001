@@ -4,11 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @Entity
-@Table(name = "Orders")
+@Table(name = "orders", schema = "dbo")
 public class Orders {
 
     @Id

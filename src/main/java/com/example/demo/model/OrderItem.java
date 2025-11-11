@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
-@Table(name = "OrderItem")
+@Table(name = "order_item", schema = "dbo")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "order"})
 public class OrderItem {
 
