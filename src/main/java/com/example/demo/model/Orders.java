@@ -24,6 +24,9 @@ public class Orders {
 
     @Column(name = "payment_status")
     private String paymentStatus;
+    
+    @Column(name = "order_type_id")
+    private Integer order_type_id;
 
     // ใช้ JsonManagedReference เพื่อกันวนซ้ำ
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,23 +1,31 @@
-﻿CREATE TRIGGER trg_update_best_seller
+﻿CREATE OR ALTER TRIGGER trg_best_seller_after_insert
 ON dbo.order_item
-AFTER INSERT, UPDATE, DELETE
+AFTER INSERT
 AS
 BEGIN
-    -- ลบข้อมูลใน best_seller ที่ไม่ถูกต้อง
-    DELETE FROM dbo.best_seller WHERE menu_id IN (SELECT menu_id FROM inserted);
+    SET NOCOUNT ON;
 
-    -- คำนวณยอดขายรวมของเมนูใหม่ที่มีการเพิ่ม/แก้ไข
-    INSERT INTO dbo.best_seller (menu_id, menu_name, total_sales, total_sales_amount, last_updated)
-    SELECT 
-        oi.menu_id, 
-        m.name AS menu_name, 
-        SUM(oi.quantity) AS total_sales, 
-        SUM(oi.quantity * (m.price + ISNULL(oi.additional_price, 0))) AS total_sales_amount, 
-        GETDATE() AS last_updated
-    FROM 
-        dbo.order_item oi
-    JOIN 
-        dbo.menu m ON oi.menu_id = m.menu_id
-    GROUP BY 
-        oi.menu_id, m.name;
-END;
+    ;WITH S AS (
+        SELECT 
+            i.menu_id,
+            MAX(m.name)                    AS menu_name,
+            SUM(i.quantity)                AS qty,
+            SUM(i.quantity * m.price)      AS amt
+        FROM inserted i
+        JOIN dbo.menu m ON m.menu_id = i.menu_id
+        GROUP BY i.menu_id
+    )
+    MERGE dbo.best_seller AS T
+    USING S
+      ON T.menu_id = S.menu_id
+    WHEN MATCHED THEN
+        UPDATE SET
+            T.menu_name          = S.menu_name,              -- เผื่อชื่อเมนูถูกแก้
+            T.total_sales        = T.total_sales + S.qty,    -- บวกเพิ่มตามที่สั่ง
+            T.total_sales_amount = T.total_sales_amount + S.amt,
+            T.last_updated       = SYSUTCDATETIME()
+    WHEN NOT MATCHED THEN
+        INSERT (menu_id, menu_name, total_sales, total_sales_amount, last_updated)
+        VALUES (S.menu_id, S.menu_name, S.qty, S.amt, SYSUTCDATETIME());
+END
+GO
