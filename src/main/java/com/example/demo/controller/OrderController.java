@@ -1,89 +1,142 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.*;
-import com.example.demo.repo.*;
+import com.example.demo.dto.OrderItemDTO;
+import com.example.demo.dto.OrdersResponseDTO;
+import com.example.demo.model.Menu;
+import com.example.demo.model.OrderItem;
+import com.example.demo.model.OrderType;
+import com.example.demo.model.Orders;
+import com.example.demo.repo.MenuRepository;
+import com.example.demo.repo.OrderRepository;
+import com.example.demo.repo.OrderTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import jakarta.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(
-		  origins = "*",
-		  allowedHeaders = "*",
-		  methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}
-		)
-
+@CrossOrigin(origins = "*")
 public class OrderController {
 
     @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
-    private OrderItemRepository orderItemRepository;
-
-    @Autowired
     private MenuRepository menuRepository;
 
-    // ✅ ล้างข้อมูลเก่าทุกครั้งที่รัน (ตามที่คุณตั้งใจไว้)
+    @Autowired
+    private OrderTypeRepository orderTypeRepository;
+
+    // ล้างข้อมูลทุกครั้งที่รัน (กันลูป json)
     @PostConstruct
     public void resetOrdersOnStartup() {
-        orderItemRepository.deleteAll();
         orderRepository.deleteAll();
-        System.out.println("✅ Cleared all orders on startup!");
     }
 
-    // ✅ ดึง Order ทั้งหมด
+    // -------------------------------
+    // 📌 สร้างออเดอร์ (POST)
+    // -------------------------------
+    @PostMapping
+    public ResponseEntity<OrdersResponseDTO> createOrder(@RequestBody Orders orderRequest) {
+
+        // คำนวณ totalAmount
+        double total = 0;
+
+        for (OrderItem item : orderRequest.getItems()) {
+
+            Menu menu = menuRepository.findById(item.getMenuId()).orElse(null);
+            if (menu != null) {
+                total += (menu.getPrice() + item.getAdditionalPrice()) * item.getQuantity();
+            }
+
+            // ตั้งค่า parent
+            item.setOrder(orderRequest);
+        }
+
+        orderRequest.setTotalAmount(total);
+
+        // save
+        Orders savedOrder = orderRepository.save(orderRequest);
+
+        // ส่งออก DTO
+        return ResponseEntity.ok(convertToDTO(savedOrder));
+    }
+
+
+    // -------------------------------
+    // 📌 GET ALL ORDERS
+    // -------------------------------
     @GetMapping
-    public List<Orders> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrdersResponseDTO> getAllOrders() {
+        List<Orders> orders = orderRepository.findAll();
+
+        List<OrdersResponseDTO> responseList = new ArrayList<>();
+
+        for (Orders order : orders) {
+            responseList.add(convertToDTO(order));
+        }
+
+        return responseList;
     }
 
-    // ✅ ดึง Order ตาม ID
+
+    // -------------------------------
+    // 📌 GET ORDER BY ID
+    // -------------------------------
     @GetMapping("/{id}")
-    public ResponseEntity<Orders> getOrderById(@PathVariable Integer id) {
+    public ResponseEntity<OrdersResponseDTO> getOrderById(@PathVariable Integer id) {
         return orderRepository.findById(id)
-                .map(ResponseEntity::ok)
+                .map(order -> ResponseEntity.ok(convertToDTO(order)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ✅ สร้างออเดอร์ใหม่ (ใช้ menuId เพื่อ lookup เมนูจาก DB)
-    @PostMapping
-    public Orders createOrder(@RequestBody Orders order) {
-        if (order.getOrderItems() != null) {
-            for (OrderItem item : order.getOrderItems()) {
-                item.setOrder(order);
+    // -------------------------------
+    // 🛠 แปลง Orders → OrdersResponseDTO
+    // -------------------------------
+    private OrdersResponseDTO convertToDTO(Orders order) {
 
-                // ✅ ใช้ menuId ดึงข้อมูลเมนูจริงจาก DB
-                if (item.getMenuId() != null) {
-                    menuRepository.findById(Long.valueOf(item.getMenuId()))
-                            .ifPresent(item::setMenu);
-                }
+        OrdersResponseDTO dto = new OrdersResponseDTO();
+        dto.setId(order.getId());
+        dto.setOrderDate(order.getFormattedOrderDate());   // เวลาแบบไทย
+        dto.setOrderDateRaw(order.getOrderDateRaw().toString());
+        dto.setPaymentStatus(order.getPaymentStatus());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setOrderTypeId(order.getOrderTypeId());
+
+        // หา orderTypeName
+        OrderType type = orderTypeRepository.findById(order.getOrderTypeId()).orElse(null);
+        dto.setOrderTypeName(type != null ? type.getType() : null);
+
+        // ----------------------
+        // เติม items
+        // ----------------------
+        List<OrderItemDTO> itemDTOList = new ArrayList<>();
+
+        for (OrderItem item : order.getItems()) {
+
+            Menu menu = menuRepository.findById(item.getMenuId()).orElse(null);
+
+            OrderItemDTO itemDTO = new OrderItemDTO();
+            itemDTO.setId(item.getId());
+            itemDTO.setMenuId(item.getMenuId());
+            itemDTO.setQuantity(item.getQuantity());
+            itemDTO.setAdditionalPrice(item.getAdditionalPrice());
+            itemDTO.setNoteText(item.getNoteText());
+
+            if (menu != null) {
+                itemDTO.setMenuName(menu.getName());
+                itemDTO.setMenuPrice(menu.getPrice());
             }
+
+            itemDTOList.add(itemDTO);
         }
 
-        // ✅ บันทึกออเดอร์ทั้งหมด (Cascade จะ save OrderItem ด้วย)
-        Orders savedOrder = orderRepository.save(order);
-        return savedOrder;
-    }
+        dto.setItems(itemDTOList);
 
-    // ✅ ลบออเดอร์ตาม ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
-        if (!orderRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        orderRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // ✅ ลบทุกออเดอร์
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAllOrders() {
-        orderItemRepository.deleteAll();
-        orderRepository.deleteAll();
-        return ResponseEntity.noContent().build();
+        return dto;
     }
 }

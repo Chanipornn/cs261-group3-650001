@@ -8,6 +8,7 @@ public class MenuModifier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "menu_id")
@@ -19,18 +20,37 @@ public class MenuModifier {
     @Column(name = "additional_price")
     private Double additionalPrice;
 
-    public MenuModifier() {}
+    // GETTER & SETTER
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getMenuId() { return menuId; }
-    public void setMenuId(Long menuId) { this.menuId = menuId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getModifierId() { return modifierId; }
-    public void setModifierId(Long modifierId) { this.modifierId = modifierId; }
+    public Long getMenuId() {
+        return menuId;
+    }
 
-    public Double getAdditionalPrice() { return additionalPrice; }
-    public void setAdditionalPrice(Double additionalPrice) { this.additionalPrice = additionalPrice; }
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
+    }
+
+    public Long getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(Long modifierId) {
+        this.modifierId = modifierId;
+    }
+
+    public Double getAdditionalPrice() {
+        return additionalPrice;
+    }
+
+    public void setAdditionalPrice(Double additionalPrice) {
+        this.additionalPrice = additionalPrice;
+    }
 }

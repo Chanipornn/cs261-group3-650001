@@ -14,17 +14,17 @@ public class Menu {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "category_id")
-    private int categoryId;
-
     @Column(name = "price")
-    private double price;
+    private Double price;
 
-    @Column(name = "allow_notes")
-    private boolean allowNotes;
-    
+    @Column(name = "category_id")
+    private Long categoryId;
+
     @Column(name = "image")
     private String image;
+
+    @Column(name = "allow_notes")
+    private Boolean allowNotes;
 
     public Long getId() {
         return id;
@@ -32,13 +32,6 @@ public class Menu {
 
     public void setId(Long id) {
         this.id = id;
-    }
-    public boolean isAllowNotes() {
-        return allowNotes;
-    }
-
-    public void setAllowNotes(boolean allowNotes) {
-        this.allowNotes = allowNotes;
     }
 
     public String getName() {
@@ -49,22 +42,22 @@ public class Menu {
         this.name = name;
     }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
-    
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getImage() {
         return image;
     }
@@ -72,5 +65,12 @@ public class Menu {
     public void setImage(String image) {
         this.image = image;
     }
-    
+
+    public Boolean getAllowNotes() {
+        return allowNotes;
+    }
+
+    public void setAllowNotes(Boolean allowNotes) {
+        this.allowNotes = allowNotes;
+    }
 }
