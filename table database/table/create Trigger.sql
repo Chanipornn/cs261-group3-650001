@@ -1,11 +1,10 @@
-﻿ALTER TRIGGER trg_update_best_seller
+CREATE TRIGGER trg_update_best_seller
 ON dbo.order_item
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- ดึงเมนูที่มีการเปลี่ยนแปลง (INSERT, UPDATE, DELETE)
     DECLARE @changed TABLE (menu_id INT);
 
     INSERT INTO @changed (menu_id)
@@ -13,11 +12,9 @@ BEGIN
     UNION
     SELECT menu_id FROM deleted;
 
-    -- ลบข้อมูลเก่าของเมนูเหล่านี้ออกก่อน
     DELETE FROM dbo.best_seller
     WHERE menu_id IN (SELECT menu_id FROM @changed);
 
-    -- คำนวณยอดขายเฉพาะเมนูที่มีการเปลี่ยนแปลง
     INSERT INTO dbo.best_seller (menu_id, menu_name, total_sales, total_sales_amount, last_updated)
     SELECT 
         oi.menu_id,
