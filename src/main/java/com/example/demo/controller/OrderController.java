@@ -31,62 +31,57 @@ public class OrderController {
     @Autowired
     private OrderTypeRepository orderTypeRepository;
 
-    // ล้างข้อมูลทุกครั้งที่รัน (กันลูป json)
+    // ล้างข้อมูลทุกครั้งที่รัน
     @PostConstruct
     public void resetOrdersOnStartup() {
         orderRepository.deleteAll();
     }
 
-    // -------------------------------
-    // สร้างออเดอร์ (POST)
-    // -------------------------------
+    // =============================
+    // CREATE ORDER (POST)
+    // =============================
     @PostMapping
     public ResponseEntity<OrdersResponseDTO> createOrder(@RequestBody Orders orderRequest) {
 
-        // คำนวณ totalAmount
         double total = 0;
 
-        for (OrderItem item : orderRequest.getItems()) {
+        if (orderRequest.getItems() != null) {
+            for (OrderItem item : orderRequest.getItems()) {
 
-            Menu menu = menuRepository.findById(item.getMenuId()).orElse(null);
-            if (menu != null) {
-                total += (menu.getPrice() + item.getAdditionalPrice()) * item.getQuantity();
+                Menu menu = menuRepository.findById(item.getMenuId()).orElse(null);
+
+                if (menu != null) {
+                    total += (menu.getPrice() + item.getAdditionalPrice()) * item.getQuantity();
+                }
+
+                item.setOrder(orderRequest); // set parent
             }
-
-            // ตั้งค่า parent
-            item.setOrder(orderRequest);
         }
 
         orderRequest.setTotalAmount(total);
 
-        // save
         Orders savedOrder = orderRepository.save(orderRequest);
 
-        // ส่งออก DTO
         return ResponseEntity.ok(convertToDTO(savedOrder));
     }
 
-
-    // -------------------------------
+    // =============================
     // GET ALL ORDERS
-    // -------------------------------
+    // =============================
     @GetMapping
     public List<OrdersResponseDTO> getAllOrders() {
         List<Orders> orders = orderRepository.findAll();
-
         List<OrdersResponseDTO> responseList = new ArrayList<>();
 
         for (Orders order : orders) {
             responseList.add(convertToDTO(order));
         }
-
         return responseList;
     }
 
-
-    // -------------------------------
+    // =============================
     // GET ORDER BY ID
-    // -------------------------------
+    // =============================
     @GetMapping("/{id}")
     public ResponseEntity<OrdersResponseDTO> getOrderById(@PathVariable Integer id) {
         return orderRepository.findById(id)
@@ -94,45 +89,54 @@ public class OrderController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // -------------------------------
-    // แปลง Orders → OrdersResponseDTO
-    // -------------------------------
+    // =============================
+    // Convert Orders → DTO
+    // =============================
     private OrdersResponseDTO convertToDTO(Orders order) {
 
         OrdersResponseDTO dto = new OrdersResponseDTO();
         dto.setId(order.getId());
-        dto.setOrderDate(order.getFormattedOrderDate());   // เวลาแบบไทย
+        dto.setOrderDate(order.getFormattedOrderDate());
         dto.setOrderDateRaw(order.getOrderDateRaw().toString());
         dto.setPaymentStatus(order.getPaymentStatus());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setOrderTypeId(order.getOrderTypeId());
 
-        // หา orderTypeName
-        OrderType type = orderTypeRepository.findById(order.getOrderTypeId()).orElse(null);
-        dto.setOrderTypeName(type != null ? type.getType() : null);
+        // ===== FIX: กัน orderTypeId = null =====
+        Integer typeId = order.getOrderTypeId();
+        String typeName = null;
 
-        // ----------------------
-        // เติม items
-        // ----------------------
+        if (typeId != null) {
+            OrderType type = orderTypeRepository.findById(typeId).orElse(null);
+            if (type != null) {
+                typeName = type.getType();
+            }
+        }
+
+        dto.setOrderTypeName(typeName);
+
+        // เติมรายการ orderItems
         List<OrderItemDTO> itemDTOList = new ArrayList<>();
 
-        for (OrderItem item : order.getItems()) {
+        if (order.getItems() != null) {
+            for (OrderItem item : order.getItems()) {
 
-            Menu menu = menuRepository.findById(item.getMenuId()).orElse(null);
+                Menu menu = menuRepository.findById(item.getMenuId()).orElse(null);
 
-            OrderItemDTO itemDTO = new OrderItemDTO();
-            itemDTO.setId(item.getId());
-            itemDTO.setMenuId(item.getMenuId());
-            itemDTO.setQuantity(item.getQuantity());
-            itemDTO.setAdditionalPrice(item.getAdditionalPrice());
-            itemDTO.setNoteText(item.getNoteText());
+                OrderItemDTO itemDTO = new OrderItemDTO();
+                itemDTO.setId(item.getId());
+                itemDTO.setMenuId(item.getMenuId());
+                itemDTO.setQuantity(item.getQuantity());
+                itemDTO.setAdditionalPrice(item.getAdditionalPrice());
+                itemDTO.setNoteText(item.getNoteText());
 
-            if (menu != null) {
-                itemDTO.setMenuName(menu.getName());
-                itemDTO.setMenuPrice(menu.getPrice());
+                if (menu != null) {
+                    itemDTO.setMenuName(menu.getName());
+                    itemDTO.setMenuPrice(menu.getPrice());
+                }
+
+                itemDTOList.add(itemDTO);
             }
-
-            itemDTOList.add(itemDTO);
         }
 
         dto.setItems(itemDTOList);

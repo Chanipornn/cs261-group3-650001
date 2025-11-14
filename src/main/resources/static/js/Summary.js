@@ -203,53 +203,36 @@ function wireQtyActions() {
 
 async function submitOrder(cart, grandTotal) {
   if (CONFIG.API_CREATE_ORDER_URL) {
-    // แปลง addons เป็นข้อความอังกฤษ (สำหรับ noteText)
-    const toEnglishAddons = (addons = []) =>
-      addons
-        .filter(a => Number(a.qty) > 0)
-        .map(a => {
-          let name = String(a.name || "");
-          // แปลงคำไทย -> อังกฤษ
-          name = name
-            .replace("ความหวาน", "sweetness")
-            .replace("ขวดใหญ่", "large bottle")
-            .replace("ไข่ดาว", "fried egg")
-            .replace("ไข่เจียว", "omelet")
-            .replace("พิเศษ", "special");
-          return `${name} x${a.qty}`;
-        })
-        .join(", ");
 
-    // เตรียม orderItems ให้สะอาด + คิดราคาเพิ่มให้ถูกต้อง
     const items = cart.map(it => {
       const qty = Number(it.qty || 0);
       const sizeExtraPerUnit = Number(it.sizeExtra || 0);
 
-      // รวมราคารวมของ addons (price * qty ของ addon)
+      // รวมราคา addons ทั้งหมด
       const addonsTotal = (it.addons || []).reduce((s, a) => {
         const p = Number(a.price || 0);
         const q = Number(a.qty || 0);
         return s + p * q;
       }, 0);
 
-      // additionalPrice ทั้งบรรทัด = sizeExtra ต่อชิ้น * จำนวน + addons รวม
+      // additionalPrice = ราคาเพิ่มจากไซส์ + ราคา addons
       const additionalPrice = sizeExtraPerUnit * qty + addonsTotal;
 
-      // รวม noteText เป็นอังกฤษ
-      const addonsText = toEnglishAddons(it.addons);
+      // สร้างข้อความ note จากชื่อ addon ภาษาไทย ไม่แปล
+      const addonsText = (it.addons || [])
+        .filter(a => Number(a.qty) > 0)
+        .map(a => `${a.name} x${a.qty}`)
+        .join(", ");
+
+      // ถ้า addons ไม่มี ก็ใช้ note ปกติ
       const noteText = addonsText || String(it.note || "");
 
-      // ใส่ menuId เฉพาะกรณีที่เป็นตัวเลขจริงเท่านั้น
-      const mid = Number(it.menuId);
-      const line = {
+      return {
         quantity: qty,
         additionalPrice: additionalPrice,
-        noteText: noteText
+        noteText: noteText,
+        menuId: Number(it.menuId || it.id)
       };
-      if (Number.isFinite(mid) && mid > 0) {
-        line.menuId = mid; // ✅ มีค่าเท่านั้นถึงจะส่ง
-      }
-      return line;
     });
 
     const res = await fetch(CONFIG.API_CREATE_ORDER_URL, {
@@ -258,7 +241,8 @@ async function submitOrder(cart, grandTotal) {
       body: JSON.stringify({
         totalAmount: grandTotal,
         paymentStatus: "pending",
-        orderItems: items
+        items: items,
+        orderTypeId: 1 // จะเปลี่ยนทีหลังได้
       }),
     });
 
@@ -269,6 +253,7 @@ async function submitOrder(cart, grandTotal) {
     return data;
   }
 }
+
 
 
 function clearCart() {
