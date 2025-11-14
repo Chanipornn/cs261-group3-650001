@@ -246,9 +246,10 @@
 	      amount: mainQty
 	    }));
 	  } catch {}
-
-	  window.location.href = 'beverage.html';
 	};
-
+	document.querySelector('.back').addEventListener('click', () => {
+		  window.history.back();
+		  console.log("BACK BUTTON CLICKED!");
+		});
   }
 })();

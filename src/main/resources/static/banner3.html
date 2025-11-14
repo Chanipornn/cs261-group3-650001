@@ -21,7 +21,7 @@
   </header>
   
   <section class="menu-list">
-		<div class="menu-item" data-id="10">
+		<div class="menu-item" data-id="74">
 		   <div class="image-box">
 		     <img src="../src-front/img-dessert/ice-cream.jpg" alt="ไอศกรีม">
 		     <div class="add-btn" data-action="add">+</div>
@@ -30,7 +30,7 @@
 		       <p class="price">45 บาท</p>
 		 </div>
 		 
-		 <div class="menu-item" data-id="11">
+		 <div class="menu-item" data-id="75">
 		     <div class="image-box">
 		       <img src="../src-front/img-dessert/Choclava.jpg" alt="เค้กลาวา">
 		       <div class="add-btn" data-action="add">+</div>
@@ -39,7 +39,7 @@
 		     <p class="price">70 บาท</p>
 		   </div>
       
-		   <div class="menu-item" data-id="12">
+		   <div class="menu-item" data-id="76">
 		        <div class="image-box">
 		          <img src="../src-front/img-dessert/cake.jpg" alt="เค้กหน้านิ่ม">
 		          <div class="add-btn" data-action="add">+</div>
@@ -53,3 +53,25 @@
 
 </body>
 </html>
+				<script>
+				  const menuList = document.querySelector('.menu-list');
+
+				  // ===== fetch Menu =====
+				  fetch('http://localhost:8081/api/menu')
+				    .then(res => res.json())
+				    .then(data => {
+				      console.log('Loaded menu:', data);
+				    })
+				    .catch(err => console.error('Fetch error:', err));
+				  menuList.addEventListener("click", (event) => {
+				    const menuItem = event.target.closest(".menu-item");
+				    if (!menuItem) return;
+
+				    if (event.target.classList.contains("add-btn")) {
+				      const id = menuItem.dataset.id;
+				      if (id) {
+				        window.location.href = `http://localhost:8081/beveragedetail.html?id=${id}`;
+				      }
+				    }
+				  });
+				</script>

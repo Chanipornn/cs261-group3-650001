@@ -241,8 +241,11 @@
           amount: mainQty
         }));
       } catch {}
-
-      window.location.href = 'dessert.html';
+;
     };
+	document.querySelector('.back').addEventListener('click', () => {
+	  window.history.back();
+	  console.log("BACK BUTTON CLICKED!");
+	});
   }
 })();
