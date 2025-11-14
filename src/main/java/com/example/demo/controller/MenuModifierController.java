@@ -4,65 +4,68 @@ import com.example.demo.model.MenuModifier;
 import com.example.demo.model.Modifier;
 import com.example.demo.repo.MenuModifierRepository;
 import com.example.demo.repo.ModifierRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/menu")
+@CrossOrigin
 public class MenuModifierController {
 
-    @Autowired
-    private MenuModifierRepository menuModifierRepository;
+    private final MenuModifierRepository menuModifierRepository;
+    private final ModifierRepository modifierRepository;
 
-    @Autowired
-    private ModifierRepository modifierRepository;
+    public MenuModifierController(MenuModifierRepository menuModifierRepository,
+                                  ModifierRepository modifierRepository) {
+        this.menuModifierRepository = menuModifierRepository;
+        this.modifierRepository = modifierRepository;
+    }
 
-    // GET /api/menu/{menuId}/modifiers
-    @GetMapping("/menu/{menuId}/modifiers")
+    // ==========================
+    //   GET MODIFIERS BY MENU
+    // ==========================
+    @GetMapping("/{menuId}/modifiers")
     public List<ModifierDTO> getModifiersByMenu(@PathVariable Long menuId) {
 
-        List<MenuModifier> menuMods = menuModifierRepository.findByMenuId(menuId);
+        // ดึงความสัมพันธ์จาก menu_modifiers
+        List<MenuModifier> mList = menuModifierRepository.findByMenuId(menuId);
 
-        return menuMods.stream().map(mm -> {
+        return mList.stream().map(mm -> {
+
+            // load modifier จริง
             Modifier mod = modifierRepository.findById(mm.getModifierId()).orElse(null);
             if (mod == null) return null;
 
+            // ส่ง DTO ให้หน้าเว็บ
             return new ModifierDTO(
-                    mod.getId(),
-                    mod.getName(),
-                    mod.getGroupId(),
-                    mod.getAdditionalPrice(),
-                    mod.getIsAdditional(),
-                    mm.getAdditionalPrice()
+                    mod.getId(),          // id
+                    mod.getModifierName(),        // name
+                    mod.getAdditionalPrice(),     // base price
+                    mod.getIsAdditional(),        // is additional?
+                    mm.getAdditionalPrice()       // extra price override
             );
-        }).filter(dto -> dto != null).collect(Collectors.toList());
+
+        }).filter(Objects::nonNull).toList();
     }
 
-    // GET /api/modifier-groups/{groupId} -> ดึง modifiers ตาม group
-    @GetMapping("/modifier-groups/{groupId}")
-    public List<Modifier> getModifiersByGroup(@PathVariable Long groupId){
-        return modifierRepository.findByGroupId(groupId);
-    }
-
-    // DTO สำหรับ front-end
+    // ==========================
+    //       DTO CLASS
+    // ==========================
     public static class ModifierDTO {
-        public Long id;
+        public Integer id;
         public String name;
-        public Long groupId;
-        public Double basePrice;   // ราคาใน modifiers
+        public Double basePrice;
         public Boolean isAdditional;
-        public Double menuPrice;   // ราคาเฉพาะเมนู
+        public Double extraPrice;
 
-        public ModifierDTO(Long id, String name, Long groupId, Double basePrice, Boolean isAdditional, Double menuPrice) {
+        public ModifierDTO(Integer id, String name, Double basePrice, Boolean isAdditional, Double extraPrice) {
             this.id = id;
             this.name = name;
-            this.groupId = groupId;
             this.basePrice = basePrice;
             this.isAdditional = isAdditional;
-            this.menuPrice = menuPrice;
+            this.extraPrice = extraPrice;
         }
     }
 }

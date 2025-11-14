@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "modifiers")
@@ -10,14 +9,10 @@ public class Modifier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "modifier_id")
-    private Long id;
+    private Integer id;
 
-    @Column(name = "name")
-    private String name;
-
-    // group_id ใน DB จริงไหม? ถ้ามีให้แก้ตามนี้
-    @Column(name = "group_id")
-    private Long groupId;
+    @Column(name = "modifier_name")   // 👈 ของจริงใน DB
+    private String modifierName;
 
     @Column(name = "additional_price")
     private Double additionalPrice;
@@ -25,34 +20,25 @@ public class Modifier {
     @Column(name = "is_additional")
     private Boolean isAdditional;
 
-    // ถ้ามี price ด้วยให้เพิ่มกลับมา
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "created_at")
+    private java.time.LocalDateTime createdAt;
 
-    // GETTERS & SETTERS
+    // GETTER & SETTER
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getModifierName() {
+        return modifierName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setModifierName(String modifierName) {
+        this.modifierName = modifierName;
     }
 
     public Double getAdditionalPrice() {
@@ -67,15 +53,15 @@ public class Modifier {
         return isAdditional;
     }
 
-    public void setIsAdditional(Boolean additional) {
-        isAdditional = additional;
+    public void setIsAdditional(Boolean isAdditional) {
+        this.isAdditional = isAdditional;
     }
 
-    public Double getPrice() {
-        return price;
+    public java.time.LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setCreatedAt(java.time.LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MenuModifierRepository extends JpaRepository<MenuModifier, Long> {
+public interface MenuModifierRepository extends JpaRepository<MenuModifier, MenuModifier.CompositeKey> {
+
     List<MenuModifier> findByMenuId(Long menuId);
 }

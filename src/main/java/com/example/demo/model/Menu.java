@@ -9,7 +9,7 @@ public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "menu_id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -26,11 +26,11 @@ public class Menu {
     @Column(name = "allow_notes")
     private Boolean allowNotes;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

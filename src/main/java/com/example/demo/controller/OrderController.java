@@ -38,7 +38,7 @@ public class OrderController {
     }
 
     // -------------------------------
-    // 📌 สร้างออเดอร์ (POST)
+    // สร้างออเดอร์ (POST)
     // -------------------------------
     @PostMapping
     public ResponseEntity<OrdersResponseDTO> createOrder(@RequestBody Orders orderRequest) {
@@ -68,7 +68,7 @@ public class OrderController {
 
 
     // -------------------------------
-    // 📌 GET ALL ORDERS
+    // GET ALL ORDERS
     // -------------------------------
     @GetMapping
     public List<OrdersResponseDTO> getAllOrders() {
@@ -85,7 +85,7 @@ public class OrderController {
 
 
     // -------------------------------
-    // 📌 GET ORDER BY ID
+    // GET ORDER BY ID
     // -------------------------------
     @GetMapping("/{id}")
     public ResponseEntity<OrdersResponseDTO> getOrderById(@PathVariable Integer id) {
@@ -95,7 +95,7 @@ public class OrderController {
     }
 
     // -------------------------------
-    // 🛠 แปลง Orders → OrdersResponseDTO
+    // แปลง Orders → OrdersResponseDTO
     // -------------------------------
     private OrdersResponseDTO convertToDTO(Orders order) {
 
