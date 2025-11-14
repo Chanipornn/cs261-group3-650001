@@ -195,11 +195,9 @@
 
 	  // ===== Radio (เช่น ความหวาน, ความเย็น, ฯลฯ) =====
 	  const selectedRadios = sizeWrap.querySelectorAll('input[type="radio"]:checked');
-
 	  selectedRadios.forEach(radio => {
 	    const m = modifiers.find(x => x.id == radio.value);
 	    if (m) {
-	      // ความหวาน / radio type → เก็บเป็น addon แบบ qty = 1
 	      addons.push({
 	        name: m.name,
 	        qty: 1,
@@ -207,6 +205,7 @@
 	      });
 	    }
 	  });
+
 
 	  let cart = [];
 	  try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { cart = []; }
@@ -246,6 +245,7 @@
 	      amount: mainQty
 	    }));
 	  } catch {}
+	  window.location.href = 'beverage.html';
 	};
 	document.querySelector('.back').addEventListener('click', () => {
 		  window.history.back();

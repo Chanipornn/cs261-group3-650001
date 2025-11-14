@@ -157,16 +157,10 @@
       return { perDish, total };
     }
 
-    // ===== Load menu & modifiers =====
     const id = getMenuId();
     const menuData = await loadMenuFromAPI(id);
     if (!menuData) { alert('โหลดเมนูไม่สำเร็จ'); return; }
-    currentMenu = {
-      id: Number(menuData.id),
-      name: menuData.name,
-      img:  menuData.image,
-      base: Number(menuData.price||0)
-    };
+    currentMenu = { id: Number(menuData.id), name: menuData.name, img: menuData.image, base: Number(menuData.price||0) };
     modifiers = await loadModifiersFromAPI(id);
 
     elTitle.textContent = currentMenu.name;
@@ -179,73 +173,49 @@
     btnMinus.addEventListener('click', () => { if (mainQty>1){ mainQty--; recalc(); } });
     btnPlus.addEventListener('click', () => { if (mainQty<99){ mainQty++; recalc(); } });
 
-	// ===== Add to Cart =====
-	    window.addToCart = function () {
-	      const noteEl = document.getElementById('note');
-	      const note = noteEl ? noteEl.value.trim() : '';
-	      const perDish = calcPerDish();
+    window.addToCart = function () {
+      const noteEl = document.getElementById('note');
+      const note = noteEl ? noteEl.value.trim() : '';
+      const perDish = calcPerDish();
 
-	      // Addons
-	      const addons = Object.keys(addonQty)
-	        .filter(id => addonQty[id]>0)
-	        .map(id => {
-	          const m = modifiers.find(x => x.id == id);
-	          return { name: m.name, qty: addonQty[id], price: Number(m.basePrice||0) };
-	        });
+      const addons = Object.keys(addonQty)
+        .filter(id => addonQty[id]>0)
+        .map(id => {
+          const m = modifiers.find(x => x.id == id);
+          return { name: m.name, qty: addonQty[id], price: Number(m.basePrice || 0) };
+        });
 
-	      // Radio
-	      const selectedRadio = sizeWrap.querySelector('input[type="radio"]:checked');
-	      let sizeExtra = 0;
-	      let sizeName = ''; 
-	      
-	      if(selectedRadio) {
-	        const m = modifiers.find(x => x.id == selectedRadio.value);
-	        sizeExtra = Number(m.basePrice||0);
-	        sizeName = m.name; 
-	      }
+      const selectedRadios = sizeWrap.querySelectorAll('input[type="radio"]:checked');
+      selectedRadios.forEach(radio => {
+        const m = modifiers.find(x => x.id == radio.value);
+        if (m) {
+          addons.push({ name: m.name, qty: 1, price: Number(m.basePrice || 0) });
+        }
+      });
 
-	      let cart = [];
-	      try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { cart = []; }
+      let cart = [];
+      try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { cart = []; }
 
-	      const addonKey = addons.map(a => `${a.name}x${a.qty}`).join('|');
-	     
-	      const idx = cart.findIndex(it =>
-	        Number(it.menuId) === currentMenu.id &&
-	        (it.sizeName || '') === sizeName && 
-	        (it.addons||[]).map(a => `${a.name}x${a.qty}`).join('|') === addonKey
-	      );
+      const addonKey = addons.map(a => `${a.name}x${a.qty}`).join('|');
+      const idx = cart.findIndex(it =>
+        Number(it.menuId) === currentMenu.id &&
+        (it.addons||[]).map(a => `${a.name}x${a.qty}`).join('|') === addonKey
+      );
 
-	      if (idx > -1) {
-	        cart[idx].qty += mainQty;
-	        if (note) cart[idx].note = note;
-	        cart[idx].price = perDish;
-	      } else {
-	        cart.push({
-	          menuId: currentMenu.id,
-	          name: currentMenu.name,
-	          qty: mainQty,
-	          sizeExtra: sizeExtra,
-	          sizeName: sizeName,
-	          price: perDish,
-	          image: elImg.src,
-	          addons: addons,
-	          note: note
-	        });
-	      }
+      if (idx > -1) {
+        cart[idx].qty += mainQty;
+        if (note) cart[idx].note = note;
+        cart[idx].price = perDish;
+      } else {
+        cart.push({ menuId: currentMenu.id, name: currentMenu.name, qty: mainQty, price: perDish, image: elImg.src, addons, note });
+      }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-      try {
-        localStorage.setItem('pending_add', JSON.stringify({
-          id: currentMenu.id,
-          qty: mainQty,
-          amount: mainQty
-        }));
-      } catch {}
-;
+      try { localStorage.setItem('pending_add', JSON.stringify({ id: currentMenu.id, qty: mainQty, amount: mainQty })); } 
+	  catch {}
+      window.location.href = 'dessert.html';
     };
-	document.querySelector('.back').addEventListener('click', () => {
-	  window.history.back();
-	  console.log("BACK BUTTON CLICKED!");
-	});
+
+    document.querySelector('.back').addEventListener('click', () => { window.history.back(); });
   }
 })();

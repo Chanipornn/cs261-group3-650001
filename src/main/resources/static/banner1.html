@@ -21,7 +21,7 @@
   </header>
   
   <section class="menu-list">
-		<div class="menu-item" data-id="53">
+		<div class="menu-item" data-id="53" data-categoryid="2">
 		   <div class="image-box">
 		     <img src="../src-front/img-beverage/strawberry_lime_soda.jpg" alt="สตอเบอรี่โซดา">
 		    <div class="add-btn" data-action="add">+</div>
@@ -30,7 +30,7 @@
 		   <p class="price">35 บาท</p>
 		 </div>
 		 
-		 <div class="menu-item" data-id="54">
+		 <div class="menu-item" data-id="54" data-categoryid="2">
 		      <div class="image-box">
 		        <img src="../src-front/img-beverage/blue_hawaii.jpg" alt="บลูฮาวายโซดา">
 		        <div class="add-btn" data-action="add">+</div>
@@ -39,7 +39,7 @@
 		      <p class="price">35 บาท</p>
 		    </div>
       
-		 <div class="menu-item" data-id="55">
+		 <div class="menu-item" data-id="55" data-categoryid="2">
 		       <div class="image-box">
 		         <img src="../src-front/img-beverage/แดงโซดาสอง.webp" alt="แดงโซดา">
 		         <div class="add-btn" data-action="add">+</div>
@@ -48,7 +48,7 @@
 		       <p class="price">35 บาท</p>
 		     </div>
       
-			 <div class="menu-item" data-id="74">
+			 <div class="menu-item" data-id="74" data-categoryid="3">
 			      <div class="image-box">
 			        <img src="../src-front/img-dessert/ice-cream.jpg" alt="ไอศกรีม">
 			        <div class="add-btn" data-action="add">+</div>
@@ -72,16 +72,22 @@
 				      console.log('Loaded menu:', data);
 				    })
 				    .catch(err => console.error('Fetch error:', err));
-				  menuList.addEventListener("click", (event) => {
-				    const menuItem = event.target.closest(".menu-item");
-				    if (!menuItem) return;
+					menuList.addEventListener("click", (event) => {
+					  const menuItem = event.target.closest(".menu-item");
+					  if (!menuItem) return;
 
-				    if (event.target.classList.contains("add-btn")) {
-				      const id = menuItem.dataset.id;
-				      if (id) {
-				        window.location.href = `http://localhost:8081/beveragedetail.html?id=${id}`;
-				      }
-				    }
-				  });
+					  if (event.target.classList.contains("add-btn")) {
+					    const id = menuItem.dataset.id;
+					    const categoryId = parseInt(menuItem.dataset.categoryid, 10);
+
+					    let detailPage = "Detail.html";
+					    if (categoryId === 2) detailPage = "beveragedetail.html";
+					    else if (categoryId === 3) detailPage = "dessertdetail.html";
+
+					    if (id) {
+					      window.location.href = `http://localhost:8081/${detailPage}?id=${id}`;
+					    }
+					  }
+					});
 				</script>
 

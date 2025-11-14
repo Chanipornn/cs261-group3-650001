@@ -22,34 +22,45 @@ async function loadBestSellers() {
       const menu = menuMap[bs.menuId];
       if (!menu) return;
 
-      const item = document.createElement("div");
-      item.className = "menu-item";
-      item.innerHTML = `
-        <div class="image-box">
-          <img src="${menu.image}" alt="${menu.name}">
-        </div>
-        <div class="menu-info">
-          <p>${menu.name}</p>
-          <a href="detail.html?id=${menu.id}" class="arrow-link">➜</a>
-        </div>
-      `;
-      container.appendChild(item);
+	  const item = document.createElement("div");
+	  item.className = "menu-item";
+	  item.dataset.id = menu.id;               
+	  item.dataset.categoryid = menu.categoryId; 
+	  item.innerHTML = `
+	    <div class="image-box">
+	      <img src="${menu.image}" alt="${menu.name}">
+	    </div>
+	    <div class="menu-info">
+	      <p>${menu.name}</p>
+	      <a href="#" class="arrow-link">➜</a>
+	    </div>
+	  `;
+	  container.appendChild(item);
     });
 
   } catch (err) {
     console.error("Error loading best sellers:", err);
   }
-  menuList.addEventListener("click", (event) => {
-      const menuItem = event.target.closest(".menu-item");
-      if (!menuItem) return;
+  const container = document.getElementById("best-sellers-list");
+  container.addEventListener("click", (event) => {
+    const menuItem = event.target.closest(".menu-item");
+    if (!menuItem) return;
 
-      if (event.target.classList.contains("arrow-link")) {
-        const id = menuItem.dataset.id;
-        if (id) {
-          window.location.href = `http://localhost:8081/Detail.html?id=${id}`;
-        }
+    if (event.target.classList.contains("arrow-link")) {
+      event.preventDefault();
+      const id = menuItem.dataset.id;
+      const categoryId = parseInt(menuItem.dataset.categoryid, 10);
+
+      let detailPage = "Detail.html"; 
+      if (categoryId === 2) detailPage = "beveragedetail.html";
+      else if (categoryId === 3) detailPage = "dessertdetail.html";
+
+      if (id) {
+        window.location.href = `http://localhost:8081/${detailPage}?id=${id}`;
       }
-    });
+    }
+  });
+
 }
 
 loadBestSellers();
