@@ -179,70 +179,76 @@
     btnMinus.addEventListener('click', () => { if (mainQty>1){ mainQty--; recalc(); } });
     btnPlus.addEventListener('click', () => { if (mainQty<99){ mainQty++; recalc(); } });
 
-    // ===== Add to Cart =====
-    window.addToCart = function () {
-      const noteEl = document.getElementById('note');
-      const note = noteEl ? noteEl.value.trim() : '';
-      const perDish = calcPerDish();
+	// ===== Add to Cart =====
+	window.addToCart = function () {
+	  const noteEl = document.getElementById('note');
+	  const note = noteEl ? noteEl.value.trim() : '';
+	  const perDish = calcPerDish();
 
-      // Addons
-      const addons = Object.keys(addonQty)
-        .filter(id => addonQty[id]>0)
-        .map(id => {
-          const m = modifiers.find(x => x.id == id);
-          return { name: m.name, qty: addonQty[id], price: Number(m.basePrice||0) };
-        });
+	  // Addons (qty-based)
+	  const addons = Object.keys(addonQty)
+	    .filter(id => addonQty[id] > 0)
+	    .map(id => {
+	      const m = modifiers.find(x => x.id == id);
+	      return { name: m.name, qty: addonQty[id], price: Number(m.basePrice || 0) };
+	    });
 
-      // Radio
-      const selectedRadio = sizeWrap.querySelector('input[type="radio"]:checked');
-      let sizeExtra = 0;
-      let sizeName = '';
-      
-      if(selectedRadio) {
-        const m = modifiers.find(x => x.id == selectedRadio.value);
-        sizeExtra = Number(m.basePrice||0);
-        sizeName = m.name; 
-      }
+	  // ===== Radio (เช่น ความหวาน, ความเย็น, ฯลฯ) =====
+	  const selectedRadios = sizeWrap.querySelectorAll('input[type="radio"]:checked');
 
-      let cart = [];
-      try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { cart = []; }
+	  selectedRadios.forEach(radio => {
+	    const m = modifiers.find(x => x.id == radio.value);
+	    if (m) {
+	      // ความหวาน / radio type → เก็บเป็น addon แบบ qty = 1
+	      addons.push({
+	        name: m.name,
+	        qty: 1,
+	        price: Number(m.basePrice || 0)
+	      });
+	    }
+	  });
 
-      const addonKey = addons.map(a => `${a.name}x${a.qty}`).join('|');
-      
-      const idx = cart.findIndex(it =>
-        Number(it.menuId) === currentMenu.id &&
-        (it.sizeName || '') === sizeName && 
-        (it.addons||[]).map(a => `${a.name}x${a.qty}`).join('|') === addonKey
-      );
+	  let cart = [];
+	  try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { cart = []; }
 
-      if (idx > -1) {
-        cart[idx].qty += mainQty;
-        if (note) cart[idx].note = note;
-        cart[idx].price = perDish;
-      } else {
-        cart.push({
-          menuId: currentMenu.id,
-          name: currentMenu.name,
-          qty: mainQty,
-          sizeExtra: sizeExtra,
-          sizeName: sizeName, 
-          price: perDish,
-          image: elImg.src,
-          addons: addons,
-          note: note
-        });
-      }
+	  // key สำหรับ detect ว่ารายการเดิมเหมือนกันไหม
+	  const addonKey = addons.map(a => `${a.name}x${a.qty}`).join('|');
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-      try {
-        localStorage.setItem('pending_add', JSON.stringify({
-          id: currentMenu.id,
-          qty: mainQty,
-          amount: mainQty
-        }));
-      } catch {}
+	  const idx = cart.findIndex(it =>
+	    Number(it.menuId) === currentMenu.id &&
+	    (it.addons || []).map(a => `${a.name}x${a.qty}`).join('|') === addonKey
+	  );
 
-      window.location.href = 'beverage.html';
-    };
+	  if (idx > -1) {
+	    // ถ้าเหมือนกัน → เพิ่มจำนวน
+	    cart[idx].qty += mainQty;
+	    if (note) cart[idx].note = note;
+	    cart[idx].price = perDish;
+	  } else {
+	    // ถ้าเป็นรายการใหม่ → push
+	    cart.push({
+	      menuId: currentMenu.id,
+	      name: currentMenu.name,
+	      qty: mainQty,
+	      price: perDish,
+	      image: elImg.src,
+	      addons: addons,
+	      note: note
+	    });
+	  }
+
+	  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+
+	  try {
+	    localStorage.setItem('pending_add', JSON.stringify({
+	      id: currentMenu.id,
+	      qty: mainQty,
+	      amount: mainQty
+	    }));
+	  } catch {}
+
+	  window.location.href = 'beverage.html';
+	};
+
   }
 })();
