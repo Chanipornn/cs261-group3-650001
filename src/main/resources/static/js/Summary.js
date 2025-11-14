@@ -203,7 +203,10 @@ function wireQtyActions() {
 
 async function submitOrder(cart, grandTotal) {
   if (CONFIG.API_CREATE_ORDER_URL) {
-
+	
+	
+	const orderTypeId = Number(localStorage.getItem("orderTypeId") || 1);
+	
     const items = cart.map(it => {
       const qty = Number(it.qty || 0);
       const sizeExtraPerUnit = Number(it.sizeExtra || 0);
@@ -242,7 +245,7 @@ async function submitOrder(cart, grandTotal) {
         totalAmount: grandTotal,
         paymentStatus: "pending",
         items: items,
-        orderTypeId: 1 // จะเปลี่ยนทีหลังได้
+        orderTypeId: orderTypeId 
       }),
     });
 

@@ -9,20 +9,27 @@ document.addEventListener('DOMContentLoaded', () => {
   let startX = 0;
   let endX = 0;
 
-  // ====== ปุ่ม EatButton ======
   const eatButton = document.getElementById('eatButton');
   const btnText = eatButton.querySelector('.btn-text');
 
-  // เริ่มต้นให้เป็น “กลับบ้าน”
-  eatButton.classList.remove('dinein');
+  // ตั้งค่าเริ่มต้น
+  eatButton.classList.add('takeaway');
   btnText.textContent = 'กลับบ้าน';
+  localStorage.setItem("orderTypeId", "2");
 
+  // เมื่อกดปุ่ม
   eatButton.addEventListener('click', () => {
-    eatButton.classList.toggle('dinein');
-    btnText.textContent = eatButton.classList.contains('dinein')
-      ? 'ทานที่ร้าน'
-      : 'กลับบ้าน';
+    const isTakeAway = eatButton.classList.toggle('takeaway');
+
+    if (isTakeAway) {
+      btnText.textContent = 'กลับบ้าน';
+      localStorage.setItem("orderTypeId", "2");
+    } else {
+      btnText.textContent = 'ทานที่ร้าน';
+      localStorage.setItem("orderTypeId", "1");
+    }
   });
+
 
   // ====== สไลด์แบนเนอร์ ======
   function showSlide(index) {

@@ -49,14 +49,28 @@ document.addEventListener('DOMContentLoaded', () => {
       endX = e.touches[0].clientX;
     });
 
+	// ====== ปุ่ม EatButton ======
 	const eatButton = document.getElementById('eatButton');
 	const btnText = eatButton.querySelector('.btn-text');
 
+	// ตั้งค่าเริ่มต้นเป็น “ทานที่ร้าน” (orderTypeId = 1)
+	eatButton.classList.remove('takeaway');
+	btnText.textContent = 'ทานที่ร้าน';
+	localStorage.setItem("orderTypeId", "1");
+
+	// เมื่อกดปุ่ม → สลับสถานะ
 	eatButton.addEventListener('click', () => {
-	  eatButton.classList.toggle('takeaway');
-	  btnText.textContent = eatButton.classList.contains('takeaway')
-	    ? 'กลับบ้าน'
-	    : 'ทานที่ร้าน';
+	  const isDineInNow = !eatButton.classList.toggle('takeaway');
+
+	  if (isDineInNow) {
+	    // ทานที่ร้าน
+	    btnText.textContent = 'ทานที่ร้าน';
+	    localStorage.setItem("orderTypeId", "1");
+	  } else {
+	    // กลับบ้าน
+	    btnText.textContent = 'กลับบ้าน';
+	    localStorage.setItem("orderTypeId", "2");
+	  }
 	});
 
   
