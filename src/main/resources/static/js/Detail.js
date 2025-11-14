@@ -214,11 +214,11 @@
 
 	      const addonKey = addons.map(a => `${a.name}x${a.qty}`).join('|');
 	     
-	      const idx = cart.findIndex(it =>
-	        Number(it.menuId) === currentMenu.id &&
-	        (it.sizeName || '') === sizeName && 
-	        (it.addons||[]).map(a => `${a.name}x${a.qty}`).join('|') === addonKey
-	      );
+		  const idx = cart.findIndex(it =>
+		    Number(it.menuId) === currentMenu.id &&
+		    (it.size?.name || '') === (selectedSize?.name || '') &&
+		    (it.addons||[]).map(a => `${a.name}x${a.qty}`).join('|') === addonKey
+		  );
 
 	      if (idx > -1) {
 	        cart[idx].qty += mainQty;
