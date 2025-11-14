@@ -194,15 +194,20 @@
 	        });
 
 	      // Radio
-	      const selectedRadio = sizeWrap.querySelector('input[type="radio"]:checked');
-	      let sizeExtra = 0;
-	      let sizeName = ''; 
-	      
-	      if(selectedRadio) {
-	        const m = modifiers.find(x => x.id == selectedRadio.value);
-	        sizeExtra = Number(m.basePrice||0);
-	        sizeName = m.name; 
-	      }
+		  const selectedRadio = sizeWrap.querySelector('input[type="radio"]:checked');
+		  let selectedSize = null;
+
+		  if (selectedRadio) {
+		    const m = modifiers.find(x => x.id == selectedRadio.value);
+		    if (m) {
+		      selectedSize = {
+		        id: m.id,
+		        name: m.name,
+		        price: Number(m.basePrice || 0)
+		      };
+		    }
+		  }
+
 
 	      let cart = [];
 	      try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { cart = []; }
@@ -224,8 +229,7 @@
 	          menuId: currentMenu.id,
 	          name: currentMenu.name,
 	          qty: mainQty,
-	          sizeExtra: sizeExtra,
-	          sizeName: sizeName,
+	          size: selectedSize,
 	          price: perDish,
 	          image: elImg.src,
 	          addons: addons,
