@@ -5,15 +5,14 @@
     const dineInBtn = document.getElementById("dineInBtn");
 
 	homeBtn.addEventListener("click", () => {
-	  localStorage.setItem("orderTypeId", "2");  // กลับบ้าน
-	  window.location.href = "discoverTakeHome.html";
-	});
-
-	dineInBtn.addEventListener("click", () => {
-	  localStorage.setItem("orderTypeId", "1");  // ทานที่ร้าน
+	  localStorage.setItem("orderTypeId", "2");
 	  window.location.href = "discover.html";
 	});
 
+	dineInBtn.addEventListener("click", () => {
+	  localStorage.setItem("orderTypeId", "1");
+	  window.location.href = "discover.html";
+	});
 
   });
 
