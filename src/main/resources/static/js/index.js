@@ -7,11 +7,13 @@
 	homeBtn.addEventListener("click", () => {
 	  localStorage.setItem("orderTypeId", "2");
 	  window.location.href = "discover.html";
+	  console.log("Home");
 	});
 
 	dineInBtn.addEventListener("click", () => {
 	  localStorage.setItem("orderTypeId", "1");
 	  window.location.href = "discover.html";
+	  console.log("dineIn");
 	});
 
   });

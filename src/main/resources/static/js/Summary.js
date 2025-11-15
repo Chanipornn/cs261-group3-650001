@@ -222,7 +222,7 @@ async function submitOrder(cart, grandTotal) {
     body: JSON.stringify({
       totalAmount: grandTotal,
       paymentStatus: "pending",
-      orderTypeId: Number(localStorage.getItem("orderType") || 1),
+	  orderTypeId: Number(localStorage.getItem("orderTypeId") || 1),
       items: items,
     }),
   });
